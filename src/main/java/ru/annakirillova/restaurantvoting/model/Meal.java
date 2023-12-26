@@ -29,18 +29,19 @@ public class Meal extends AbstractBaseEntity {
     private String description;
 
     @Column(name = "price", nullable = false)
+    @NotNull
     @Range(min = 0, max = 10000)
-    private int price;
+    private Integer price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", referencedColumnName = "id", nullable = false)
     private Restaurant restaurant;
 
-    public Meal(LocalDate date, String description, int price, Restaurant restaurant) {
+    public Meal(LocalDate date, String description, Integer price, Restaurant restaurant) {
         this(null, date, description, price, restaurant);
     }
 
-    public Meal(Integer id, LocalDate date, String description, int price, Restaurant restaurant) {
+    public Meal(Integer id, LocalDate date, String description, Integer price, Restaurant restaurant) {
         super(id);
         this.date = date;
         this.description = description;
