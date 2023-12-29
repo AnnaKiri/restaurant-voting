@@ -43,4 +43,8 @@ public class DataJpaRestaurantRepository {
     public Restaurant getWithMeals(int id) {
         return restaurantRepository.getWithMeals(id);
     }
+
+    public Restaurant getWithMealsAndVotes(int id) {
+        return restaurantRepository.getWithMealsAndVotes(id);
+    }
 }

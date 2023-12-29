@@ -1,6 +1,5 @@
 package ru.annakirillova.restaurantvoting.repository.datajpa;
 
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.annakirillova.restaurantvoting.model.Vote;
@@ -9,12 +8,13 @@ import ru.annakirillova.restaurantvoting.repository.UserRepository;
 import ru.annakirillova.restaurantvoting.repository.VoteRepository;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Transactional(readOnly = true)
 public class DataJpaVoteRepository {
-    private static final Sort SORT_RESTAURANT_DATE = Sort.by(Sort.Direction.ASC, "restaurant", "date");
 
     private final VoteRepository voteRepository;
     private final RestaurantRepository restaurantRepository;
@@ -27,24 +27,27 @@ public class DataJpaVoteRepository {
     }
 
     @Transactional
-    public Vote save(Vote vote, int restaurantId, int userId) {
-        if (!vote.isNew() && get(vote.id(), userId) == null) {
-            return null;
+    public Vote save(int restaurantId, int userId) {
+        Optional<Vote> voteToday = voteRepository.getVoteByDate(userId, LocalDate.now());
+        if (voteToday.isPresent()) {
+            if (LocalTime.now().isBefore(LocalTime.of(11, 0))) {
+                voteRepository.delete(voteToday.get().getId());
+            } else {
+                return null;
+            }
         }
-        vote.setRestaurant(restaurantRepository.getReferenceById(restaurantId));
-        vote.setUser(userRepository.getReferenceById(userId));
-        return voteRepository.save(vote);
+
+        Vote newVote = new Vote(userRepository.getReferenceById(userId), restaurantRepository.getReferenceById(restaurantId));
+        return voteRepository.save(newVote);
     }
 
     @Transactional
-    public boolean delete(int id, int userId) {
-        return voteRepository.delete(id, userId) != 0;
+    public boolean delete(int id) {
+        return voteRepository.delete(id) != 0;
     }
 
-    public Vote get(int id, int userId) {
-        return voteRepository.findById(id)
-                .filter(vote -> vote.getUser().getId() == userId)
-                .orElse(null);
+    public Optional<Vote> get(int id) {
+        return voteRepository.findById(id);
     }
 
     public List<Vote> getAllByRestaurant(int restaurantId) {
@@ -55,7 +58,7 @@ public class DataJpaVoteRepository {
         return voteRepository.getAllByDate(restaurantId, date);
     }
 
-    public List<Vote> getBetweenHalfOpen(LocalDate startDate, LocalDate endDate) {
-        return voteRepository.getBetweenHalfOpen(startDate, endDate);
+    public List<Vote> getBetweenHalfOpen(LocalDate startDate, LocalDate endDate, int restaurantId) {
+        return voteRepository.getBetweenHalfOpen(startDate, endDate, restaurantId);
     }
 }

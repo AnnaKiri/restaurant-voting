@@ -35,8 +35,9 @@ public class Vote extends AbstractBaseEntity {
     @NotNull
     private LocalTime time;
 
-    public Vote(User user, Restaurant restaurant, LocalDate date, LocalTime time) {
-        this(null, user, restaurant, date, time);
+    public Vote(User user, Restaurant restaurant) {
+        this.user = user;
+        this.restaurant = restaurant;
     }
 
     public Vote(Integer id, User user, Restaurant restaurant, LocalDate date, LocalTime time) {

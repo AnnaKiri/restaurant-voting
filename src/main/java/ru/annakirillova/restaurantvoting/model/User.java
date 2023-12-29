@@ -67,6 +67,10 @@ public class User extends AbstractNamedEntity implements HasIdAndEmail {
         setRoles(roles);
     }
 
+    public boolean hasRole(Role role) {
+        return roles.contains(role);
+    }
+
     public void setRoles(Collection<Role> roles) {
         this.roles = CollectionUtils.isEmpty(roles) ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles);
     }

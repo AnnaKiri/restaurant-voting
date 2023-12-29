@@ -1,6 +1,5 @@
 package ru.annakirillova.restaurantvoting.repository.datajpa;
 
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.annakirillova.restaurantvoting.model.Meal;
@@ -8,13 +7,13 @@ import ru.annakirillova.restaurantvoting.model.Restaurant;
 import ru.annakirillova.restaurantvoting.repository.MealRepository;
 import ru.annakirillova.restaurantvoting.repository.RestaurantRepository;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class DataJpaMealRepository {
-    private static final Sort SORT_DESCRIPTION = Sort.by(Sort.Direction.ASC, "description");
 
     private final MealRepository mealRepository;
     private final RestaurantRepository restaurantRepository;
@@ -26,7 +25,7 @@ public class DataJpaMealRepository {
 
     @Transactional
     public Meal save(Meal meal, int restaurantId) {
-        if (!meal.isNew() && get(meal.id(), restaurantId) == null) {
+        if (!meal.isNew() && get(meal.id()).isEmpty()) {
             return null;
         }
         meal.setRestaurant(restaurantRepository.getReferenceById(restaurantId));
@@ -46,25 +45,23 @@ public class DataJpaMealRepository {
     }
 
     @Transactional
-    public boolean delete(int id, int restaurantId) {
-        return mealRepository.delete(id, restaurantId) != 0;
+    public boolean delete(int id) {
+        return mealRepository.delete(id) != 0;
     }
 
-    public List<Meal> getAll() {
-        return mealRepository.findAll(SORT_DESCRIPTION);
+    public List<Meal> getAll(int restaurantId) {
+        return mealRepository.getAll(restaurantId);
     }
 
-    public List<Meal> getBetweenHalfOpen(LocalDateTime startDate, LocalDateTime endDate, int restaurantId) {
-        return mealRepository.getBetweenHalfOpen(startDate, endDate);
+    public List<Meal> getBetweenHalfOpen(LocalDate startDate, LocalDate endDate, int restaurantId) {
+        return mealRepository.getBetweenHalfOpen(startDate, endDate, restaurantId);
     }
 
-    public Meal get(int id, int restaurantId) {
-        return mealRepository.findById(id)
-                .filter(meal -> meal.getRestaurant().getId() == restaurantId)
-                .orElse(null);
+    public Optional<Meal> get(int id) {
+        return mealRepository.findById(id);
     }
 
-    public List<Meal> getAllToday() {
-        return mealRepository.getAllToday(LocalDateTime.now());  // нужна только дата
+    public List<Meal> getAllToday(int restaurantId) {
+        return mealRepository.getAllToday(LocalDate.now(), restaurantId);
     }
 }

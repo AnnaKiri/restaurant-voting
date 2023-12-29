@@ -8,19 +8,22 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import ru.annakirillova.restaurantvoting.model.Meal;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Transactional(readOnly = true)
 public interface MealRepository extends JpaRepository<Meal, Integer> {
     @Modifying
     @Transactional
-    @Query("DELETE FROM Meal m WHERE m.id=:id AND m.restaurant.id=:restaurantId")
-    int delete(@Param("id") int id, @Param("restaurantId") int restaurantId);
+    @Query("DELETE FROM Meal m WHERE m.id=:id")
+    int delete(@Param("id") int id);
 
-    @Query("SELECT m from Meal m WHERE m.date = :date ORDER BY m.date DESC")
-    List<Meal> getAllToday(@Param("date") LocalDateTime date);
+    @Query("SELECT m from Meal m WHERE m.restaurant.id = :restaurantId ORDER BY m.date DESC")
+    List<Meal> getAll(@Param("restaurantId") int restaurantId);
 
-    @Query("SELECT m from Meal m WHERE m.date >= :startDate AND m.date < :endDate ORDER BY m.date DESC")
-    List<Meal> getBetweenHalfOpen(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+    @Query("SELECT m from Meal m WHERE m.date = :date AND m.restaurant.id = :restaurantId ORDER BY m.date DESC")
+    List<Meal> getAllToday(@Param("date") LocalDate date, @Param("restaurantId") int restaurantId);
+
+    @Query("SELECT m from Meal m WHERE m.date >= :startDate AND m.date < :endDate AND m.restaurant.id = :restaurantId ORDER BY m.date DESC")
+    List<Meal> getBetweenHalfOpen(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("restaurantId") int restaurantId);
 }

@@ -21,4 +21,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
 
     @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.meals WHERE r.id=?1")
     Restaurant getWithMeals(int id);
+
+    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.meals, r.votes WHERE r.id=?1")
+    Restaurant getWithMealsAndVotes(int id);
 }
