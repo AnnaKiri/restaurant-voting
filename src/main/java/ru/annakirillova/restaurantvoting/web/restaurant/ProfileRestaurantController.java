@@ -25,12 +25,12 @@ public class ProfileRestaurantController {
     @GetMapping("/{id}/with-meals-and-rating")
     public RestaurantTo getWithMealsAndRating(@PathVariable int id) {
         log.info("get the restaurant {} with meals and rating", id);
-        return RestaurantUtil.createTo(repository.getWithMealsAndVotes(id));
+        return RestaurantUtil.createTo(repository.getWithMealsAndVotesToday(id));
     }
 
     @GetMapping("/with-rating")
     public List<RestaurantTo> getAllWithRating() {
         log.info("get restaurants with rating");
-        return RestaurantUtil.getTos(repository.getAllWithVotes());
+        return RestaurantUtil.getTos(repository.getAllWithVotesToday());
     }
 }

@@ -28,5 +28,5 @@ public interface VoteRepository extends JpaRepository<Vote, Integer> {
     List<Vote> getAllByDate(@Param("restaurantsId") int restaurantsId, @Param("date") LocalDate date);
 
     @Query("SELECT v from Vote v WHERE v.date >= :startDate AND v.date < :endDate AND v.restaurant = :restaurantId ORDER BY v.date, v.time DESC")
-    List<Vote> getBetweenHalfOpen(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("id") int restaurantId);
+    List<Vote> getBetweenHalfOpen(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("restaurantId") int restaurantId);
 }

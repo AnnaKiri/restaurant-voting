@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.annakirillova.restaurantvoting.model.Restaurant;
 import ru.annakirillova.restaurantvoting.repository.RestaurantRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -28,8 +29,8 @@ public class DataJpaRestaurantRepository {
         return restaurantRepository.delete(id) != 0;
     }
 
-    public List<Restaurant> getAllWithVotes() {
-        return restaurantRepository.getAllWithVotes();
+    public List<Restaurant> getAllWithVotesToday() {
+        return restaurantRepository.getAllWithVotesByDate(LocalDate.now());
     }
 
     public List<Restaurant> getAll() {
@@ -40,11 +41,11 @@ public class DataJpaRestaurantRepository {
         return restaurantRepository.findById(id).orElse(null);
     }
 
-    public Restaurant getWithMeals(int id) {
-        return restaurantRepository.getWithMeals(id);
+    public Restaurant getWithMealsToday(int id) {
+        return restaurantRepository.getWithMealsByDate(id, LocalDate.now());
     }
 
-    public Restaurant getWithMealsAndVotes(int id) {
-        return restaurantRepository.getWithMealsAndVotes(id);
+    public Restaurant getWithMealsAndVotesToday(int id) {
+        return restaurantRepository.getWithMealsAndVotesByDate(id, LocalDate.now());
     }
 }

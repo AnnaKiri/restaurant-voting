@@ -56,7 +56,7 @@ public class AdminRestaurantController {
         boolean isVotesNeeded = votes != null && votes;
         if (isVotesNeeded) {
             log.info("get all restaurants with votes");
-            return RestaurantUtil.getTos(repository.getAllWithVotes());
+            return RestaurantUtil.getTos(repository.getAllWithVotesToday());
         } else {
             log.info("get all restaurant");
             return RestaurantUtil.getTos(repository.getAll());
@@ -68,7 +68,7 @@ public class AdminRestaurantController {
         boolean isMealsNeeded = meals != null && meals;
         if (isMealsNeeded) {
             log.info("get the restaurant {} with meals", id);
-            return RestaurantUtil.createTo(repository.getWithMeals(id));
+            return RestaurantUtil.createTo(repository.getWithMealsToday(id));
         } else {
             log.info("get the restaurant {}", id);
             return RestaurantUtil.createTo(repository.get(id));
