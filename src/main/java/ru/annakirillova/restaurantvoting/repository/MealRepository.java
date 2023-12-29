@@ -15,7 +15,7 @@ import java.util.List;
 public interface MealRepository extends JpaRepository<Meal, Integer> {
     @Modifying
     @Transactional
-    @Query("DELETE FROM Meal m WHERE m.id=:id")
+    @Query("DELETE FROM Meal m WHERE m.id= :id")
     int delete(@Param("id") int id);
 
     @Query("SELECT m from Meal m WHERE m.restaurant.id = :restaurantId ORDER BY m.date DESC")

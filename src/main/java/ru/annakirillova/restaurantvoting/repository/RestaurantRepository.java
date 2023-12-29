@@ -14,13 +14,13 @@ import java.util.List;
 public interface RestaurantRepository extends JpaRepository<Restaurant, Integer> {
     @Transactional
     @Modifying
-    @Query("DELETE FROM Restaurant r WHERE r.id =: id")
+    @Query("DELETE FROM Restaurant r WHERE r.id = :id")
     int delete(@Param("id") int id);
 
     @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.votes v WHERE v.date = :date")
     List<Restaurant> getAllWithVotesByDate(@Param("date") LocalDate date);
 
-    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.meals m WHERE r.id =: id AND m.date =: date")
+    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.meals m WHERE r.id = :id AND m.date = :date")
     Restaurant getWithMealsByDate(@Param("id") int id, @Param("date") LocalDate date);
 
     @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.meals m LEFT JOIN FETCH r.votes v WHERE r.id = :id AND m.date = :date AND v.date = :date")

@@ -15,16 +15,16 @@ import java.util.Optional;
 public interface VoteRepository extends JpaRepository<Vote, Integer> {
     @Modifying
     @Transactional
-    @Query("DELETE FROM Vote v WHERE v.id=:id")
+    @Query("DELETE FROM Vote v WHERE v.id= :id")
     int delete(@Param("id") int id);
 
-    @Query("SELECT v FROM Vote v WHERE v.user.id=:userId AND v.date=:date ORDER BY v.date, v.time DESC")
+    @Query("SELECT v FROM Vote v WHERE v.user.id=:userId AND v.date= :date ORDER BY v.date, v.time DESC")
     Optional<Vote> getVoteByDate(@Param("userId") int userId, @Param("date") LocalDate date);
 
-    @Query("SELECT v FROM Vote v WHERE v.restaurant.id=:restaurantsId ORDER BY v.date, v.time DESC")
+    @Query("SELECT v FROM Vote v WHERE v.restaurant.id= :restaurantsId ORDER BY v.date, v.time DESC")
     List<Vote> getAllByRestaurant(@Param("restaurantsId") int restaurantsId);
 
-    @Query("SELECT v from Vote v WHERE v.restaurant.id=:restaurantsId AND v.date = :date ORDER BY v.time DESC")
+    @Query("SELECT v from Vote v WHERE v.restaurant.id= :restaurantsId AND v.date = :date ORDER BY v.time DESC")
     List<Vote> getAllByDate(@Param("restaurantsId") int restaurantsId, @Param("date") LocalDate date);
 
     @Query("SELECT v from Vote v WHERE v.date >= :startDate AND v.date < :endDate AND v.restaurant = :restaurantId ORDER BY v.date, v.time DESC")

@@ -7,6 +7,7 @@ import ru.annakirillova.restaurantvoting.model.User;
 import ru.annakirillova.restaurantvoting.repository.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Transactional(readOnly = true)
@@ -37,5 +38,9 @@ public class DataJpaUserRepository {
 
     public User get(int id) {
         return crudRepository.findById(id).orElse(null);
+    }
+
+    public Optional<User> findByEmailIgnoreCase(String email) {
+        return crudRepository.findByEmailIgnoreCase(email);
     }
 }

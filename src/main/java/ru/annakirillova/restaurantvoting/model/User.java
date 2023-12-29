@@ -1,5 +1,7 @@
 package ru.annakirillova.restaurantvoting.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -11,6 +13,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.util.CollectionUtils;
 import ru.annakirillova.restaurantvoting.HasIdAndEmail;
 
+import java.io.Serializable;
 import java.util.*;
 
 @Entity
@@ -19,7 +22,7 @@ import java.util.*;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(callSuper = true, exclude = {"votes"})
-public class User extends AbstractNamedEntity implements HasIdAndEmail {
+public class User extends AbstractNamedEntity implements HasIdAndEmail, Serializable {
 
     @Column(name = "email", nullable = false, unique = true)
     @Email
@@ -30,6 +33,7 @@ public class User extends AbstractNamedEntity implements HasIdAndEmail {
     @Column(name = "password", nullable = false)
     @NotBlank
     @Size(min = 5, max = 128)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Column(name = "enabled", nullable = false, columnDefinition = "bool default true")
@@ -48,6 +52,7 @@ public class User extends AbstractNamedEntity implements HasIdAndEmail {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private List<Vote> votes;
 
     public User(User u) {

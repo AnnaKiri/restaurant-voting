@@ -1,5 +1,6 @@
 package ru.annakirillova.restaurantvoting.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -35,6 +36,7 @@ public class Meal extends AbstractBaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnore
     private Restaurant restaurant;
 
     public Meal(LocalDate date, String description, Integer price, Restaurant restaurant) {

@@ -1,6 +1,8 @@
 package ru.annakirillova.restaurantvoting.util;
 
 import lombok.experimental.UtilityClass;
+import org.hibernate.Hibernate;
+import ru.annakirillova.restaurantvoting.model.Meal;
 import ru.annakirillova.restaurantvoting.model.Restaurant;
 import ru.annakirillova.restaurantvoting.model.Vote;
 import ru.annakirillova.restaurantvoting.to.RestaurantTo;
@@ -13,7 +15,10 @@ public class RestaurantUtil {
 
     public static RestaurantTo createTo(Restaurant restaurant) {
         List<Vote> votes = restaurant.getVotes();
-        return new RestaurantTo(restaurant.getName(), restaurant.getMeals(), votes == null ? null : votes.size());
+        Integer rating = Hibernate.isInitialized(votes) ? votes.size() : null;
+
+        List<Meal> meals = restaurant.getMeals();
+        return new RestaurantTo(restaurant.getName(), Hibernate.isInitialized(meals) ? meals : null, rating);
     }
 
     public static List<RestaurantTo> getTos(Collection<Restaurant> restaurants) {
