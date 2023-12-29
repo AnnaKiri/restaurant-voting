@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.annakirillova.restaurantvoting.model.Restaurant;
@@ -29,49 +28,50 @@ public class AdminRestaurantController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Restaurant> register(@Valid @RequestBody Restaurant restaurant) {
-        log.info("create {}", restaurant);
+    public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody Restaurant restaurant) {
+        log.info("create a restaurant {}", restaurant);
         Restaurant created = repository.save(restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL).build().toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @DeleteMapping("/{restaurantId}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable int restaurantId) {
-        log.info("delete {}", restaurantId);
-        repository.delete(restaurantId);
+    public void delete(@PathVariable int id) {
+        log.info("delete the restaurant {}", id);
+        repository.delete(id);
     }
 
-    @PutMapping(value = "/{restaurantId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Transactional
-    public void update(@PathVariable int restaurantId, @Valid @RequestBody Restaurant restaurant) {
-        log.info("update {} with id={}", restaurant, restaurantId);
-        restaurant.setId(restaurantId);
+    public void update(@PathVariable int id, @Valid @RequestBody Restaurant restaurant) {
+        log.info("update the restaurant {} with id={}", restaurant, id);
+        restaurant.setId(id);
         repository.save(restaurant);
     }
 
     @GetMapping
     public List<RestaurantTo> getAllWithVotes(@RequestParam @Nullable Boolean votes) {
-        if (votes == null) {
-            log.info("getAll");
-            return RestaurantUtil.getTos(repository.getAll());
-        } else {
-            log.info("getAllWithVotes");
+        boolean isVotesNeeded = votes != null && votes;
+        if (isVotesNeeded) {
+            log.info("get all restaurants with votes");
             return RestaurantUtil.getTos(repository.getAllWithVotes());
+        } else {
+            log.info("get all restaurant");
+            return RestaurantUtil.getTos(repository.getAll());
         }
     }
 
-    @GetMapping("/{restaurantId}")
-    public RestaurantTo getWithMeals(@PathVariable int restaurantId, @RequestParam @Nullable Boolean meals) {
-        if (meals == null) {
-            log.info("get {}", restaurantId);
-            return RestaurantUtil.createTo(repository.get(restaurantId));
+    @GetMapping("/{id}")
+    public RestaurantTo getWithMeals(@PathVariable int id, @RequestParam @Nullable Boolean meals) {
+        boolean isMealsNeeded = meals != null && meals;
+        if (isMealsNeeded) {
+            log.info("get the restaurant {} with meals", id);
+            return RestaurantUtil.createTo(repository.getWithMeals(id));
         } else {
-            log.info("getWithMeals {}", restaurantId);
-            return RestaurantUtil.createTo(repository.getWithMeals(restaurantId));
+            log.info("get the restaurant {}", id);
+            return RestaurantUtil.createTo(repository.get(id));
         }
 
     }

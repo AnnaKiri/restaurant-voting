@@ -22,15 +22,15 @@ public class ProfileRestaurantController {
     @Autowired
     private DataJpaRestaurantRepository repository;
 
-    @GetMapping("/{restaurantId}/with-meals-and-rating")
-    public RestaurantTo getWithMealsAndRating(@PathVariable int restaurantId) {
-        log.info("get meals and rating for restaurant {}", restaurantId);
-        return RestaurantUtil.createTo(repository.getWithMealsAndVotes(restaurantId));
+    @GetMapping("/{id}/with-meals-and-rating")
+    public RestaurantTo getWithMealsAndRating(@PathVariable int id) {
+        log.info("get the restaurant {} with meals and rating", id);
+        return RestaurantUtil.createTo(repository.getWithMealsAndVotes(id));
     }
 
     @GetMapping("/with-rating")
     public List<RestaurantTo> getAllWithRating() {
-        log.info("get rating for restaurants");
+        log.info("get restaurants with rating");
         return RestaurantUtil.getTos(repository.getAllWithVotes());
     }
 }

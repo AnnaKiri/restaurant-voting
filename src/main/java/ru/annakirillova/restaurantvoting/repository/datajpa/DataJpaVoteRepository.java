@@ -58,7 +58,7 @@ public class DataJpaVoteRepository {
         return voteRepository.getAllByDate(restaurantId, date);
     }
 
-    public List<Vote> getBetweenHalfOpen(LocalDate startDate, LocalDate endDate, int restaurantId) {
+    public List<Vote> getAllBetweenHalfOpen(LocalDate startDate, LocalDate endDate, int restaurantId) {
         return voteRepository.getBetweenHalfOpen(startDate, endDate, restaurantId);
     }
 }

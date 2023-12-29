@@ -26,7 +26,7 @@ public class ProfileVoteController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Vote> register(@PathVariable int restaurantId, @AuthenticationPrincipal AuthUser authUser) {
-        log.info("voting {}", authUser);
+        log.info("The user {} votes for the restaurant {}", authUser.getUser().id(), restaurantId);
         Vote created = repository.save(restaurantId, authUser.id());
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")

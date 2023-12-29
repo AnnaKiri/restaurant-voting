@@ -25,7 +25,7 @@ public class AdminUserController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> createWithLocation(@Valid @RequestBody User user) {
-        log.info("create {}", user);
+        log.info("create a user {}", user);
         User created = repository.save(user);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
@@ -36,24 +36,26 @@ public class AdminUserController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
+        log.info("delete the user {}", id);
         repository.delete(id);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody User user, @PathVariable int id) {
-        log.info("update {} with id={}", user, id);
+        log.info("update the user {} with id={}", user, id);
         repository.save(user);
     }
 
     @GetMapping("/{id}")
     public User get(@PathVariable int id) {
+        log.info("get the user with id={}", id);
         return repository.get(id);
     }
 
     @GetMapping
     public List<User> getAll() {
-        log.info("getAll");
+        log.info("get all users");
         return repository.getAll();
     }
 }
