@@ -17,12 +17,12 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
     @Query("DELETE FROM Restaurant r WHERE r.id = :id")
     int delete(@Param("id") int id);
 
-    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.votes v WHERE v.date = :date")
+    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.votes v WHERE v.date = :date OR v.date IS NULL")
     List<Restaurant> getAllWithVotesByDate(@Param("date") LocalDate date);
 
-    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.meals m WHERE r.id = :id AND m.date = :date")
+    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.meals m WHERE r.id = :id AND (m.date = :date OR m.date IS NULL)")
     Restaurant getWithMealsByDate(@Param("id") int id, @Param("date") LocalDate date);
 
-    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.meals m LEFT JOIN FETCH r.votes v WHERE r.id = :id AND m.date = :date AND v.date = :date")
-    Restaurant getWithMealsAndVotesByDate(@Param("id") int id, @Param("date") LocalDate date);
+    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.votes v WHERE r.id = :id AND (v.date = :date OR v.date IS NULL)")
+    Restaurant getWithVotesByDate(@Param("id") int id, @Param("date") LocalDate date);
 }

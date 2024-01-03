@@ -1,5 +1,6 @@
 package ru.annakirillova.restaurantvoting.web.restaurant;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.annakirillova.restaurantvoting.model.Restaurant;
 import ru.annakirillova.restaurantvoting.repository.datajpa.DataJpaRestaurantRepository;
 import ru.annakirillova.restaurantvoting.to.RestaurantTo;
 import ru.annakirillova.restaurantvoting.util.RestaurantUtil;
@@ -23,9 +25,14 @@ public class UserRestaurantController {
     private DataJpaRestaurantRepository repository;
 
     @GetMapping("/{id}/with-meals-and-rating")
+    @Transactional
     public RestaurantTo getWithMealsAndRating(@PathVariable int id) {
         log.info("get the restaurant {} with meals and rating", id);
-        return RestaurantUtil.createTo(repository.getWithMealsAndVotesToday(id));
+        Restaurant restaurantWithMeals = repository.getWithMealsToday(id);
+        Restaurant restaurantWithVotes = repository.getWithVotesToday(id);
+        RestaurantTo restaurantTo = RestaurantUtil.createTo(restaurantWithVotes);
+        restaurantTo.setMeals(restaurantWithMeals.getMeals());
+        return restaurantTo;
     }
 
     @GetMapping("/with-rating")

@@ -23,7 +23,8 @@ public class VoteTo extends BaseTo {
     @NotNull
     private LocalDate date;
 
-    public VoteTo(Integer userId, Integer restaurantId, LocalDate date) {
+    public VoteTo(Integer id, Integer userId, Integer restaurantId, LocalDate date) {
+        super(id);
         this.userId = userId;
         this.restaurantId = restaurantId;
         this.date = date;

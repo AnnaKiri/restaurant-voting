@@ -18,7 +18,7 @@ public class RestaurantUtil {
         Integer rating = Hibernate.isInitialized(votes) ? votes.size() : null;
 
         List<Meal> meals = restaurant.getMeals();
-        return new RestaurantTo(restaurant.getName(), Hibernate.isInitialized(meals) ? meals : null, rating);
+        return new RestaurantTo(restaurant.getId(), restaurant.getName(), Hibernate.isInitialized(meals) ? meals : null, rating);
     }
 
     public static List<RestaurantTo> getTos(Collection<Restaurant> restaurants) {

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.annakirillova.restaurantvoting.model.Vote;
 import ru.annakirillova.restaurantvoting.repository.datajpa.DataJpaVoteRepository;
+import ru.annakirillova.restaurantvoting.to.VoteTo;
+import ru.annakirillova.restaurantvoting.util.VoteUtil;
 import ru.annakirillova.restaurantvoting.web.AuthUser;
 
 import java.net.URI;
@@ -25,12 +27,12 @@ public class UserVoteController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Vote> register(@PathVariable int restaurantId, @AuthenticationPrincipal AuthUser authUser) {
+    public ResponseEntity<VoteTo> register(@PathVariable int restaurantId, @AuthenticationPrincipal AuthUser authUser) {
         log.info("The user {} votes for the restaurant {}", authUser.getUser().id(), restaurantId);
         Vote created = repository.save(restaurantId, authUser.id());
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
-                .buildAndExpand(created.getId()).toUri();
-        return ResponseEntity.created(uriOfNewResource).body(created);
+                .buildAndExpand(restaurantId, created.getId()).toUri();
+        return ResponseEntity.created(uriOfNewResource).body(VoteUtil.createTo(created));
     }
 }

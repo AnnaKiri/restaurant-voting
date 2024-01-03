@@ -34,7 +34,7 @@ public class AdminMealController {
         Meal created = repository.save(meal, restaurantId);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
-                .buildAndExpand(created.getId()).toUri();
+                .buildAndExpand(restaurantId, created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
@@ -71,7 +71,7 @@ public class AdminMealController {
                                  @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
                                  @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         log.info("get all meals between dates({} - {}) of the restaurant {}", startDate, endDate, restaurantId);
-        return repository.getBetweenHalfOpen(startDate, endDate, restaurantId);
+        return repository.getMealsBetweenDates(startDate, endDate, restaurantId);
     }
 
     @GetMapping("/{mealId}")

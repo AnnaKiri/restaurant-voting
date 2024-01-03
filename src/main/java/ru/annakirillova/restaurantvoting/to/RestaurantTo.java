@@ -20,11 +20,12 @@ public class RestaurantTo extends BaseTo {
     @Size(min = 2, max = 100)
     private final String name;
 
-    private final List<Meal> meals;
+    private List<Meal> meals;
 
     private final Integer rating;
 
-    public RestaurantTo(String name, List<Meal> meals, Integer rating) {
+    public RestaurantTo(Integer id, String name, List<Meal> meals, Integer rating) {
+        super(id);
         this.name = name;
         this.meals = meals;
         this.rating = rating;

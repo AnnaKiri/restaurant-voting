@@ -29,7 +29,8 @@ public class DataJpaMealRepository {
             return null;
         }
         meal.setRestaurant(restaurantRepository.getReferenceById(restaurantId));
-        return mealRepository.save(meal);
+        Meal savedMeal = mealRepository.save(meal);
+        return savedMeal;
     }
 
     @Transactional
@@ -53,8 +54,8 @@ public class DataJpaMealRepository {
         return mealRepository.getAll(restaurantId);
     }
 
-    public List<Meal> getBetweenHalfOpen(LocalDate startDate, LocalDate endDate, int restaurantId) {
-        return mealRepository.getBetweenHalfOpen(startDate, endDate, restaurantId);
+    public List<Meal> getMealsBetweenDates(LocalDate startDate, LocalDate endDate, int restaurantId) {
+        return mealRepository.getMealsBetweenDates(startDate, endDate, restaurantId);
     }
 
     public Optional<Meal> get(int id) {

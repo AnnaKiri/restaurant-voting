@@ -24,6 +24,6 @@ public interface MealRepository extends JpaRepository<Meal, Integer> {
     @Query("SELECT m from Meal m WHERE m.date = :date AND m.restaurant.id = :restaurantId ORDER BY m.date DESC")
     List<Meal> getAllToday(@Param("date") LocalDate date, @Param("restaurantId") int restaurantId);
 
-    @Query("SELECT m from Meal m WHERE m.date >= :startDate AND m.date < :endDate AND m.restaurant.id = :restaurantId ORDER BY m.date DESC")
-    List<Meal> getBetweenHalfOpen(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("restaurantId") int restaurantId);
+    @Query("SELECT m from Meal m WHERE m.date >= :startDate AND m.date <= :endDate AND m.restaurant.id = :restaurantId ORDER BY m.date DESC")
+    List<Meal> getMealsBetweenDates(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("restaurantId") int restaurantId);
 }

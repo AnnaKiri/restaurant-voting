@@ -45,7 +45,7 @@ public class DataJpaRestaurantRepository {
         return restaurantRepository.getWithMealsByDate(id, LocalDate.now());
     }
 
-    public Restaurant getWithMealsAndVotesToday(int id) {
-        return restaurantRepository.getWithMealsAndVotesByDate(id, LocalDate.now());
+    public Restaurant getWithVotesToday(int id) {
+        return restaurantRepository.getWithVotesByDate(id, LocalDate.now());
     }
 }
