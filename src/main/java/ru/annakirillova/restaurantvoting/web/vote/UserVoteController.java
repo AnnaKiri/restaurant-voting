@@ -15,10 +15,10 @@ import ru.annakirillova.restaurantvoting.web.AuthUser;
 import java.net.URI;
 
 @RestController
-@RequestMapping(value = ProfileVoteController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = UserVoteController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
-public class ProfileVoteController {
-    static final String REST_URL = "/profile/restaurants/{restaurantId}/votes";
+public class UserVoteController {
+    static final String REST_URL = "/user/restaurants/{restaurantId}/votes";
 
     @Autowired
     private DataJpaVoteRepository repository;

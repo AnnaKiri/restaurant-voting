@@ -14,10 +14,10 @@ import ru.annakirillova.restaurantvoting.util.RestaurantUtil;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = ProfileRestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = UserRestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
-public class ProfileRestaurantController {
-    static final String REST_URL = "/profile/restaurants";
+public class UserRestaurantController {
+    static final String REST_URL = "/user/restaurants";
 
     @Autowired
     private DataJpaRestaurantRepository repository;

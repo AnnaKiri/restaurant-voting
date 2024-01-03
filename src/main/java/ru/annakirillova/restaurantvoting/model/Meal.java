@@ -22,7 +22,7 @@ public class Meal extends AbstractBaseEntity {
 
     @Column(name = "date", nullable = false, columnDefinition = "date default current_date")
     @NotNull
-    private LocalDate date;
+    private LocalDate date = LocalDate.now();
 
     @Column(name = "description", nullable = false)
     @NotBlank

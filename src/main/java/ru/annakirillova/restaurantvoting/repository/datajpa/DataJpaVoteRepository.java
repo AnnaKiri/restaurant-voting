@@ -46,8 +46,8 @@ public class DataJpaVoteRepository {
         return voteRepository.delete(id) != 0;
     }
 
-    public Optional<Vote> get(int id) {
-        return voteRepository.findById(id);
+    public Vote get(int id) {
+        return voteRepository.findById(id).orElse(null);
     }
 
     public List<Vote> getAllByRestaurant(int restaurantId) {

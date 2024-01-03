@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Entity
 @Table(name = "vote",
@@ -29,23 +28,18 @@ public class Vote extends AbstractBaseEntity {
 
     @Column(name = "date", nullable = false, columnDefinition = "date default current_date", updatable = false)
     @NotNull
-    private LocalDate date;
-
-    @Column(name = "time", nullable = false, columnDefinition = "time default current_time")
-    @NotNull
-    private LocalTime time;
+    private LocalDate date = LocalDate.now();
 
     public Vote(User user, Restaurant restaurant) {
         this.user = user;
         this.restaurant = restaurant;
     }
 
-    public Vote(Integer id, User user, Restaurant restaurant, LocalDate date, LocalTime time) {
+    public Vote(Integer id, User user, Restaurant restaurant, LocalDate date) {
         super(id);
         this.user = user;
         this.restaurant = restaurant;
         this.date = date;
-        this.time = time;
     }
 
     @Override
@@ -55,7 +49,6 @@ public class Vote extends AbstractBaseEntity {
                 ", user_id=" + user.getId() +
                 ", restaurant_id=" + restaurant.getId() +
                 ", date=" + date +
-                ", time=" + time +
                 '}';
     }
 }
