@@ -7,8 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.annakirillova.restaurantvoting.config.SecurityConfig;
 import ru.annakirillova.restaurantvoting.model.User;
 import ru.annakirillova.restaurantvoting.repository.datajpa.DataJpaUserRepository;
 import ru.annakirillova.restaurantvoting.to.UserTo;
@@ -38,10 +40,13 @@ public class ProfileController {
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     public void update(@RequestBody @Valid UserTo userTo, @AuthenticationPrincipal AuthUser authUser) {
         log.info("update the user {} with id={}", userTo, authUser.id());
         User user = authUser.getUser();
-        repository.save(UsersUtil.updateFromTo(user, userTo));
+        User updatedUser = UsersUtil.updateFromTo(user, userTo);
+        updatedUser.setPassword(SecurityConfig.PASSWORD_ENCODER.encode(updatedUser.getPassword()));
+        repository.save(updatedUser);
     }
 
     @GetMapping

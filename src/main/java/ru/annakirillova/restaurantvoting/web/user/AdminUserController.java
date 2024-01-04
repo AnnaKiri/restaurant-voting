@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.annakirillova.restaurantvoting.config.SecurityConfig;
 import ru.annakirillova.restaurantvoting.model.User;
 import ru.annakirillova.restaurantvoting.repository.datajpa.DataJpaUserRepository;
 
@@ -42,8 +44,11 @@ public class AdminUserController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     public void update(@Valid @RequestBody User user, @PathVariable int id) {
         log.info("update the user {} with id={}", user, id);
+        user.setId(id);
+        user.setPassword(SecurityConfig.PASSWORD_ENCODER.encode(user.getPassword()));
         repository.save(user);
     }
 
