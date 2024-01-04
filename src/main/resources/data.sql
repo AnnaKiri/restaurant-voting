@@ -33,7 +33,19 @@ VALUES (1, 'Antipasto Salad', 500),
        (5, 'Chicken Marsala', 600),
        (5, 'Mango Meringue Cake', 300);
 
+INSERT INTO meal (date, restaurant_id, description, price)
+VALUES ('2024-01-01', 1, 'Olivye salad', 89),
+       ('2024-01-01', 2, 'Shuba salad', 99),
+       ('2024-01-01', 3, 'Zalivnaya ryba', 109),
+       ('2024-01-01', 4, 'Pelmeni', 119),
+       ('2024-01-01', 5, 'Holodec', 129);
+
 INSERT INTO vote (user_id, restaurant_id)
 VALUES (1, 1),
        (2, 1),
        (3, 2);
+
+INSERT INTO vote (date, user_id, restaurant_id)
+VALUES ('2024-01-01', 1, 3),
+       ('2024-01-01', 2, 5),
+       ('2024-01-01', 3, 5);

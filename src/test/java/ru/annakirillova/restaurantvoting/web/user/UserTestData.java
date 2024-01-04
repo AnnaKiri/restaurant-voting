@@ -9,19 +9,14 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import static ru.annakirillova.restaurantvoting.web.vote.VoteTestData.*;
-
 public class UserTestData {
 
     public static final int USER1_ID = 1;
     public static final int ADMIN_ID = 4;
-    public static final int GUEST_ID = 101;
-    public static final int NOT_FOUND = 100;
     public static final String USER1_MAIL = "user1@yandex.ru";
     public static final String USER2_MAIL = "user2@yandex.ru";
     public static final String USER3_MAIL = "user3@yandex.ru";
     public static final String ADMIN_MAIL = "admin@gmail.com";
-    public static final String GUEST_MAIL = "guest@gmail.com";
 
     public static final MatcherFactory.Matcher<User> USER_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(User.class, "registered", "password", "votes");
 
@@ -29,13 +24,6 @@ public class UserTestData {
     public static final User user2 = new User(USER1_ID + 1, "User2", USER2_MAIL, "{noop}password2", Role.USER);
     public static final User user3 = new User(USER1_ID + 2, "User3", USER3_MAIL, "{noop}password3", Role.USER);
     public static final User admin = new User(ADMIN_ID, "Admin", ADMIN_MAIL, "{noop}admin", Role.ADMIN);
-    public static final User guest = new User(GUEST_ID, "Guest", GUEST_MAIL, "guest");
-
-    static {
-        user1.setVotes(List.of(vote1));
-        user2.setVotes(List.of(vote2));
-        user3.setVotes(List.of(vote3));
-    }
 
     public static User getNew() {
         return new User(null, "NewUser", "newemail@yandex.ru", "newpassword", false, new Date(), Collections.singleton(Role.USER));
