@@ -9,8 +9,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static ru.annakirillova.restaurantvoting.web.meal.MealTestData.*;
-import static ru.annakirillova.restaurantvoting.web.vote.VoteTestData.votesForRestaurant1;
-import static ru.annakirillova.restaurantvoting.web.vote.VoteTestData.votesForRestaurant2;
+import static ru.annakirillova.restaurantvoting.web.vote.VoteTestData.vote1;
+import static ru.annakirillova.restaurantvoting.web.vote.VoteTestData.vote2;
 
 public class RestaurantTestData {
 
@@ -40,9 +40,11 @@ public class RestaurantTestData {
     static {
         chekhov.setVotes(new ArrayList<>());
         dante.setVotes(new ArrayList<>());
-        dickinson.setVotes(votesForRestaurant1);
+        dickinson.setVotes(new ArrayList<>());
         hemingway.setVotes(new ArrayList<>());
-        voltaire.setVotes(votesForRestaurant2);
+        voltaire.setVotes(new ArrayList<>());
+        dickinson.getVotes().add(vote1);
+        dickinson.getVotes().add(vote2);
 
         dickinson.setMeals(List.of(meal1, meal2, meal3));
         voltaire.setMeals(List.of(meal4, meal5, meal6));

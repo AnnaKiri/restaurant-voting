@@ -42,10 +42,10 @@ VALUES ('2024-01-01', 1, 'Olivye salad', 89),
 
 INSERT INTO vote (user_id, restaurant_id)
 VALUES (1, 1),
-       (2, 1),
-       (3, 2);
+       (2, 1);
 
 INSERT INTO vote (date, user_id, restaurant_id)
 VALUES ('2024-01-01', 1, 3),
        ('2024-01-01', 2, 5),
-       ('2024-01-01', 3, 5);
+       ('2024-01-01', 3, 5),
+       ('2024-01-02', 3, 1);

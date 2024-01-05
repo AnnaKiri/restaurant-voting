@@ -12,13 +12,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.annakirillova.restaurantvoting.web.restaurant.RestaurantTestData.*;
 import static ru.annakirillova.restaurantvoting.web.restaurant.UserRestaurantController.REST_URL;
-import static ru.annakirillova.restaurantvoting.web.user.UserTestData.ADMIN_MAIL;
+import static ru.annakirillova.restaurantvoting.web.user.UserTestData.USER1_MAIL;
 
 public class UserRestaurantControllerTest extends AbstractControllerTest {
     private static final String REST_URL_SLASH = REST_URL + '/';
 
     @Test
-    @WithUserDetails(value = ADMIN_MAIL)
+    @WithUserDetails(value = USER1_MAIL)
     void getAllWithRating() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "with-rating"))
                 .andDo(print())
@@ -28,7 +28,7 @@ public class UserRestaurantControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = ADMIN_MAIL)
+    @WithUserDetails(value = USER1_MAIL)
     void getWithMealsAndRating() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + RESTAURANT1_ID + "/with-meals-and-rating"))
                 .andDo(print())

@@ -18,23 +18,22 @@ public class VoteTestData {
 
     public static final Vote vote1 = new Vote(VOTE1_ID, user1, dickinson, LocalDate.now());
     public static final Vote vote2 = new Vote(VOTE1_ID + 1, user2, dickinson, LocalDate.now());
-    public static final Vote vote3 = new Vote(VOTE1_ID + 2, user3, voltaire, LocalDate.now());
 
-    public static final Vote newYearVote1 = new Vote(VOTE1_ID, user1, dante, LocalDate.of(2024, 1, 1));
-    public static final Vote newYearVote2 = new Vote(VOTE1_ID, user2, hemingway, LocalDate.of(2024, 1, 1));
-    public static final Vote newYearVote3 = new Vote(VOTE1_ID, user3, hemingway, LocalDate.of(2024, 1, 1));
+    public static final Vote newYearVote1 = new Vote(VOTE1_ID + 2, user1, dante, LocalDate.of(2024, 1, 1));
+    public static final Vote newYearVote2 = new Vote(VOTE1_ID + 3, user2, hemingway, LocalDate.of(2024, 1, 1));
+    public static final Vote newYearVote3 = new Vote(VOTE1_ID + 4, user3, hemingway, LocalDate.of(2024, 1, 1));
+    public static final Vote newYearVote4 = new Vote(VOTE1_ID + 5, user3, dickinson, LocalDate.of(2024, 1, 2));
 
-    public static final List<Vote> votesForRestaurant1 = List.of(vote1, vote2);
-    public static final List<Vote> votesForRestaurant2 = List.of(vote3);
+    public static final List<Vote> votesForRestaurant1Today = List.of(vote1, vote2);
+    public static final List<Vote> votesForRestaurant1AllTime = List.of(vote1, vote2, newYearVote4);
 
     public static MatcherFactory.Matcher<VoteTo> VOTE_TO_MATCHER = MatcherFactory.usingEqualsComparator(VoteTo.class);
 
     public static Vote getNew() {
-        return new Vote(user1, chekhov);
+        return new Vote(user3, chekhov);
     }
 
     public static Vote getUpdated() {
-        return new Vote(user1, hemingway);
+        return new Vote(user1, voltaire);
     }
-
 }
