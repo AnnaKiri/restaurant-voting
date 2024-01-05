@@ -57,7 +57,7 @@ class MealControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
-        MEAL_MATCHER.assertMatch(getUpdated(), updated);
+        MEAL_MATCHER.assertMatch(mealRepository.get(updated.getId()).get(), getUpdated());
     }
 
     @Test
@@ -72,7 +72,7 @@ class MealControllerTest extends AbstractControllerTest {
         int newId = created.id();
         newMeal.setId(newId);
         MEAL_MATCHER.assertMatch(created, newMeal);
-        MEAL_MATCHER.assertMatch(created, newMeal);
+        MEAL_MATCHER.assertMatch(mealRepository.get(newId).get(), newMeal);
     }
 
     @Test

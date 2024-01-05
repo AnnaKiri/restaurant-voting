@@ -4,10 +4,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.annakirillova.restaurantvoting.model.Restaurant;
+import ru.annakirillova.restaurantvoting.model.Vote;
 import ru.annakirillova.restaurantvoting.repository.RestaurantRepository;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class DataJpaRestaurantRepository {
@@ -29,8 +33,20 @@ public class DataJpaRestaurantRepository {
         return restaurantRepository.delete(id) != 0;
     }
 
+    @Transactional
     public List<Restaurant> getAllWithVotesToday() {
-        return restaurantRepository.getAllWithVotesByDate(LocalDate.now());
+        Map<Integer, List<Vote>> votesMap = new LinkedHashMap<>();
+        for (Restaurant r : restaurantRepository.getAllWithVotesByDate(LocalDate.now())) {
+            votesMap.put(r.getId(), r.getVotes());
+        }
+
+        List<Restaurant> restaurantsWithVotes = getAll();
+        for (Restaurant r : restaurantsWithVotes) {
+            votesMap.computeIfAbsent(r.getId(), id -> new ArrayList<>());
+            r.setVotes(votesMap.get(r.getId()));
+        }
+
+        return restaurantsWithVotes;
     }
 
     public List<Restaurant> getAll() {

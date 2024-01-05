@@ -14,7 +14,7 @@ public class VoteTestData {
 
     public static final int VOTE1_ID = 1;
 
-    public static final MatcherFactory.Matcher<Vote> MEAL_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Vote.class, "user", "restaurant");
+    public static final MatcherFactory.Matcher<Vote> VOTE_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Vote.class, "user", "restaurant");
 
     public static final Vote vote1 = new Vote(VOTE1_ID, user1, dickinson, LocalDate.now());
     public static final Vote vote2 = new Vote(VOTE1_ID + 1, user2, dickinson, LocalDate.now());
@@ -27,7 +27,7 @@ public class VoteTestData {
     public static final List<Vote> votesForRestaurant1 = List.of(vote1, vote2);
     public static final List<Vote> votesForRestaurant2 = List.of(vote3);
 
-    public static MatcherFactory.Matcher<VoteTo> RESTAURANT_TO_MATCHER = MatcherFactory.usingEqualsComparator(VoteTo.class);
+    public static MatcherFactory.Matcher<VoteTo> VOTE_TO_MATCHER = MatcherFactory.usingEqualsComparator(VoteTo.class);
 
     public static Vote getNew() {
         return new Vote(user1, chekhov);
