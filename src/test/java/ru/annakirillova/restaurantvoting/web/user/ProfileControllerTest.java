@@ -13,6 +13,7 @@ import ru.annakirillova.restaurantvoting.util.JsonUtil;
 import ru.annakirillova.restaurantvoting.util.UsersUtil;
 import ru.annakirillova.restaurantvoting.web.AbstractControllerTest;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -68,5 +69,16 @@ class ProfileControllerTest extends AbstractControllerTest {
                 .andExpect(status().isNoContent());
 
         USER_MATCHER.assertMatch(userService.get(USER1_ID), UsersUtil.updateFromTo(new User(user1), updatedTo));
+    }
+
+    @Test
+    @WithUserDetails(value = USER1_MAIL)
+    void updateDuplicate() throws Exception {
+        UserTo updatedTo = new UserTo(null, "newName", ADMIN_MAIL, "newPassword");
+        perform(MockMvcRequestBuilders.put(REST_URL).contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(updatedTo)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(content().string(containsString(UniqueMailValidator.EXCEPTION_DUPLICATE_EMAIL)));
     }
 }

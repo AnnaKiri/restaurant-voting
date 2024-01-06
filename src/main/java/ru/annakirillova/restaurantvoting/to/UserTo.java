@@ -7,13 +7,14 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import ru.annakirillova.restaurantvoting.HasIdAndEmail;
 import ru.annakirillova.restaurantvoting.validation.NoHtml;
 
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class UserTo extends BaseTo {
+public class UserTo extends BaseTo implements HasIdAndEmail {
 
     @NotBlank
     @Size(min = 2, max = 100)

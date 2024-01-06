@@ -1,8 +1,6 @@
 package ru.annakirillova.restaurantvoting.web.user;
 
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +8,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.annakirillova.restaurantvoting.model.User;
-import ru.annakirillova.restaurantvoting.service.UserService;
 import ru.annakirillova.restaurantvoting.to.UserTo;
 import ru.annakirillova.restaurantvoting.util.UsersUtil;
 import ru.annakirillova.restaurantvoting.web.AuthUser;
@@ -19,12 +16,8 @@ import java.net.URI;
 
 @RestController
 @RequestMapping(value = ProfileController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-@Slf4j
-public class ProfileController {
+public class ProfileController extends AbstractUserController {
     static final String REST_URL = "/profile";
-
-    @Autowired
-    private UserService userService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
