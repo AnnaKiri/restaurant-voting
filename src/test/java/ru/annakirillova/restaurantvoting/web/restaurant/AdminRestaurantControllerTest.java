@@ -7,7 +7,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.annakirillova.restaurantvoting.model.Restaurant;
-import ru.annakirillova.restaurantvoting.repository.datajpa.DataJpaRestaurantRepository;
+import ru.annakirillova.restaurantvoting.service.RestaurantService;
 import ru.annakirillova.restaurantvoting.util.JsonUtil;
 import ru.annakirillova.restaurantvoting.util.RestaurantUtil;
 import ru.annakirillova.restaurantvoting.web.AbstractControllerTest;
@@ -24,14 +24,14 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
     private static final String REST_URL_SLASH = REST_URL + '/';
 
     @Autowired
-    private DataJpaRestaurantRepository restaurantRepository;
+    private RestaurantService restaurantService;
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + RESTAURANT1_ID))
                 .andExpect(status().isNoContent());
-        assertNull(restaurantRepository.get(RESTAURANT1_ID));
+        assertNull(restaurantService.get(RESTAURANT1_ID));
     }
 
     @Test
@@ -42,7 +42,7 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
-        RESTAURANT_MATCHER.assertMatch(restaurantRepository.get(updated.getId()), getUpdated());
+        RESTAURANT_MATCHER.assertMatch(restaurantService.get(updated.getId()), getUpdated());
     }
 
     @Test
@@ -57,7 +57,7 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
         int newId = created.id();
         newRestaurant.setId(newId);
         RESTAURANT_MATCHER.assertMatch(created, newRestaurant);
-        RESTAURANT_MATCHER.assertMatch(restaurantRepository.get(newId), newRestaurant);
+        RESTAURANT_MATCHER.assertMatch(restaurantService.get(newId), newRestaurant);
     }
 
     @Test

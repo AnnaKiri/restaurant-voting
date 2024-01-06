@@ -10,7 +10,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.annakirillova.restaurantvoting.model.Restaurant;
-import ru.annakirillova.restaurantvoting.repository.datajpa.DataJpaRestaurantRepository;
+import ru.annakirillova.restaurantvoting.service.RestaurantService;
 import ru.annakirillova.restaurantvoting.to.RestaurantTo;
 import ru.annakirillova.restaurantvoting.util.RestaurantUtil;
 
@@ -24,13 +24,13 @@ public class AdminRestaurantController {
     static final String REST_URL = "/admin/restaurants";
 
     @Autowired
-    private DataJpaRestaurantRepository repository;
+    private RestaurantService restaurantService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody Restaurant restaurant) {
         log.info("create a restaurant {}", restaurant);
-        Restaurant created = repository.save(restaurant);
+        Restaurant created = restaurantService.create(restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL).build().toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
@@ -40,15 +40,14 @@ public class AdminRestaurantController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
         log.info("delete the restaurant {}", id);
-        repository.delete(id);
+        restaurantService.delete(id);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@PathVariable int id, @Valid @RequestBody Restaurant restaurant) {
         log.info("update the restaurant {} with id={}", restaurant, id);
-        restaurant.setId(id);
-        repository.save(restaurant);
+        restaurantService.update(id, restaurant);
     }
 
     @GetMapping
@@ -56,10 +55,10 @@ public class AdminRestaurantController {
         boolean isVotesNeeded = votes != null && votes;
         if (isVotesNeeded) {
             log.info("get all restaurants with votes");
-            return RestaurantUtil.getTos(repository.getAllWithVotesToday());
+            return restaurantService.getAllWithVotesToday();
         } else {
             log.info("get all restaurant");
-            return RestaurantUtil.getTos(repository.getAll());
+            return RestaurantUtil.getTos(restaurantService.getAll());
         }
     }
 
@@ -68,11 +67,10 @@ public class AdminRestaurantController {
         boolean isMealsNeeded = meals != null && meals;
         if (isMealsNeeded) {
             log.info("get the restaurant {} with meals", id);
-            return RestaurantUtil.createTo(repository.getWithMealsToday(id));
+            return RestaurantUtil.createTo(restaurantService.getWithMealsToday(id));
         } else {
             log.info("get the restaurant {}", id);
-            return RestaurantUtil.createTo(repository.get(id));
+            return RestaurantUtil.createTo(restaurantService.get(id));
         }
-
     }
 }
