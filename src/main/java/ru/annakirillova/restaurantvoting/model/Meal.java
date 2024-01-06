@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.validator.constraints.Range;
+import ru.annakirillova.restaurantvoting.validation.NoHtml;
 
 import java.time.LocalDate;
 
@@ -27,6 +28,7 @@ public class Meal extends AbstractBaseEntity {
     @Column(name = "description", nullable = false)
     @NotBlank
     @Size(min = 2, max = 128)
+    @NoHtml
     private String description;
 
     @Column(name = "price", nullable = false)

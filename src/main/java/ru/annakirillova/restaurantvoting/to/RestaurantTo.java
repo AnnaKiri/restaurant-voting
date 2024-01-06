@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import ru.annakirillova.restaurantvoting.model.Meal;
+import ru.annakirillova.restaurantvoting.validation.NoHtml;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class RestaurantTo extends BaseTo {
 
     @NotBlank
     @Size(min = 2, max = 100)
+    @NoHtml
     private final String name;
 
     private List<Meal> meals;

@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import ru.annakirillova.restaurantvoting.validation.NoHtml;
 
 @Getter
 @Setter
@@ -16,11 +17,13 @@ public class UserTo extends BaseTo {
 
     @NotBlank
     @Size(min = 2, max = 100)
+    @NoHtml
     private String name;
 
     @Email
     @NotBlank
     @Size(max = 100)
+    @NoHtml
     private String email;
 
     @NotBlank

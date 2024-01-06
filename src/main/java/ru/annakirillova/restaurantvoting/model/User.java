@@ -12,8 +12,8 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.util.CollectionUtils;
 import ru.annakirillova.restaurantvoting.HasIdAndEmail;
+import ru.annakirillova.restaurantvoting.validation.NoHtml;
 
-import java.io.Serializable;
 import java.util.*;
 
 @Entity
@@ -22,12 +22,13 @@ import java.util.*;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(callSuper = true, exclude = {"votes"})
-public class User extends AbstractNamedEntity implements HasIdAndEmail, Serializable {
+public class User extends AbstractNamedEntity implements HasIdAndEmail {
 
     @Column(name = "email", nullable = false, unique = true)
     @Email
     @NotBlank
     @Size(max = 128)
+    @NoHtml
     private String email;
 
     @Column(name = "password", nullable = false)
