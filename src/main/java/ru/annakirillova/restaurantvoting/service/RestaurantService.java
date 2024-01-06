@@ -16,6 +16,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static ru.annakirillova.restaurantvoting.validation.ValidationUtil.assureIdConsistent;
+import static ru.annakirillova.restaurantvoting.validation.ValidationUtil.checkNew;
+
 @Service
 @AllArgsConstructor
 public class RestaurantService {
@@ -24,6 +27,7 @@ public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
 
     public Restaurant create(Restaurant restaurant) {
+        checkNew(restaurant);
         return restaurantRepository.save(restaurant);
     }
 
@@ -32,7 +36,7 @@ public class RestaurantService {
     }
 
     public void update(int id, Restaurant restaurant) {
-        restaurant.setId(id);
+        assureIdConsistent(restaurant, id);
         restaurantRepository.save(restaurant);
     }
 

@@ -18,13 +18,13 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("DELETE FROM User u WHERE u.id= :id")
     int delete(@Param("id") int id);
 
+    @Query("SELECT u FROM User u WHERE u.email = LOWER(:email)")
+    Optional<User> findByEmailIgnoreCase(String email);
+
     @Transactional
     default User prepareAndSave(User user) {
         user.setPassword(PASSWORD_ENCODER.encode(user.getPassword()));
         user.setEmail(user.getEmail().toLowerCase());
         return save(user);
     }
-
-    @Query("SELECT u FROM User u WHERE u.email = LOWER(:email)")
-    Optional<User> findByEmailIgnoreCase(String email);
 }

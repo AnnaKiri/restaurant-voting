@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static ru.annakirillova.restaurantvoting.validation.ValidationUtil.assureIdConsistent;
+import static ru.annakirillova.restaurantvoting.validation.ValidationUtil.checkNew;
+
 @Service
 @AllArgsConstructor
 public class MealService {
@@ -26,9 +29,7 @@ public class MealService {
 
     @Transactional
     public Meal create(int restaurantId, Meal meal) {
-        if (!meal.isNew() && get(meal.id()).isEmpty()) {
-            return null;
-        }
+        checkNew(meal);
         meal.setRestaurant(restaurantRepository.getReferenceById(restaurantId));
         return mealRepository.save(meal);
     }
@@ -39,6 +40,7 @@ public class MealService {
         Restaurant restaurant = restaurantRepository.getReferenceById(restaurantId);
         for (int i = 0; i < meals.size(); i++) {
             Meal meal = meals.get(i);
+            checkNew(meal);
             meal.setRestaurant(restaurant);
             savedMeals.add(mealRepository.save(meal));
         }
@@ -51,7 +53,7 @@ public class MealService {
 
     @Transactional
     public void update(int restaurantId, Meal meal, int mealId) {
-        meal.setId(mealId);
+        assureIdConsistent(meal, mealId);
         create(restaurantId, meal);
     }
 

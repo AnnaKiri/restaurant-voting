@@ -11,6 +11,9 @@ import ru.annakirillova.restaurantvoting.util.UsersUtil;
 import java.util.List;
 import java.util.Optional;
 
+import static ru.annakirillova.restaurantvoting.validation.ValidationUtil.assureIdConsistent;
+import static ru.annakirillova.restaurantvoting.validation.ValidationUtil.checkNew;
+
 @Service
 @AllArgsConstructor
 public class UserService {
@@ -36,11 +39,12 @@ public class UserService {
     }
 
     public void updateFull(User user, int id) {
-        user.setId(id);
+        assureIdConsistent(user, id);
         userRepository.prepareAndSave(user);
     }
 
     public User create(User user) {
+        checkNew(user);
         return userRepository.prepareAndSave(user);
     }
 

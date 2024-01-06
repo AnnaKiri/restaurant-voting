@@ -56,7 +56,6 @@ public class AdminMealController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@PathVariable int restaurantId, @Valid @RequestBody Meal meal, @PathVariable int mealId) {
         log.info("update the meal {} for the restaurant {}", meal, restaurantId);
-        meal.setId(mealId);
         mealService.update(restaurantId, meal, mealId);
     }
 
