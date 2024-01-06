@@ -7,7 +7,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.annakirillova.restaurantvoting.model.User;
-import ru.annakirillova.restaurantvoting.repository.datajpa.DataJpaUserRepository;
+import ru.annakirillova.restaurantvoting.service.UserService;
 import ru.annakirillova.restaurantvoting.to.UserTo;
 import ru.annakirillova.restaurantvoting.util.JsonUtil;
 import ru.annakirillova.restaurantvoting.util.UsersUtil;
@@ -22,7 +22,7 @@ import static ru.annakirillova.restaurantvoting.web.user.UserTestData.*;
 class ProfileControllerTest extends AbstractControllerTest {
 
     @Autowired
-    private DataJpaUserRepository repository;
+    private UserService userService;
 
     @Test
     @WithUserDetails(value = USER1_MAIL)
@@ -38,7 +38,7 @@ class ProfileControllerTest extends AbstractControllerTest {
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL))
                 .andExpect(status().isNoContent());
-        USER_MATCHER.assertMatch(repository.getAll(), admin, user2, user3);
+        USER_MATCHER.assertMatch(userService.getAll(), admin, user2, user3);
     }
 
     @Test
@@ -55,7 +55,7 @@ class ProfileControllerTest extends AbstractControllerTest {
         int newId = created.id();
         newUser.setId(newId);
         USER_MATCHER.assertMatch(created, newUser);
-        USER_MATCHER.assertMatch(repository.get(newId), newUser);
+        USER_MATCHER.assertMatch(userService.get(newId), newUser);
     }
 
     @Test
@@ -67,6 +67,6 @@ class ProfileControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        USER_MATCHER.assertMatch(repository.get(USER1_ID), UsersUtil.updateFromTo(new User(user1), updatedTo));
+        USER_MATCHER.assertMatch(userService.get(USER1_ID), UsersUtil.updateFromTo(new User(user1), updatedTo));
     }
 }

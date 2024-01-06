@@ -7,12 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.annakirillova.restaurantvoting.config.SecurityConfig;
 import ru.annakirillova.restaurantvoting.model.User;
-import ru.annakirillova.restaurantvoting.repository.datajpa.DataJpaUserRepository;
+import ru.annakirillova.restaurantvoting.service.UserService;
 import ru.annakirillova.restaurantvoting.to.UserTo;
 import ru.annakirillova.restaurantvoting.util.UsersUtil;
 import ru.annakirillova.restaurantvoting.web.AuthUser;
@@ -26,13 +24,13 @@ public class ProfileController {
     static final String REST_URL = "/profile";
 
     @Autowired
-    private DataJpaUserRepository repository;
+    private UserService userService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<User> register(@Valid @RequestBody UserTo userTo) {
         log.info("register a new user {}", userTo);
-        User created = repository.save(UsersUtil.createNewFromTo(userTo));
+        User created = userService.create(UsersUtil.createNewFromTo(userTo));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL).build().toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
@@ -40,13 +38,9 @@ public class ProfileController {
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Transactional
     public void update(@RequestBody @Valid UserTo userTo, @AuthenticationPrincipal AuthUser authUser) {
         log.info("update the user {} with id={}", userTo, authUser.id());
-        User user = authUser.getUser();
-        User updatedUser = UsersUtil.updateFromTo(user, userTo);
-        updatedUser.setPassword(SecurityConfig.PASSWORD_ENCODER.encode(updatedUser.getPassword()));
-        repository.save(updatedUser);
+        userService.updatePartially(userTo, authUser.getUser());
     }
 
     @GetMapping
@@ -59,6 +53,6 @@ public class ProfileController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal AuthUser authUser) {
         log.info("delete the user {}", authUser.getUser().id());
-        repository.delete(authUser.id());
+        userService.delete(authUser.id());
     }
 }

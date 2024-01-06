@@ -7,7 +7,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.annakirillova.restaurantvoting.model.User;
-import ru.annakirillova.restaurantvoting.repository.datajpa.DataJpaUserRepository;
+import ru.annakirillova.restaurantvoting.service.UserService;
 import ru.annakirillova.restaurantvoting.web.AbstractControllerTest;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -22,7 +22,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
     private static final String REST_URL_SLASH = REST_URL + '/';
 
     @Autowired
-    private DataJpaUserRepository repository;
+    private UserService userService;
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
@@ -40,7 +40,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + USER1_ID))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertNull(repository.get(USER1_ID));
+        assertNull(userService.get(USER1_ID));
     }
 
     @Test
@@ -53,7 +53,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
                 .content(jsonWithPassword(updated, updated.getPassword())))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        USER_MATCHER.assertMatch(repository.get(USER1_ID), getUpdated());
+        USER_MATCHER.assertMatch(userService.get(USER1_ID), getUpdated());
     }
 
     @Test

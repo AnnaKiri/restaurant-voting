@@ -9,6 +9,8 @@ import ru.annakirillova.restaurantvoting.model.User;
 
 import java.util.Optional;
 
+import static ru.annakirillova.restaurantvoting.config.SecurityConfig.PASSWORD_ENCODER;
+
 @Transactional(readOnly = true)
 public interface UserRepository extends JpaRepository<User, Integer> {
     @Transactional
@@ -16,8 +18,13 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("DELETE FROM User u WHERE u.id= :id")
     int delete(@Param("id") int id);
 
+    @Transactional
+    default User prepareAndSave(User user) {
+        user.setPassword(PASSWORD_ENCODER.encode(user.getPassword()));
+        user.setEmail(user.getEmail().toLowerCase());
+        return save(user);
+    }
+
     @Query("SELECT u FROM User u WHERE u.email = LOWER(:email)")
     Optional<User> findByEmailIgnoreCase(String email);
-
-    User getByEmail(String email);
 }

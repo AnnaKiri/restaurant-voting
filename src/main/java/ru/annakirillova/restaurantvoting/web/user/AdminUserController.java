@@ -6,12 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.annakirillova.restaurantvoting.config.SecurityConfig;
 import ru.annakirillova.restaurantvoting.model.User;
-import ru.annakirillova.restaurantvoting.repository.datajpa.DataJpaUserRepository;
+import ru.annakirillova.restaurantvoting.service.UserService;
 
 import java.net.URI;
 import java.util.List;
@@ -23,12 +21,12 @@ public class AdminUserController {
     static final String REST_URL = "/admin/users";
 
     @Autowired
-    private DataJpaUserRepository repository;
+    private UserService userService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> createWithLocation(@Valid @RequestBody User user) {
         log.info("create a user {}", user);
-        User created = repository.save(user);
+        User created = userService.create(user);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
@@ -39,28 +37,25 @@ public class AdminUserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
         log.info("delete the user {}", id);
-        repository.delete(id);
+        userService.delete(id);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Transactional
     public void update(@Valid @RequestBody User user, @PathVariable int id) {
         log.info("update the user {} with id={}", user, id);
-        user.setId(id);
-        user.setPassword(SecurityConfig.PASSWORD_ENCODER.encode(user.getPassword()));
-        repository.save(user);
+        userService.updateFull(user, id);
     }
 
     @GetMapping("/{id}")
     public User get(@PathVariable int id) {
         log.info("get the user with id={}", id);
-        return repository.get(id);
+        return userService.get(id);
     }
 
     @GetMapping
     public List<User> getAll() {
         log.info("get all users");
-        return repository.getAll();
+        return userService.getAll();
     }
 }

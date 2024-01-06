@@ -18,7 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import ru.annakirillova.restaurantvoting.model.Role;
 import ru.annakirillova.restaurantvoting.model.User;
-import ru.annakirillova.restaurantvoting.repository.datajpa.DataJpaUserRepository;
+import ru.annakirillova.restaurantvoting.service.UserService;
 import ru.annakirillova.restaurantvoting.web.AuthUser;
 
 import java.util.Optional;
@@ -30,7 +30,7 @@ import java.util.Optional;
 public class SecurityConfig {
     public static final PasswordEncoder PASSWORD_ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-    private final DataJpaUserRepository userRepository;
+    private final UserService userService;
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -41,7 +41,7 @@ public class SecurityConfig {
     UserDetailsService userDetailsService() {
         return email -> {
             log.debug("Authenticating '{}'", email);
-            Optional<User> optionalUser = userRepository.findByEmailIgnoreCase(email);
+            Optional<User> optionalUser = userService.findByEmailIgnoreCase(email);
             return new AuthUser(optionalUser.orElseThrow(
                     () -> new UsernameNotFoundException("User '" + email + "' was not found")));
         };
