@@ -32,3 +32,5 @@ logging:
   level:
     root: INFO
     ru.annakirillova.restaurantvoting: DEBUG
+
+springdoc.swagger-ui.path: /

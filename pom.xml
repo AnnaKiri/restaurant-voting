@@ -16,6 +16,7 @@
 	<description>Java application based on Spring Framework. Restaurant voting system.</description>
 	<properties>
 		<java.version>21</java.version>
+		<springdoc.version>2.3.0</springdoc.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
@@ -41,6 +42,13 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-hibernate5-jakarta</artifactId>
+		</dependency>
+
+		<!--Springdoc / Swagger-->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>${springdoc.version}</version>
 		</dependency>
 
 		<!--cache-->

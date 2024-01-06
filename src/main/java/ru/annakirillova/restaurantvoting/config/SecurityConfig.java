@@ -57,6 +57,7 @@ public class SecurityConfig {
         http.securityMatcher("/**").authorizeHttpRequests(authz -> authz
                         .requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
                         .requestMatchers(HttpMethod.POST, "/profile").anonymous()
+                        .requestMatchers("/", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
                         .requestMatchers("/**").authenticated()
                 ).httpBasic(Customizer.withDefaults())
                 .sessionManagement(smc -> smc
