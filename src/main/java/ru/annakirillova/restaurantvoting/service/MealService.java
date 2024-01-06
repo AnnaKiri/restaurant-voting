@@ -1,6 +1,7 @@
-package ru.annakirillova.restaurantvoting.repository.datajpa;
+package ru.annakirillova.restaurantvoting.service;
 
-import org.springframework.stereotype.Repository;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.annakirillova.restaurantvoting.model.Meal;
 import ru.annakirillova.restaurantvoting.model.Restaurant;
@@ -12,25 +13,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
-public class DataJpaMealRepository {
+@Service
+@AllArgsConstructor
+public class MealService {
 
     private final MealRepository mealRepository;
     private final RestaurantRepository restaurantRepository;
 
-    public DataJpaMealRepository(MealRepository mealRepository, RestaurantRepository restaurantRepository) {
-        this.mealRepository = mealRepository;
-        this.restaurantRepository = restaurantRepository;
+    public Optional<Meal> get(int mealId) {
+        return mealRepository.findById(mealId);
     }
 
     @Transactional
-    public Meal save(Meal meal, int restaurantId) {
+    public Meal create(int restaurantId, Meal meal) {
         if (!meal.isNew() && get(meal.id()).isEmpty()) {
             return null;
         }
         meal.setRestaurant(restaurantRepository.getReferenceById(restaurantId));
-        Meal savedMeal = mealRepository.save(meal);
-        return savedMeal;
+        return mealRepository.save(meal);
     }
 
     @Transactional
@@ -45,9 +45,14 @@ public class DataJpaMealRepository {
         return savedMeals;
     }
 
+    public void delete(int mealId) {
+        mealRepository.delete(mealId);
+    }
+
     @Transactional
-    public boolean delete(int id) {
-        return mealRepository.delete(id) != 0;
+    public void update(int restaurantId, Meal meal, int mealId) {
+        meal.setId(mealId);
+        create(restaurantId, meal);
     }
 
     public List<Meal> getAll(int restaurantId) {
@@ -56,10 +61,6 @@ public class DataJpaMealRepository {
 
     public List<Meal> getMealsBetweenDates(LocalDate startDate, LocalDate endDate, int restaurantId) {
         return mealRepository.getMealsBetweenDates(startDate, endDate, restaurantId);
-    }
-
-    public Optional<Meal> get(int id) {
-        return mealRepository.findById(id);
     }
 
     public List<Meal> getAllToday(int restaurantId) {

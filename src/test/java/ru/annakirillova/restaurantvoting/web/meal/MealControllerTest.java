@@ -8,7 +8,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.annakirillova.restaurantvoting.model.Meal;
-import ru.annakirillova.restaurantvoting.repository.datajpa.DataJpaMealRepository;
+import ru.annakirillova.restaurantvoting.service.MealService;
 import ru.annakirillova.restaurantvoting.util.JsonUtil;
 import ru.annakirillova.restaurantvoting.web.AbstractControllerTest;
 
@@ -29,7 +29,7 @@ class MealControllerTest extends AbstractControllerTest {
     private static final String REST_URL_SLASH = REST_URL + '/';
 
     @Autowired
-    private DataJpaMealRepository mealRepository;
+    private MealService mealService;
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
@@ -46,7 +46,7 @@ class MealControllerTest extends AbstractControllerTest {
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(buildUrlWithRestaurantId(REST_URL_SLASH, RESTAURANT1_ID) + MEAL1_ID))
                 .andExpect(status().isNoContent());
-        assertFalse(mealRepository.get(MEAL1_ID).isPresent());
+        assertFalse(mealService.get(MEAL1_ID).isPresent());
     }
 
     @Test
@@ -57,7 +57,7 @@ class MealControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
-        MEAL_MATCHER.assertMatch(mealRepository.get(updated.getId()).get(), getUpdated());
+        MEAL_MATCHER.assertMatch(mealService.get(updated.getId()).get(), getUpdated());
     }
 
     @Test
@@ -72,7 +72,7 @@ class MealControllerTest extends AbstractControllerTest {
         int newId = created.id();
         newMeal.setId(newId);
         MEAL_MATCHER.assertMatch(created, newMeal);
-        MEAL_MATCHER.assertMatch(mealRepository.get(newId).get(), newMeal);
+        MEAL_MATCHER.assertMatch(mealService.get(newId).get(), newMeal);
     }
 
     @Test
