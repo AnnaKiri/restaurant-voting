@@ -8,7 +8,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.annakirillova.restaurantvoting.model.Vote;
-import ru.annakirillova.restaurantvoting.repository.datajpa.DataJpaVoteRepository;
+import ru.annakirillova.restaurantvoting.service.VoteService;
 import ru.annakirillova.restaurantvoting.to.VoteTo;
 import ru.annakirillova.restaurantvoting.util.VoteUtil;
 import ru.annakirillova.restaurantvoting.web.AbstractControllerTest;
@@ -23,7 +23,7 @@ import static ru.annakirillova.restaurantvoting.web.vote.VoteTestData.*;
 public class UserVoteControllerTest extends AbstractControllerTest {
 
     @Autowired
-    private DataJpaVoteRepository voteRepository;
+    private VoteService voteService;
 
     @Test
     @WithUserDetails(value = USER3_MAIL)
@@ -39,7 +39,7 @@ public class UserVoteControllerTest extends AbstractControllerTest {
         newVote.setId(newId);
         VoteTo newVoteTo = VoteUtil.createTo(newVote);
         VOTE_TO_MATCHER.assertMatch(created, newVoteTo);
-        VOTE_TO_MATCHER.assertMatch(VoteUtil.createTo(voteRepository.get(newId)), newVoteTo);
+        VOTE_TO_MATCHER.assertMatch(VoteUtil.createTo(voteService.get(newId)), newVoteTo);
     }
 
     @Test
@@ -56,6 +56,6 @@ public class UserVoteControllerTest extends AbstractControllerTest {
         updatedVote.setId(newId);
         VoteTo newVoteTo = VoteUtil.createTo(updatedVote);
         VOTE_TO_MATCHER.assertMatch(created, newVoteTo);
-        VOTE_TO_MATCHER.assertMatch(VoteUtil.createTo(voteRepository.get(newId)), newVoteTo);
+        VOTE_TO_MATCHER.assertMatch(VoteUtil.createTo(voteService.get(newId)), newVoteTo);
     }
 }

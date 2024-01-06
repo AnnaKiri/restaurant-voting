@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.annakirillova.restaurantvoting.repository.datajpa.DataJpaVoteRepository;
+import ru.annakirillova.restaurantvoting.service.VoteService;
 import ru.annakirillova.restaurantvoting.util.VoteUtil;
 import ru.annakirillova.restaurantvoting.web.AbstractControllerTest;
 
@@ -25,7 +25,7 @@ public class AdminVoteControllerTest extends AbstractControllerTest {
     private static final String REST_URL_SLASH = REST_URL + '/';
 
     @Autowired
-    private DataJpaVoteRepository voteRepository;
+    private VoteService voteService;
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
@@ -42,7 +42,7 @@ public class AdminVoteControllerTest extends AbstractControllerTest {
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(buildUrlWithRestaurantId(REST_URL_SLASH, RESTAURANT1_ID) + VOTE1_ID))
                 .andExpect(status().isNoContent());
-        assertNull(voteRepository.get(VOTE1_ID));
+        assertNull(voteService.get(VOTE1_ID));
     }
 
     @Test

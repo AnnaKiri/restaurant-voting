@@ -1,6 +1,7 @@
-package ru.annakirillova.restaurantvoting.repository.datajpa;
+package ru.annakirillova.restaurantvoting.service;
 
-import org.springframework.stereotype.Repository;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.annakirillova.restaurantvoting.model.Vote;
 import ru.annakirillova.restaurantvoting.repository.RestaurantRepository;
@@ -12,18 +13,32 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
-@Transactional(readOnly = true)
-public class DataJpaVoteRepository {
+@Service
+@AllArgsConstructor
+public class VoteService {
 
     private final VoteRepository voteRepository;
     private final RestaurantRepository restaurantRepository;
     private final UserRepository userRepository;
 
-    public DataJpaVoteRepository(VoteRepository voteRepository, RestaurantRepository restaurantRepository, UserRepository userRepository) {
-        this.voteRepository = voteRepository;
-        this.restaurantRepository = restaurantRepository;
-        this.userRepository = userRepository;
+    public Vote get(int voteId) {
+        return voteRepository.findById(voteId).orElse(null);
+    }
+
+    public void delete(int voteId) {
+        voteRepository.delete(voteId);
+    }
+
+    public List<Vote> getAllByRestaurant(int restaurantId) {
+        return voteRepository.getAllByRestaurant(restaurantId);
+    }
+
+    public List<Vote> getBetween(LocalDate startDate, LocalDate endDate, int restaurantId) {
+        return voteRepository.getVotesBetweenDates(startDate, endDate, restaurantId);
+    }
+
+    public List<Vote> getAllToday(int restaurantId, LocalDate date) {
+        return voteRepository.getAllByDate(restaurantId, date);
     }
 
     @Transactional
@@ -36,29 +51,7 @@ public class DataJpaVoteRepository {
                 return null;
             }
         }
-
         Vote newVote = new Vote(userRepository.getReferenceById(userId), restaurantRepository.getReferenceById(restaurantId));
         return voteRepository.save(newVote);
-    }
-
-    @Transactional
-    public boolean delete(int id) {
-        return voteRepository.delete(id) != 0;
-    }
-
-    public Vote get(int id) {
-        return voteRepository.findById(id).orElse(null);
-    }
-
-    public List<Vote> getAllByRestaurant(int restaurantId) {
-        return voteRepository.getAllByRestaurant(restaurantId);
-    }
-
-    public List<Vote> getAllByDate(int restaurantId, LocalDate date) {
-        return voteRepository.getAllByDate(restaurantId, date);
-    }
-
-    public List<Vote> getAllBetweenHalfOpen(LocalDate startDate, LocalDate endDate, int restaurantId) {
-        return voteRepository.getBetweenHalfOpen(startDate, endDate, restaurantId);
     }
 }
