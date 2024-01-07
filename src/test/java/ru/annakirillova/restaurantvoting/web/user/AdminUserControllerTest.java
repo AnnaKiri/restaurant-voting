@@ -13,6 +13,7 @@ import ru.annakirillova.restaurantvoting.service.UserService;
 import ru.annakirillova.restaurantvoting.web.AbstractControllerTest;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -129,4 +130,17 @@ class AdminUserControllerTest extends AbstractControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(USER_MATCHER.contentJson(admin));
     }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void enable() throws Exception {
+        perform(MockMvcRequestBuilders.patch(REST_URL_SLASH + USER1_ID)
+                .param("enabled", "false")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+
+        assertFalse(userService.get(USER1_ID).isEnabled());
+    }
+
 }

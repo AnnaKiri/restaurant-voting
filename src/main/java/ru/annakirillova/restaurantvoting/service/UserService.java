@@ -3,6 +3,7 @@ package ru.annakirillova.restaurantvoting.service;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.annakirillova.restaurantvoting.error.NotFoundException;
 import ru.annakirillova.restaurantvoting.model.User;
 import ru.annakirillova.restaurantvoting.repository.UserRepository;
@@ -57,5 +58,11 @@ public class UserService {
 
     public User getExistedByEmail(String email) {
         return findByEmailIgnoreCase(email).orElseThrow(() -> new NotFoundException("User with email=" + email + " not found"));
+    }
+
+    @Transactional
+    public void setEnabled(int userId, boolean enabled) {
+        User user = get(userId);
+        user.setEnabled(enabled);
     }
 }

@@ -57,4 +57,11 @@ public class AdminUserController extends AbstractUserController {
         log.info("getByEmail {}", email);
         return userService.getExistedByEmail(email);
     }
+
+    @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void enable(@PathVariable int id, @RequestParam boolean enabled) {
+        log.info(enabled ? "enable {}" : "disable {}", id);
+        userService.setEnabled(id, enabled);
+    }
 }
