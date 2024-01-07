@@ -1,10 +1,10 @@
 package ru.annakirillova.restaurantvoting.web.vote;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.annakirillova.restaurantvoting.model.Vote;
@@ -20,7 +20,8 @@ import static ru.annakirillova.restaurantvoting.web.user.UserTestData.USER1_MAIL
 import static ru.annakirillova.restaurantvoting.web.user.UserTestData.USER3_MAIL;
 import static ru.annakirillova.restaurantvoting.web.vote.VoteTestData.*;
 
-public class UserVoteControllerTest extends AbstractControllerTest {
+@ActiveProfiles("timeBefore11")
+public class UserVoteControllerBeforeElevenTest extends AbstractControllerTest {
 
     @Autowired
     private VoteService voteService;
@@ -44,8 +45,7 @@ public class UserVoteControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = USER1_MAIL)
-    @Disabled
-    void update() throws Exception {
+    void updateBeforeEleven() throws Exception {
         ResultActions action = perform(MockMvcRequestBuilders.post(buildUrlWithRestaurantId(UserVoteController.REST_URL, RESTAURANT1_ID + 1))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -57,5 +57,14 @@ public class UserVoteControllerTest extends AbstractControllerTest {
         VoteTo newVoteTo = VoteUtil.createTo(updatedVote);
         VOTE_TO_MATCHER.assertMatch(created, newVoteTo);
         VOTE_TO_MATCHER.assertMatch(VoteUtil.createTo(voteService.get(newId)), newVoteTo);
+    }
+
+    @Test
+    @WithUserDetails(value = USER1_MAIL)
+    void updateVoteTheSameRestaurant() throws Exception {
+        perform(MockMvcRequestBuilders.post(buildUrlWithRestaurantId(UserVoteController.REST_URL, RESTAURANT1_ID))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
     }
 }

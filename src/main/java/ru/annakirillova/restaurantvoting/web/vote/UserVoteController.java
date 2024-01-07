@@ -25,7 +25,7 @@ public class UserVoteController {
     @Autowired
     private VoteService voteService;
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<VoteTo> register(@PathVariable int restaurantId, @AuthenticationPrincipal AuthUser authUser) {
         log.info("the user {} votes for the restaurant {}", authUser.getUser().id(), restaurantId);

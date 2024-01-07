@@ -47,7 +47,7 @@ public class AdminVoteController {
     @GetMapping("/today")
     public List<VoteTo> getAllToday(@PathVariable int restaurantId) {
         log.info("get votes for today for the restaurant {}", restaurantId);
-        return VoteUtil.getTos(voteService.getAllToday(restaurantId, LocalDate.now()));
+        return VoteUtil.getTos(voteService.getAllToday(restaurantId));
     }
 
     @GetMapping("/{voteId}")

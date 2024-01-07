@@ -9,10 +9,12 @@ import org.h2.tools.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ProblemDetail;
 import ru.annakirillova.restaurantvoting.util.JsonUtil;
 
 import java.sql.SQLException;
+import java.time.Clock;
 import java.util.Map;
 
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
@@ -22,6 +24,7 @@ import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 @Slf4j
 public class AppConfig {
 
+    @Profile("!test")
     @Bean(initMethod = "start", destroyMethod = "stop")
     Server h2Server() throws SQLException {
         log.info("Start H2 TCP server");
@@ -39,5 +42,11 @@ public class AppConfig {
     interface MixIn {
         @JsonAnyGetter
         Map<String, Object> getProperties();
+    }
+
+    @Profile("!timeAfter11 && !timeBefore11")
+    @Bean
+    public Clock clockNow() {
+        return Clock.systemDefaultZone();
     }
 }
