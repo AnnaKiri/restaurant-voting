@@ -9,6 +9,7 @@ import ru.annakirillova.restaurantvoting.model.Restaurant;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface RestaurantRepository extends JpaRepository<Restaurant, Integer> {
@@ -20,9 +21,9 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
     @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.votes v WHERE v.date = :date ORDER BY r.name")
     List<Restaurant> getRestaurantsWithVotesByDate(@Param("date") LocalDate date);
 
-    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.meals m WHERE r.id = :id AND (m.date = :date OR m.date IS NULL)")
-    Restaurant getWithMealsByDate(@Param("id") int id, @Param("date") LocalDate date);
+    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.meals m WHERE r.id = :id AND m.date = :date")
+    Optional<Restaurant> getWithMealsByDate(@Param("id") int id, @Param("date") LocalDate date);
 
-    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.votes v WHERE r.id = :id AND (v.date = :date OR v.date IS NULL)")
-    Restaurant getWithVotesByDate(@Param("id") int id, @Param("date") LocalDate date);
+    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.votes v WHERE r.id = :id AND v.date = :date")
+    Optional<Restaurant> getWithVotesByDate(@Param("id") int id, @Param("date") LocalDate date);
 }

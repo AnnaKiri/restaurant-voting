@@ -12,10 +12,7 @@ import ru.annakirillova.restaurantvoting.to.RestaurantTo;
 import ru.annakirillova.restaurantvoting.util.RestaurantUtil;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static ru.annakirillova.restaurantvoting.validation.ValidationUtil.assureIdConsistent;
 import static ru.annakirillova.restaurantvoting.validation.ValidationUtil.checkNew;
@@ -61,8 +58,16 @@ public class RestaurantService {
         return restaurantRepository.findAll(SORT_NAME);
     }
 
+    @Transactional
     public Restaurant getWithMealsToday(int id) {
-        return restaurantRepository.getWithMealsByDate(id, LocalDate.now());
+        Restaurant restaurant = get(id);
+        Optional<Restaurant> restaurantWithMeals = restaurantRepository.getWithMealsByDate(id, LocalDate.now());
+        if (restaurantWithMeals.isPresent()) {
+            restaurant.setMeals(restaurantWithMeals.get().getMeals());
+        } else {
+            restaurant.setMeals(new ArrayList<>());
+        }
+        return restaurant;
     }
 
     public Restaurant get(int id) {
@@ -70,7 +75,14 @@ public class RestaurantService {
     }
 
     public Restaurant getWithVotesToday(int id) {
-        return restaurantRepository.getWithVotesByDate(id, LocalDate.now());
+        Restaurant restaurant = get(id);
+        Optional<Restaurant> restaurantWithVotes = restaurantRepository.getWithVotesByDate(id, LocalDate.now());
+        if (restaurantWithVotes.isPresent()) {
+            restaurant.setVotes(restaurantWithVotes.get().getVotes());
+        } else {
+            restaurant.setVotes(new ArrayList<>());
+        }
+        return restaurant;
     }
 
     @Transactional
