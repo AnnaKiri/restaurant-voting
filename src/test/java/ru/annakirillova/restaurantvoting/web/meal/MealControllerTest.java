@@ -7,15 +7,15 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ru.annakirillova.restaurantvoting.error.NotFoundException;
 import ru.annakirillova.restaurantvoting.model.Meal;
 import ru.annakirillova.restaurantvoting.service.MealService;
 import ru.annakirillova.restaurantvoting.util.JsonUtil;
 import ru.annakirillova.restaurantvoting.web.AbstractControllerTest;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -46,7 +46,7 @@ class MealControllerTest extends AbstractControllerTest {
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(buildUrlWithRestaurantId(REST_URL_SLASH, RESTAURANT1_ID) + MEAL1_ID))
                 .andExpect(status().isNoContent());
-        assertFalse(mealService.get(MEAL1_ID).isPresent());
+        assertThrows(NotFoundException.class, () -> mealService.get(MEAL1_ID));
     }
 
     @Test
@@ -57,7 +57,7 @@ class MealControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
-        MEAL_MATCHER.assertMatch(mealService.get(updated.getId()).get(), getUpdated());
+        MEAL_MATCHER.assertMatch(mealService.get(updated.getId()), getUpdated());
     }
 
     @Test
@@ -72,13 +72,13 @@ class MealControllerTest extends AbstractControllerTest {
         int newId = created.id();
         newMeal.setId(newId);
         MEAL_MATCHER.assertMatch(created, newMeal);
-        MEAL_MATCHER.assertMatch(mealService.get(newId).get(), newMeal);
+        MEAL_MATCHER.assertMatch(mealService.get(newId), newMeal);
     }
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createMealList() throws Exception {
-        List<Meal> newListOfMeals = new ArrayList<>(newMeals);
+        List<Meal> newListOfMeals = List.of(new Meal(newMeal1), new Meal(newMeal2), new Meal(newMeal3));
         perform(MockMvcRequestBuilders.post(buildUrlWithRestaurantId(REST_URL_SLASH, RESTAURANT1_ID) + "add-list")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newListOfMeals)))

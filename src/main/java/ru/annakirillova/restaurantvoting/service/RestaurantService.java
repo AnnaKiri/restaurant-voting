@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.annakirillova.restaurantvoting.error.NotFoundException;
 import ru.annakirillova.restaurantvoting.model.Restaurant;
 import ru.annakirillova.restaurantvoting.model.Vote;
 import ru.annakirillova.restaurantvoting.repository.RestaurantRepository;
@@ -32,7 +33,9 @@ public class RestaurantService {
     }
 
     public void delete(int id) {
-        restaurantRepository.delete(id);
+        if (restaurantRepository.delete(id) == 0) {
+            throw new NotFoundException("Entity with id=" + id + " not found");
+        }
     }
 
     public void update(int id, Restaurant restaurant) {
@@ -63,7 +66,7 @@ public class RestaurantService {
     }
 
     public Restaurant get(int id) {
-        return restaurantRepository.findById(id).orElse(null);
+        return restaurantRepository.findById(id).orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
     }
 
     public Restaurant getWithVotesToday(int id) {

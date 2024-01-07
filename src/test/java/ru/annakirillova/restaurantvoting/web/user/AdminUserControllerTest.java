@@ -6,13 +6,14 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ru.annakirillova.restaurantvoting.error.NotFoundException;
 import ru.annakirillova.restaurantvoting.model.Role;
 import ru.annakirillova.restaurantvoting.model.User;
 import ru.annakirillova.restaurantvoting.service.UserService;
 import ru.annakirillova.restaurantvoting.web.AbstractControllerTest;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,7 +44,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + USER1_ID))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertNull(userService.get(USER1_ID));
+        assertThrows(NotFoundException.class, () -> userService.get(USER1_ID));
     }
 
     @Test

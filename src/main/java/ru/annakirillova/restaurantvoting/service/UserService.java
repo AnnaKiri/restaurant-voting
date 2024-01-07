@@ -3,6 +3,7 @@ package ru.annakirillova.restaurantvoting.service;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import ru.annakirillova.restaurantvoting.error.NotFoundException;
 import ru.annakirillova.restaurantvoting.model.User;
 import ru.annakirillova.restaurantvoting.repository.UserRepository;
 import ru.annakirillova.restaurantvoting.to.UserTo;
@@ -22,11 +23,13 @@ public class UserService {
     private final UserRepository userRepository;
 
     public User get(int id) {
-        return userRepository.findById(id).orElse(null);
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
     }
 
     public void delete(int id) {
-        userRepository.delete(id);
+        if (userRepository.delete(id) == 0) {
+            throw new NotFoundException("Entity with id=" + id + " not found");
+        }
     }
 
     public List<User> getAll() {

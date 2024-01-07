@@ -41,6 +41,10 @@ public class Meal extends AbstractBaseEntity {
     @JsonIgnore
     private Restaurant restaurant;
 
+    public Meal(Meal meal) {
+        this(meal.date, meal.description, meal.price, meal.restaurant);
+    }
+
     public Meal(LocalDate date, String description, Integer price, Restaurant restaurant) {
         this(null, date, description, price, restaurant);
     }

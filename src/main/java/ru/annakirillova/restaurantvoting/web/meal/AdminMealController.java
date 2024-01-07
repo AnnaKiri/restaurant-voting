@@ -74,9 +74,9 @@ public class AdminMealController {
     }
 
     @GetMapping("/{mealId}")
-    public ResponseEntity<Meal> get(@PathVariable int restaurantId, @PathVariable int mealId) {
+    public Meal get(@PathVariable int restaurantId, @PathVariable int mealId) {
         log.info("get the meal {} of the restaurant {}", mealId, restaurantId);
-        return ResponseEntity.of(mealService.get(mealId));
+        return mealService.get(mealId);
     }
 
     @GetMapping("/today")

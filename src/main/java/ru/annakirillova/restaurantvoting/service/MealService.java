@@ -3,6 +3,7 @@ package ru.annakirillova.restaurantvoting.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.annakirillova.restaurantvoting.error.NotFoundException;
 import ru.annakirillova.restaurantvoting.model.Meal;
 import ru.annakirillova.restaurantvoting.model.Restaurant;
 import ru.annakirillova.restaurantvoting.repository.MealRepository;
@@ -11,7 +12,6 @@ import ru.annakirillova.restaurantvoting.repository.RestaurantRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static ru.annakirillova.restaurantvoting.validation.ValidationUtil.assureIdConsistent;
 import static ru.annakirillova.restaurantvoting.validation.ValidationUtil.checkNew;
@@ -23,8 +23,8 @@ public class MealService {
     private final MealRepository mealRepository;
     private final RestaurantRepository restaurantRepository;
 
-    public Optional<Meal> get(int mealId) {
-        return mealRepository.findById(mealId);
+    public Meal get(int mealId) {
+        return mealRepository.findById(mealId).orElseThrow(() -> new NotFoundException("Entity with id=" + mealId + " not found"));
     }
 
     @Transactional
@@ -48,13 +48,16 @@ public class MealService {
     }
 
     public void delete(int mealId) {
-        mealRepository.delete(mealId);
+        if (mealRepository.delete(mealId) == 0) {
+            throw new NotFoundException("Entity with id=" + mealId + " not found");
+        }
     }
 
     @Transactional
     public void update(int restaurantId, Meal meal, int mealId) {
         assureIdConsistent(meal, mealId);
-        create(restaurantId, meal);
+        meal.setRestaurant(restaurantRepository.getReferenceById(restaurantId));
+        mealRepository.save(meal);
     }
 
     public List<Meal> getAll(int restaurantId) {
