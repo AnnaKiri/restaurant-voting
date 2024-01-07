@@ -76,13 +76,13 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void getAllWithVotes() throws Exception {
+    void getAllWithMeals() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL)
-                .param("votes", "true"))
+                .param("meals", "true"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(RESTAURANT_TO_WITH_VOTES_MATCHER.contentJson(RestaurantUtil.getTos(restaurants)));
+                .andExpect(RESTAURANT_TO_WITH_MEALS_MATCHER.contentJson(RestaurantUtil.getTos(restaurants)));
     }
 
 

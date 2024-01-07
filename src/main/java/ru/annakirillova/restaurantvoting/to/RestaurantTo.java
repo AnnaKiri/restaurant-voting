@@ -24,7 +24,7 @@ public class RestaurantTo extends BaseTo {
 
     private List<Meal> meals;
 
-    private final Integer rating;
+    private Integer rating;
 
     public RestaurantTo(Integer id, String name, List<Meal> meals, Integer rating) {
         super(id);

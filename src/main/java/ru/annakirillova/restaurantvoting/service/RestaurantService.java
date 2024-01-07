@@ -1,10 +1,13 @@
 package ru.annakirillova.restaurantvoting.service;
 
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.annakirillova.restaurantvoting.error.NotFoundException;
+import ru.annakirillova.restaurantvoting.model.Meal;
 import ru.annakirillova.restaurantvoting.model.Restaurant;
 import ru.annakirillova.restaurantvoting.model.Vote;
 import ru.annakirillova.restaurantvoting.repository.RestaurantRepository;
@@ -24,17 +27,20 @@ public class RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
 
+    @CacheEvict(value = {"restaurants", "restaurantsWithMeals"}, allEntries = true)
     public Restaurant create(Restaurant restaurant) {
         checkNew(restaurant);
         return restaurantRepository.save(restaurant);
     }
 
+    @CacheEvict(value = {"restaurants", "restaurantsWithMeals"}, allEntries = true)
     public void delete(int id) {
         if (restaurantRepository.delete(id) == 0) {
             throw new NotFoundException("Entity with id=" + id + " not found");
         }
     }
 
+    @CacheEvict(value = {"restaurants", "restaurantsWithMeals"}, allEntries = true)
     public void update(int id, Restaurant restaurant) {
         assureIdConsistent(restaurant, id);
         restaurantRepository.save(restaurant);
@@ -54,6 +60,32 @@ public class RestaurantService {
         return RestaurantUtil.getTos(restaurantsWithVotes);
     }
 
+    @Cacheable("restaurantsWithMeals")
+    @Transactional
+    public List<RestaurantTo> getAllWithMealsToday() {
+        Map<Integer, List<Meal>> mealsMap = new LinkedHashMap<>();
+        for (Restaurant r : restaurantRepository.getRestaurantsWithMealsByDate(LocalDate.now())) {
+            mealsMap.put(r.getId(), r.getMeals());
+        }
+        List<Restaurant> restaurantsWithMeals = getAll();
+        for (Restaurant r : restaurantsWithMeals) {
+            mealsMap.computeIfAbsent(r.getId(), id -> new ArrayList<>());
+            r.setMeals(mealsMap.get(r.getId()));
+        }
+        return RestaurantUtil.getTos(restaurantsWithMeals);
+    }
+
+    @Transactional
+    public List<RestaurantTo> getAllWithVotesAndMealsToday() {
+        List<RestaurantTo> restaurantsWithVotes = getAllWithVotesToday();
+        List<RestaurantTo> restaurantsWithMeals = getAllWithMealsToday();
+        for (int i = 0; i < restaurantsWithVotes.size(); i++) {
+            restaurantsWithVotes.get(i).setMeals(restaurantsWithMeals.get(i).getMeals());
+        }
+        return restaurantsWithMeals;
+    }
+
+    @Cacheable("restaurants")
     public List<Restaurant> getAll() {
         return restaurantRepository.findAll(SORT_NAME);
     }

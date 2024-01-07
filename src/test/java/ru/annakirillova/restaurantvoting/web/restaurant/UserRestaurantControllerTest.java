@@ -20,11 +20,46 @@ public class UserRestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER1_MAIL)
     void getAllWithRating() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "with-rating"))
+        perform(MockMvcRequestBuilders.get(REST_URL)
+                .param("votes", "true"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(RESTAURANT_TO_WITH_VOTES_MATCHER.contentJson(RestaurantUtil.getTos(restaurants)));
+    }
+
+    @Test
+    @WithUserDetails(value = USER1_MAIL)
+    void getAllWithMeals() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL)
+                .param("meals", "true"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(RESTAURANT_TO_WITH_MEALS_MATCHER.contentJson(RestaurantUtil.getTos(restaurants)));
+    }
+
+    @Test
+    @WithUserDetails(value = USER1_MAIL)
+    void getAllWithMealsAndRating() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL)
+                .param("votes", "true")
+                .param("meals", "true"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(RESTAURANT_TO_WITH_VOTES_MATCHER.contentJson(RestaurantUtil.getTos(restaurants)))
+                .andExpect(RESTAURANT_TO_WITH_MEALS_MATCHER.contentJson(RestaurantUtil.getTos(restaurants)));
+    }
+
+    @Test
+    @WithUserDetails(value = USER1_MAIL)
+    void getAll() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(RESTAURANT_TO_MATCHER.contentJson(RestaurantUtil.getTos(restaurants)));
     }
 
     @Test

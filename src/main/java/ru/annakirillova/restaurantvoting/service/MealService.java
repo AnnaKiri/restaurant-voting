@@ -1,6 +1,7 @@
 package ru.annakirillova.restaurantvoting.service;
 
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.annakirillova.restaurantvoting.error.NotFoundException;
@@ -27,6 +28,7 @@ public class MealService {
         return mealRepository.findById(mealId).orElseThrow(() -> new NotFoundException("Entity with id=" + mealId + " not found"));
     }
 
+    @CacheEvict(value = "restaurantsWithMeals", allEntries = true)
     @Transactional
     public Meal create(int restaurantId, Meal meal) {
         checkNew(meal);
@@ -34,6 +36,7 @@ public class MealService {
         return mealRepository.save(meal);
     }
 
+    @CacheEvict(value = "restaurantsWithMeals", allEntries = true)
     @Transactional
     public List<Meal> saveList(List<Meal> meals, int restaurantId) {
         List<Meal> savedMeals = new ArrayList<>();
@@ -47,12 +50,14 @@ public class MealService {
         return savedMeals;
     }
 
+    @CacheEvict(value = "restaurantsWithMeals", allEntries = true)
     public void delete(int mealId) {
         if (mealRepository.delete(mealId) == 0) {
             throw new NotFoundException("Entity with id=" + mealId + " not found");
         }
     }
 
+    @CacheEvict(value = "restaurantsWithMeals", allEntries = true)
     @Transactional
     public void update(int restaurantId, Meal meal, int mealId) {
         assureIdConsistent(meal, mealId);

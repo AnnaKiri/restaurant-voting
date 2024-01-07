@@ -51,11 +51,11 @@ public class AdminRestaurantController {
     }
 
     @GetMapping
-    public List<RestaurantTo> getAllWithVotes(@RequestParam @Nullable Boolean votes) {
-        boolean isVotesNeeded = votes != null && votes;
-        if (isVotesNeeded) {
-            log.info("get all restaurants with votes");
-            return restaurantService.getAllWithVotesToday();
+    public List<RestaurantTo> getAllWithMealsToday(@RequestParam @Nullable Boolean meals) {
+        boolean isMealsNeeded = meals != null && meals;
+        if (isMealsNeeded) {
+            log.info("get all restaurants with meals today");
+            return restaurantService.getAllWithMealsToday();
         } else {
             log.info("get all restaurant");
             return RestaurantUtil.getTos(restaurantService.getAll());

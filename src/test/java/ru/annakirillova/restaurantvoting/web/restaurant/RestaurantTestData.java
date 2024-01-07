@@ -33,9 +33,7 @@ public class RestaurantTestData {
     public static MatcherFactory.Matcher<RestaurantTo> RESTAURANT_TO_WITH_MEALS_MATCHER =
             MatcherFactory.usingAssertions(RestaurantTo.class,
                     (a, e) -> assertThat(a).usingRecursiveComparison().ignoringFields("rating", "meals.restaurant").isEqualTo(e),
-                    (a, e) -> {
-                        throw new UnsupportedOperationException();
-                    });
+                    (a, e) -> assertThat(a).usingRecursiveComparison().ignoringFields("rating", "meals.restaurant").isEqualTo(e));
 
     static {
         chekhov.setVotes(new ArrayList<>());
@@ -48,9 +46,9 @@ public class RestaurantTestData {
 
         dickinson.setMeals(List.of(meal1, meal2, meal3));
         voltaire.setMeals(List.of(meal4, meal5, meal6));
-        dante.setMeals(List.of(meal7, meal8));
-        chekhov.setMeals(List.of(meal9, meal10, meal11));
-        hemingway.setMeals(List.of(meal12, meal13, meal14));
+        dante.setMeals(List.of(meal8, meal7));
+        chekhov.setMeals(List.of(meal9, meal11, meal10));
+        hemingway.setMeals(List.of(meal13, meal12, meal14));
     }
 
     public static Restaurant getNew() {

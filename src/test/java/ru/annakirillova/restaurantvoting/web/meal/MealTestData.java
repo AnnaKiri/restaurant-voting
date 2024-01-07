@@ -29,7 +29,7 @@ public class MealTestData {
 
     public static final Meal meal9 = new Meal(MEAL1_ID + 8, LocalDate.now(), "Chicken Salad", 500, null);
     public static final Meal meal10 = new Meal(MEAL1_ID + 9, LocalDate.now(), "Rice Bowl", 600, null);
-    public static final Meal meal11 = new Meal(MEAL1_ID + 10, LocalDate.now(), "Coffee cak", 300, null);
+    public static final Meal meal11 = new Meal(MEAL1_ID + 10, LocalDate.now(), "Coffee cake", 300, null);
     public static final Meal newYearMeal4 = new Meal(MEAL1_ID + 17, LocalDate.of(2024, 1, 1), "Pelmeni", 119, null);
 
     public static final Meal meal12 = new Meal(MEAL1_ID + 11, LocalDate.now(), "Crispy Salad", 500, null);
