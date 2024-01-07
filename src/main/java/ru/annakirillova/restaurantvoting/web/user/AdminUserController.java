@@ -51,4 +51,10 @@ public class AdminUserController extends AbstractUserController {
         log.info("get all users");
         return userService.getAll();
     }
+
+    @GetMapping("/by-email")
+    public User getByEmail(@RequestParam String email) {
+        log.info("getByEmail {}", email);
+        return userService.getExistedByEmail(email);
+    }
 }

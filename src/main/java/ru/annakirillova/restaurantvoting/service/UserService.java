@@ -54,4 +54,8 @@ public class UserService {
     public Optional<User> findByEmailIgnoreCase(String email) {
         return userRepository.findByEmailIgnoreCase(email);
     }
+
+    public User getExistedByEmail(String email) {
+        return findByEmailIgnoreCase(email).orElseThrow(() -> new NotFoundException("User with email=" + email + " not found"));
+    }
 }

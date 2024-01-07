@@ -120,4 +120,13 @@ class AdminUserControllerTest extends AbstractControllerTest {
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(content().string(containsString(EXCEPTION_DUPLICATE_EMAIL)));
     }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void getByEmail() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + "by-email?email=" + admin.getEmail()))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(USER_MATCHER.contentJson(admin));
+    }
 }
