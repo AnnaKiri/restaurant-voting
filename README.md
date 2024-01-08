@@ -2,10 +2,12 @@
 
 Enterprise Java project with registration/authorization and access rights based on roles (USER, ADMINISTRATOR).
 The administrator can create / view / edit / delete - dishes / menus / restaurants / users.
-Users can manage their profile, view restaurants and their menus, and vote via the REST interface with basic authorization.
+Users can manage their profile, view restaurants and their menus, and vote via the REST interface with basic
+authorization.
 The entire REST interface is covered by JUnit tests using Spring MVC Test and Spring Security Test.
 
 ### Description:
+
 <pre>
   Build a voting system for deciding where to have lunch.
 
@@ -19,30 +21,37 @@ The entire REST interface is covered by JUnit tests using Spring MVC Test and Sp
  - If it is after 11:00 then it is too late, vote can't be changed
  </pre> 
 ***
+
 ### Technology stack:
-**Maven** / **Hibernate** / **Spring Boot 3.2.1** / **Spring Data JPA** / **Spring Security** / **Spring MVC** / **HSQLDB** / **JUnit** / **EHCACHE** / **Apache Tomcat** / **Json Jackson** / **SLF4J**
+
+**Maven** / **Hibernate** / **Spring Boot 3.2.1** / **Spring Data JPA** / **Spring Security** / **Spring MVC** / *
+*HSQLDB** / **JUnit** / **EHCACHE** / **Apache Tomcat** / **Json Jackson** / **SLF4J**
 
 ***
+
 ### Swagger REST Api Documentation:
+
 - http://localhost:8080/swagger-ui/index.html
 - http://localhost:8080/v3/api-docs
+
 ***
 
 ### `Admin`
 
 ### AdminMealController      `/admin/restaurants/2/meals`
+
 - Create a Meal for the Restaurant
 
-`curl -X POST http://localhost:8080/admin/restaurants/2/meals 
--H 'Content-Type: application/json' 
--d '{"name": "New Meal", "price": "146"}' 
+`curl -X POST http://localhost:8080/admin/restaurants/2/meals
+-H 'Content-Type: application/json'
+-d '{"name": "New Meal", "price": "146"}'
 --user admin@gmail.com:admin`
 
 - Create a List of Meals for a Restaurant
 
-`curl -X POST http://localhost:8080/admin/restaurants/2/meals/add-list 
--H 'Content-Type: application/json' 
--d '[{"name": "New Meal1", "price": "155"}, {"name": "New Meal2", "price": "188"}, {"name": "New Meal3", "price": "146"}]' 
+`curl -X POST http://localhost:8080/admin/restaurants/2/meals/add-list
+-H 'Content-Type: application/json'
+-d '[{"name": "New Meal1", "price": "155"}, {"name": "New Meal2", "price": "188"}, {"name": "New Meal3", "price": "146"}]'
 --user admin@gmail.com:admin`
 
 - Delete a Meal
@@ -51,9 +60,9 @@ The entire REST interface is covered by JUnit tests using Spring MVC Test and Sp
 
 - Update a Meal
 
-`curl -X PUT http://localhost:8080/admin/restaurants/2/meals/1 
--H 'Content-Type: application/json' 
--d '{"name": "Updated Meal", "price": "455"}' 
+`curl -X PUT http://localhost:8080/admin/restaurants/2/meals/1
+-H 'Content-Type: application/json'
+-d '{"name": "Updated Meal", "price": "455"}'
 --user admin@gmail.com:admin`
 
 - Get All Meals for a Restaurant
@@ -76,9 +85,9 @@ The entire REST interface is covered by JUnit tests using Spring MVC Test and Sp
 
 - Create a Restaurant
 
-`curl -X POST http://localhost:8080/admin/restaurants 
--H 'Content-Type: application/json' 
--d '{"name": "NewRestaurant"}' 
+`curl -X POST http://localhost:8080/admin/restaurants
+-H 'Content-Type: application/json'
+-d '{"name": "NewRestaurant"}'
 --user admin@gmail.com:admin`
 
 - Delete a Restaurant
@@ -87,22 +96,22 @@ The entire REST interface is covered by JUnit tests using Spring MVC Test and Sp
 
 - Update a Restaurant
 
-`curl -X PUT http://localhost:8080/admin/restaurants/2 
--H 'Content-Type: application/json' 
--d '{"name": "Updated Restaurant"}' 
+`curl -X PUT http://localhost:8080/admin/restaurants/2
+-H 'Content-Type: application/json'
+-d '{"name": "Updated Restaurant"}'
 --user admin@gmail.com:admin`
 
 - Get All Restaurants With Meals
 
-`curl -X GET 'http://localhost:8080/admin/restaurants?meals=true --user admin@gmail.com:admin`
+`curl -X GET 'http://localhost:8080/admin/restaurants?mealsToday=true --user admin@gmail.com:admin`
 
-- Get All Restaurants 
+- Get All Restaurants
 
 `curl -X GET 'http://localhost:8080/admin/restaurants --user admin@gmail.com:admin`
 
 - Get a Specific Restaurant With Meals
 
-`curl -X GET 'http://localhost:8080/admin/restaurants/2?meals=true --user admin@gmail.com:admin`
+`curl -X GET 'http://localhost:8080/admin/restaurants/2?mealsToday=true --user admin@gmail.com:admin`
 
 - Get a Specific Restaurant
 
@@ -138,8 +147,8 @@ The entire REST interface is covered by JUnit tests using Spring MVC Test and Sp
 
 - Update a user
 
-`curl -X PUT http://localhost:8080/admin/users/1 
--H "Content-Type: application/json" 
+`curl -X PUT http://localhost:8080/admin/users/1
+-H "Content-Type: application/json"
 -d '{ "name": "UpdatedUser1", "email": "updatedemail@yandex.ru", "password": "updatedpassword", "roles": ["USER"] }'
 --user admin@gmail.com:admin`
 
@@ -158,7 +167,7 @@ The entire REST interface is covered by JUnit tests using Spring MVC Test and Sp
 - Create New user
 
 `curl -X POST http://localhost:8080/admin/users
--H "Content-Type: application/json" 
+-H "Content-Type: application/json"
 -d '{ "name": "NewUser", "email": "newemail@yandex.ru", "password": "newpassword" }'
 --user admin@gmail.com:admin`
 
@@ -176,11 +185,11 @@ The entire REST interface is covered by JUnit tests using Spring MVC Test and Sp
 
 - Get All Restaurants with meals and rating
 
-`curl -X GET http://localhost:8080/user/restaurants?meals=true&ratingToday=true --user user1@yandex.ru:password1`
+`curl -X GET http://localhost:8080/user/restaurants?mealsToday=true&ratingToday=true --user user1@yandex.ru:password1`
 
 - Get All Restaurants with meals
 
-`curl -X POST http://localhost:8080/user/restaurants?meals=true --user user1@yandex.ru:password1`
+`curl -X POST http://localhost:8080/user/restaurants?mealsToday=true --user user1@yandex.ru:password1`
 
 - Get All Restaurants with rating
 
@@ -200,8 +209,8 @@ The entire REST interface is covered by JUnit tests using Spring MVC Test and Sp
 
 - Create New User
 
-`curl -X POST http://localhost:8080/profile 
--H "Content-Type: application/json" 
+`curl -X POST http://localhost:8080/profile
+-H "Content-Type: application/json"
 -d '{ "name": "NewUser", "email": "newuseremail@yandex.ru", "password": "password4" }'`
 
 - Get the currently logged-in user
@@ -210,9 +219,9 @@ The entire REST interface is covered by JUnit tests using Spring MVC Test and Sp
 
 - Update the currently logged-in user
 
-`curl -X PUT http://localhost:8080/profile 
--H "Content-Type: application/json" 
--d '{ "name": "UpdatedUser1", "email": "updateduser1@yandex.ru", "password": "updatedpassword1" }' 
+`curl -X PUT http://localhost:8080/profile
+-H "Content-Type: application/json"
+-d '{ "name": "UpdatedUser1", "email": "updateduser1@yandex.ru", "password": "updatedpassword1" }'
 --user user1@yandex.ru:password1`
 
 - Delete the currently logged-in user

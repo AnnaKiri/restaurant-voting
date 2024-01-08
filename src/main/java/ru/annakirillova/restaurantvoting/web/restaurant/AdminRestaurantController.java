@@ -54,8 +54,8 @@ public class AdminRestaurantController {
     }
 
     @GetMapping
-    public List<RestaurantTo> getAllWithMealsToday(@RequestParam @Nullable Boolean meals) {
-        boolean isMealsNeeded = meals != null && meals;
+    public List<RestaurantTo> getAllWithMealsToday(@RequestParam @Nullable Boolean mealsToday) {
+        boolean isMealsNeeded = mealsToday != null && mealsToday;
         if (isMealsNeeded) {
             log.info("get all restaurants with meals today");
             return restaurantService.getAllWithMealsToday();
@@ -66,8 +66,8 @@ public class AdminRestaurantController {
     }
 
     @GetMapping("/{id}")
-    public RestaurantTo getWithMeals(@PathVariable int id, @RequestParam @Nullable Boolean meals) {
-        boolean isMealsNeeded = meals != null && meals;
+    public RestaurantTo getWithMeals(@PathVariable int id, @RequestParam @Nullable Boolean mealsToday) {
+        boolean isMealsNeeded = mealsToday != null && mealsToday;
         if (isMealsNeeded) {
             log.info("get the restaurant {} with meals", id);
             return RestaurantUtil.createTo(restaurantService.getWithMealsToday(id));

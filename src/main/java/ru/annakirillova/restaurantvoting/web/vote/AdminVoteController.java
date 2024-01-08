@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import ru.annakirillova.restaurantvoting.service.VoteService;
 import ru.annakirillova.restaurantvoting.to.VoteTo;
@@ -38,8 +37,8 @@ public class AdminVoteController {
 
     @GetMapping("/filter")
     public List<VoteTo> getBetween(@PathVariable int restaurantId,
-                                   @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                   @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+                                   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         log.info("get votes between dates({} - {}) for the restaurant {}", startDate, endDate, restaurantId);
         return VoteUtil.getTos(voteService.getBetween(startDate, endDate, restaurantId));
     }

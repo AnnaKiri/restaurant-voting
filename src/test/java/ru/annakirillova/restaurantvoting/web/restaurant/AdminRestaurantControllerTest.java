@@ -108,7 +108,7 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void getAllWithMeals() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL)
-                .param("meals", "true"))
+                .param("mealsToday", "true"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -130,7 +130,7 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void getWithMeals() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + RESTAURANT1_ID)
-                .param("meals", "true"))
+                .param("mealsToday", "true"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(RESTAURANT_TO_WITH_MEALS_MATCHER.contentJson(RestaurantUtil.createTo(dickinson)));
