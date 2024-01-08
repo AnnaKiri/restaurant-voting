@@ -10,9 +10,6 @@ public abstract class BaseTo implements HasId {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     protected Integer id;
 
-    public BaseTo() {
-    }
-
     public BaseTo(Integer id) {
         this.id = id;
     }

@@ -1,7 +1,7 @@
 package ru.annakirillova.restaurantvoting.web.vote;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +19,10 @@ import java.net.URI;
 @RestController
 @RequestMapping(value = UserVoteController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
+@AllArgsConstructor
 public class UserVoteController {
     static final String REST_URL = "/user/restaurants/{restaurantId}/votes";
 
-    @Autowired
     private VoteService voteService;
 
     @PostMapping()

@@ -1,7 +1,7 @@
 package ru.annakirillova.restaurantvoting.web.vote;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,10 +16,10 @@ import java.util.List;
 @RestController
 @RequestMapping(value = AdminVoteController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
+@AllArgsConstructor
 public class AdminVoteController {
     static final String REST_URL = "/admin/restaurants/{restaurantId}/votes";
 
-    @Autowired
     private VoteService voteService;
 
     @DeleteMapping("/{voteId}")

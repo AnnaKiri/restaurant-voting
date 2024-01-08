@@ -1,7 +1,7 @@
 package ru.annakirillova.restaurantvoting.web.restaurant;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.lang.Nullable;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,12 +16,11 @@ import java.util.List;
 @RestController
 @RequestMapping(value = UserRestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
+@AllArgsConstructor
 public class UserRestaurantController {
     static final String REST_URL = "/user/restaurants";
 
-    @Autowired
     private RestaurantService restaurantService;
-    @Autowired
     private RestaurantRepository restaurantRepository;
 
     @GetMapping("/{id}/with-meals-and-rating")

@@ -3,7 +3,6 @@ package ru.annakirillova.restaurantvoting.web.meal;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,7 +11,6 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.annakirillova.restaurantvoting.model.Meal;
-import ru.annakirillova.restaurantvoting.repository.MealRepository;
 import ru.annakirillova.restaurantvoting.service.MealService;
 
 import java.net.URI;
@@ -26,10 +24,7 @@ import java.util.List;
 public class AdminMealController {
     static final String REST_URL = "/admin/restaurants/{restaurantId}/meals";
 
-    @Autowired
     private final MealService mealService;
-    @Autowired
-    private final MealRepository mealRepository;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Meal> createWithLocation(@PathVariable int restaurantId, @Valid @RequestBody Meal meal) {
