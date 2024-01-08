@@ -6,7 +6,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.annakirillova.restaurantvoting.error.NotFoundException;
 import ru.annakirillova.restaurantvoting.model.Meal;
 import ru.annakirillova.restaurantvoting.model.Restaurant;
 import ru.annakirillova.restaurantvoting.model.Vote;
@@ -31,10 +30,6 @@ public class RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
 
-    public Restaurant get(int id) {
-        return restaurantRepository.findById(id).orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
-    }
-
     @CacheEvict(value = {"restaurants", "restaurantsWithMeals"}, allEntries = true)
     public Restaurant create(Restaurant restaurant) {
         checkNew(restaurant);
@@ -43,9 +38,7 @@ public class RestaurantService {
 
     @CacheEvict(value = {"restaurants", "restaurantsWithMeals"}, allEntries = true)
     public void delete(int id) {
-        if (restaurantRepository.delete(id) == 0) {
-            throw new NotFoundException("Entity with id=" + id + " not found");
-        }
+        restaurantRepository.deleteExisted(id);
     }
 
     @CacheEvict(value = {"restaurants", "restaurantsWithMeals"}, allEntries = true)
@@ -81,7 +74,7 @@ public class RestaurantService {
 
     @Transactional
     public Restaurant getWithMealsToday(int id) {
-        Restaurant restaurant = get(id);
+        Restaurant restaurant = restaurantRepository.getExisted(id);
         List<Meal> mealsToday = restaurantRepository.getWithMealsByDate(id, LocalDate.now())
                 .map(Restaurant::getMeals)
                 .orElse(Collections.emptyList());
@@ -89,8 +82,9 @@ public class RestaurantService {
         return restaurant;
     }
 
+    @Transactional
     public Restaurant getWithVotesToday(int id) {
-        Restaurant restaurant = get(id);
+        Restaurant restaurant = restaurantRepository.getExisted(id);
         List<Vote> votesToday = restaurantRepository.getWithVotesByDate(id, LocalDate.now())
                 .map(Restaurant::getVotes)
                 .orElse(Collections.emptyList());

@@ -73,7 +73,7 @@ public class AdminRestaurantController {
             return RestaurantUtil.createTo(restaurantService.getWithMealsToday(id));
         } else {
             log.info("get the restaurant {}", id);
-            return RestaurantUtil.createTo(restaurantService.get(id));
+            return RestaurantUtil.createTo(restaurantRepository.getExisted(id));
         }
     }
 }

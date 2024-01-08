@@ -43,7 +43,7 @@ public class AdminUserController extends AbstractUserController {
     @GetMapping("/{id}")
     public User get(@PathVariable int id) {
         log.info("get the user with id={}", id);
-        return userService.get(id);
+        return userRepository.getExisted(id);
     }
 
     @GetMapping

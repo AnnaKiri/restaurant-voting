@@ -9,7 +9,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.annakirillova.restaurantvoting.error.NotFoundException;
 import ru.annakirillova.restaurantvoting.model.Role;
 import ru.annakirillova.restaurantvoting.model.User;
-import ru.annakirillova.restaurantvoting.service.UserService;
+import ru.annakirillova.restaurantvoting.repository.UserRepository;
 import ru.annakirillova.restaurantvoting.web.AbstractControllerTest;
 
 import static org.hamcrest.Matchers.containsString;
@@ -27,7 +27,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
     private static final String REST_URL_SLASH = REST_URL + '/';
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
@@ -67,7 +67,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + USER1_ID))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> userService.get(USER1_ID));
+        assertThrows(NotFoundException.class, () -> userRepository.getExisted(USER1_ID));
     }
 
     @Test
@@ -88,7 +88,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
                 .content(jsonWithPassword(updated, updated.getPassword())))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        USER_MATCHER.assertMatch(userService.get(USER1_ID), getUpdated());
+        USER_MATCHER.assertMatch(userRepository.getExisted(USER1_ID), getUpdated());
     }
 
     @Test
@@ -193,7 +193,7 @@ class AdminUserControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        assertFalse(userService.get(USER1_ID).isEnabled());
+        assertFalse(userRepository.getExisted(USER1_ID).isEnabled());
     }
 
     @Test

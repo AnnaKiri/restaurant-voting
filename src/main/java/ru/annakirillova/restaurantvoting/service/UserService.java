@@ -25,15 +25,9 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public User get(int id) {
-        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
-    }
-
     @CacheEvict(value = "users", allEntries = true)
     public void delete(int id) {
-        if (userRepository.delete(id) == 0) {
-            throw new NotFoundException("Entity with id=" + id + " not found");
-        }
+        userRepository.deleteExisted(id);
     }
 
     @Cacheable("users")
@@ -70,7 +64,7 @@ public class UserService {
     @CacheEvict(value = "users", allEntries = true)
     @Transactional
     public void setEnabled(int userId, boolean enabled) {
-        User user = get(userId);
+        User user = userRepository.getExisted(userId);
         user.setEnabled(enabled);
     }
 }

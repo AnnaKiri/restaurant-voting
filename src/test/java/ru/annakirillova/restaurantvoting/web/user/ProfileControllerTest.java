@@ -7,6 +7,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.annakirillova.restaurantvoting.model.User;
+import ru.annakirillova.restaurantvoting.repository.UserRepository;
 import ru.annakirillova.restaurantvoting.service.UserService;
 import ru.annakirillova.restaurantvoting.to.UserTo;
 import ru.annakirillova.restaurantvoting.util.JsonUtil;
@@ -24,6 +25,8 @@ class ProfileControllerTest extends AbstractControllerTest {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
     @WithUserDetails(value = USER1_MAIL)
@@ -56,7 +59,7 @@ class ProfileControllerTest extends AbstractControllerTest {
         int newId = created.id();
         newUser.setId(newId);
         USER_MATCHER.assertMatch(created, newUser);
-        USER_MATCHER.assertMatch(userService.get(newId), newUser);
+        USER_MATCHER.assertMatch(userRepository.getExisted(newId), newUser);
     }
 
     @Test
@@ -68,7 +71,7 @@ class ProfileControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        USER_MATCHER.assertMatch(userService.get(USER1_ID), UsersUtil.updateFromTo(new User(user1), updatedTo));
+        USER_MATCHER.assertMatch(userRepository.getExisted(USER1_ID), UsersUtil.updateFromTo(new User(user1), updatedTo));
     }
 
     @Test

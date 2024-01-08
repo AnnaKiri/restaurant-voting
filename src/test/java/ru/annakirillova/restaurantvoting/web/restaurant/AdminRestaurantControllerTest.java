@@ -8,6 +8,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.annakirillova.restaurantvoting.error.NotFoundException;
 import ru.annakirillova.restaurantvoting.model.Restaurant;
+import ru.annakirillova.restaurantvoting.repository.RestaurantRepository;
 import ru.annakirillova.restaurantvoting.service.RestaurantService;
 import ru.annakirillova.restaurantvoting.util.JsonUtil;
 import ru.annakirillova.restaurantvoting.util.RestaurantUtil;
@@ -25,14 +26,14 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
     private static final String REST_URL_SLASH = REST_URL + '/';
 
     @Autowired
-    private RestaurantService restaurantService;
+    private RestaurantRepository restaurantRepository;
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL_SLASH + RESTAURANT1_ID))
                 .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> restaurantService.get(RESTAURANT1_ID));
+        assertThrows(NotFoundException.class, () -> restaurantRepository.getExisted(RESTAURANT1_ID));
 
     }
 
@@ -52,7 +53,7 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
-        RESTAURANT_MATCHER.assertMatch(restaurantService.get(updated.getId()), getUpdated());
+        RESTAURANT_MATCHER.assertMatch(restaurantRepository.getExisted(updated.getId()), getUpdated());
     }
 
     @Test
@@ -90,7 +91,7 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
         int newId = created.id();
         newRestaurant.setId(newId);
         RESTAURANT_MATCHER.assertMatch(created, newRestaurant);
-        RESTAURANT_MATCHER.assertMatch(restaurantService.get(newId), newRestaurant);
+        RESTAURANT_MATCHER.assertMatch(restaurantRepository.getExisted(newId), newRestaurant);
     }
 
     @Test

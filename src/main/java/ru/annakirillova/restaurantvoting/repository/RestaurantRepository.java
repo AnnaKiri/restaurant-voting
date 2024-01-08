@@ -1,8 +1,6 @@
 package ru.annakirillova.restaurantvoting.repository;
 
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,12 +14,7 @@ import java.util.Optional;
 import static ru.annakirillova.restaurantvoting.service.RestaurantService.SORT_NAME;
 
 @Transactional(readOnly = true)
-public interface RestaurantRepository extends JpaRepository<Restaurant, Integer> {
-    @Transactional
-    @Modifying
-    @Query("DELETE FROM Restaurant r WHERE r.id = :id")
-    int delete(@Param("id") int id);
-
+public interface RestaurantRepository extends BaseRepository<Restaurant> {
     @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.votes v WHERE v.created = :date ORDER BY r.name")
     List<Restaurant> getRestaurantsWithVotesByDate(@Param("date") LocalDate date);
 
