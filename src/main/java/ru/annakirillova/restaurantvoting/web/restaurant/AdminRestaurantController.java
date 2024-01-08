@@ -10,6 +10,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.annakirillova.restaurantvoting.model.Restaurant;
+import ru.annakirillova.restaurantvoting.repository.RestaurantRepository;
 import ru.annakirillova.restaurantvoting.service.RestaurantService;
 import ru.annakirillova.restaurantvoting.to.RestaurantTo;
 import ru.annakirillova.restaurantvoting.util.RestaurantUtil;
@@ -25,6 +26,8 @@ public class AdminRestaurantController {
 
     @Autowired
     private RestaurantService restaurantService;
+    @Autowired
+    private RestaurantRepository restaurantRepository;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
@@ -58,7 +61,7 @@ public class AdminRestaurantController {
             return restaurantService.getAllWithMealsToday();
         } else {
             log.info("get all restaurant");
-            return RestaurantUtil.getTos(restaurantService.getAll());
+            return RestaurantUtil.getTos(restaurantRepository.getAll());
         }
     }
 

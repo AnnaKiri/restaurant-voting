@@ -1,5 +1,6 @@
 package ru.annakirillova.restaurantvoting.repository;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,6 +11,8 @@ import ru.annakirillova.restaurantvoting.model.Restaurant;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
+import static ru.annakirillova.restaurantvoting.service.RestaurantService.SORT_NAME;
 
 @Transactional(readOnly = true)
 public interface RestaurantRepository extends JpaRepository<Restaurant, Integer> {
@@ -29,4 +32,9 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
 
     @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.votes v WHERE r.id = :id AND v.created = :date")
     Optional<Restaurant> getWithVotesByDate(@Param("id") int id, @Param("date") LocalDate date);
+
+    @Cacheable("restaurants")
+    default List<Restaurant> getAll() {
+        return findAll(SORT_NAME);
+    }
 }

@@ -23,7 +23,7 @@ import static ru.annakirillova.restaurantvoting.validation.ValidationUtil.checkN
 @Service
 @AllArgsConstructor
 public class RestaurantService {
-    private static final Sort SORT_NAME = Sort.by(Sort.Direction.ASC, "name");
+    public static final Sort SORT_NAME = Sort.by(Sort.Direction.ASC, "name");
 
     private final RestaurantRepository restaurantRepository;
 
@@ -52,7 +52,7 @@ public class RestaurantService {
         for (Restaurant r : restaurantRepository.getRestaurantsWithVotesByDate(LocalDate.now())) {
             votesMap.put(r.getId(), r.getVotes());
         }
-        List<Restaurant> restaurantsWithVotes = getAll();
+        List<Restaurant> restaurantsWithVotes = restaurantRepository.getAll();
         for (Restaurant r : restaurantsWithVotes) {
             votesMap.computeIfAbsent(r.getId(), id -> new ArrayList<>());
             r.setVotes(votesMap.get(r.getId()));
@@ -67,27 +67,12 @@ public class RestaurantService {
         for (Restaurant r : restaurantRepository.getRestaurantsWithMealsByDate(LocalDate.now())) {
             mealsMap.put(r.getId(), r.getMeals());
         }
-        List<Restaurant> restaurantsWithMeals = getAll();
+        List<Restaurant> restaurantsWithMeals = restaurantRepository.getAll();
         for (Restaurant r : restaurantsWithMeals) {
             mealsMap.computeIfAbsent(r.getId(), id -> new ArrayList<>());
             r.setMeals(mealsMap.get(r.getId()));
         }
         return RestaurantUtil.getTos(restaurantsWithMeals);
-    }
-
-    @Transactional
-    public List<RestaurantTo> getAllWithVotesAndMealsToday() {
-        List<RestaurantTo> restaurantsWithVotes = getAllWithVotesToday();
-        List<RestaurantTo> restaurantsWithMeals = getAllWithMealsToday();
-        for (int i = 0; i < restaurantsWithVotes.size(); i++) {
-            restaurantsWithVotes.get(i).setMeals(restaurantsWithMeals.get(i).getMeals());
-        }
-        return restaurantsWithMeals;
-    }
-
-    @Cacheable("restaurants")
-    public List<Restaurant> getAll() {
-        return restaurantRepository.findAll(SORT_NAME);
     }
 
     @Transactional

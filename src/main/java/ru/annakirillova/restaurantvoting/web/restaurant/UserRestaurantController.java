@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.lang.Nullable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import ru.annakirillova.restaurantvoting.repository.RestaurantRepository;
 import ru.annakirillova.restaurantvoting.service.RestaurantService;
 import ru.annakirillova.restaurantvoting.to.RestaurantTo;
 import ru.annakirillova.restaurantvoting.util.RestaurantUtil;
@@ -20,6 +21,8 @@ public class UserRestaurantController {
 
     @Autowired
     private RestaurantService restaurantService;
+    @Autowired
+    private RestaurantRepository restaurantRepository;
 
     @GetMapping("/{id}/with-meals-and-rating")
     @Transactional
@@ -29,12 +32,18 @@ public class UserRestaurantController {
     }
 
     @GetMapping
+    @Transactional
     public List<RestaurantTo> getAllWithMealsAndRating(@RequestParam @Nullable Boolean meals, @RequestParam @Nullable Boolean votes) {
         boolean isMealsNeeded = meals != null && meals;
         boolean isVotesNeeded = votes != null && votes;
         if (isMealsNeeded && isVotesNeeded) {
             log.info("get restaurants with meals and rating");
-            return restaurantService.getAllWithVotesAndMealsToday();
+            List<RestaurantTo> restaurantsWithVotes = restaurantService.getAllWithVotesToday();
+            List<RestaurantTo> restaurantsWithMeals = restaurantService.getAllWithMealsToday();
+            for (int i = 0; i < restaurantsWithVotes.size(); i++) {
+                restaurantsWithVotes.get(i).setMeals(restaurantsWithMeals.get(i).getMeals());
+            }
+            return restaurantsWithMeals;
         } else if (isMealsNeeded) {
             log.info("get all restaurants with meals today");
             return restaurantService.getAllWithMealsToday();
@@ -43,7 +52,7 @@ public class UserRestaurantController {
             return restaurantService.getAllWithVotesToday();
         } else {
             log.info("get all restaurants ");
-            return RestaurantUtil.getTos(restaurantService.getAll());
+            return RestaurantUtil.getTos(restaurantRepository.getAll());
         }
     }
 }
