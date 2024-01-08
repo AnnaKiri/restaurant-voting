@@ -18,12 +18,12 @@ public interface MealRepository extends JpaRepository<Meal, Integer> {
     @Query("DELETE FROM Meal m WHERE m.id= :id")
     int delete(@Param("id") int id);
 
-    @Query("SELECT m from Meal m WHERE m.restaurant.id = :restaurantId ORDER BY m.date DESC")
+    @Query("SELECT m from Meal m WHERE m.restaurant.id = :restaurantId ORDER BY m.created DESC")
     List<Meal> getAll(@Param("restaurantId") int restaurantId);
 
-    @Query("SELECT m from Meal m WHERE m.date = :date AND m.restaurant.id = :restaurantId ORDER BY m.date DESC")
+    @Query("SELECT m from Meal m WHERE m.created = :date AND m.restaurant.id = :restaurantId ORDER BY m.created DESC")
     List<Meal> getAllToday(@Param("date") LocalDate date, @Param("restaurantId") int restaurantId);
 
-    @Query("SELECT m from Meal m WHERE m.date >= :startDate AND m.date <= :endDate AND m.restaurant.id = :restaurantId ORDER BY m.date DESC")
+    @Query("SELECT m from Meal m WHERE m.created >= :startDate AND m.created <= :endDate AND m.restaurant.id = :restaurantId ORDER BY m.created DESC")
     List<Meal> getMealsBetweenDates(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("restaurantId") int restaurantId);
 }

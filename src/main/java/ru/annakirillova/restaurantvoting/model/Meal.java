@@ -13,17 +13,17 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "meal",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"date", "restaurant_id", "description"},
-                name = "uk_date_restaurant_description"))
+        uniqueConstraints = @UniqueConstraint(columnNames = {"created", "restaurant_id", "description"},
+                name = "uk_created_restaurant_description"))
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(callSuper = true, exclude = {"restaurant"})
 public class Meal extends AbstractBaseEntity {
 
-    @Column(name = "date", nullable = false, columnDefinition = "date default current_date")
+    @Column(name = "created", nullable = false, columnDefinition = "date default current_date")
     @NotNull
-    private LocalDate date = LocalDate.now();
+    private LocalDate created = LocalDate.now();
 
     @Column(name = "description", nullable = false)
     @NotBlank
@@ -42,16 +42,16 @@ public class Meal extends AbstractBaseEntity {
     private Restaurant restaurant;
 
     public Meal(Meal meal) {
-        this(meal.date, meal.description, meal.price, meal.restaurant);
+        this(meal.created, meal.description, meal.price, meal.restaurant);
     }
 
-    public Meal(LocalDate date, String description, Integer price, Restaurant restaurant) {
-        this(null, date, description, price, restaurant);
+    public Meal(LocalDate created, String description, Integer price, Restaurant restaurant) {
+        this(null, created, description, price, restaurant);
     }
 
-    public Meal(Integer id, LocalDate date, String description, Integer price, Restaurant restaurant) {
+    public Meal(Integer id, LocalDate created, String description, Integer price, Restaurant restaurant) {
         super(id);
-        this.date = date;
+        this.created = created;
         this.description = description;
         this.price = price;
         this.restaurant = restaurant;

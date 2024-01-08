@@ -11,8 +11,8 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "vote",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "date", "restaurant_id"},
-                name = "uk_user_date_restaurant"))
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "created", "restaurant_id"},
+                name = "uk_user_created_restaurant"))
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,20 +26,20 @@ public class Vote extends AbstractBaseEntity {
     @JoinColumn(name = "restaurant_id", referencedColumnName = "id", nullable = false)
     private Restaurant restaurant;
 
-    @Column(name = "date", nullable = false, columnDefinition = "date default current_date", updatable = false)
+    @Column(name = "created", nullable = false, columnDefinition = "date default current_date", updatable = false)
     @NotNull
-    private LocalDate date = LocalDate.now();
+    private LocalDate created = LocalDate.now();
 
     public Vote(User user, Restaurant restaurant) {
         this.user = user;
         this.restaurant = restaurant;
     }
 
-    public Vote(Integer id, User user, Restaurant restaurant, LocalDate date) {
+    public Vote(Integer id, User user, Restaurant restaurant, LocalDate created) {
         super(id);
         this.user = user;
         this.restaurant = restaurant;
-        this.date = date;
+        this.created = created;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class Vote extends AbstractBaseEntity {
                 "id=" + id +
                 ", user_id=" + user.getId() +
                 ", restaurant_id=" + restaurant.getId() +
-                ", date=" + date +
+                ", date=" + created +
                 '}';
     }
 }
