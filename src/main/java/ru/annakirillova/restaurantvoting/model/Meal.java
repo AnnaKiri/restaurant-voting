@@ -42,18 +42,17 @@ public class Meal extends AbstractBaseEntity {
     private Restaurant restaurant;
 
     public Meal(Meal meal) {
-        this(meal.created, meal.description, meal.price, meal.restaurant);
+        this(meal.created, meal.description, meal.price);
     }
 
-    public Meal(LocalDate created, String description, Integer price, Restaurant restaurant) {
-        this(null, created, description, price, restaurant);
+    public Meal(LocalDate created, String description, Integer price) {
+        this(null, created, description, price);
     }
 
-    public Meal(Integer id, LocalDate created, String description, Integer price, Restaurant restaurant) {
+    public Meal(Integer id, LocalDate created, String description, Integer price) {
         super(id);
         this.created = created;
         this.description = description;
         this.price = price;
-        this.restaurant = restaurant;
     }
 }
