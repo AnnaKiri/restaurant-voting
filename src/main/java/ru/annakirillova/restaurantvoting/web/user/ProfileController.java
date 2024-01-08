@@ -45,7 +45,6 @@ public class ProfileController extends AbstractUserController {
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal AuthUser authUser) {
-        log.info("delete the user {}", authUser.getUser().id());
-        userService.delete(authUser.id());
+        super.delete(authUser.id());
     }
 }

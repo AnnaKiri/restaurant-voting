@@ -23,4 +23,9 @@ public class AbstractUserController {
     protected void initBinder(WebDataBinder binder) {
         binder.addValidators(emailValidator);
     }
+
+    public void delete(int id) {
+        log.info("delete the user {}", id);
+        userRepository.deleteExisted(id);
+    }
 }
