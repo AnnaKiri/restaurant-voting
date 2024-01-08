@@ -15,6 +15,7 @@ import static ru.annakirillova.restaurantvoting.web.vote.VoteTestData.vote2;
 public class RestaurantTestData {
 
     public static final int RESTAURANT1_ID = 1;
+    public static final int NOT_FOUND = 1000;
 
     public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Restaurant.class, "meals", "votes");
 
