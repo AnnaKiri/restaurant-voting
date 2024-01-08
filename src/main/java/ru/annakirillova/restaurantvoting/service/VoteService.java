@@ -19,6 +19,7 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class VoteService {
+    public static final LocalTime RE_VOTE_DEADLINE = LocalTime.of(11, 0);
 
     private final VoteRepository voteRepository;
     private final RestaurantRepository restaurantRepository;
@@ -57,8 +58,8 @@ public class VoteService {
             Vote newVote = voteToday.get();
             if (newVote.getRestaurant().getId() == restaurantId) {
                 throw new VoteException("Voting for the same restaurant");
-            } else if (LocalTime.now(clock).isAfter(LocalTime.of(11, 0))) {
-                throw new VoteException("It's prohibited to change the vote after 11 a.m.");
+            } else if (LocalTime.now(clock).isAfter(RE_VOTE_DEADLINE)) {
+                throw new VoteException("It's prohibited to change the vote after " + RE_VOTE_DEADLINE);
             } else {
                 newVote.setRestaurant(restaurantRepository.getReferenceById(restaurantId));
                 return voteRepository.save(newVote);

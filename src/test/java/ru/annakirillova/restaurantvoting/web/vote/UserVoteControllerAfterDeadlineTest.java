@@ -12,12 +12,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.annakirillova.restaurantvoting.web.restaurant.RestaurantTestData.RESTAURANT1_ID;
 import static ru.annakirillova.restaurantvoting.web.user.UserTestData.USER1_MAIL;
 
-@ActiveProfiles("timeAfter11")
-public class UserVoteControllerAfterElevenTest extends AbstractControllerTest {
+@ActiveProfiles("timeAfterDeadline")
+public class UserVoteControllerAfterDeadlineTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = USER1_MAIL)
-    void updateAfterEleven() throws Exception {
+    void updateAfterDeadline() throws Exception {
         perform(MockMvcRequestBuilders.post(buildUrlWithRestaurantId(UserVoteController.REST_URL, RESTAURANT1_ID + 1))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())

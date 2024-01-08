@@ -48,7 +48,7 @@ public class UserRestaurantController {
             log.info("get all restaurants with meals today");
             return restaurantService.getAllWithMealsToday();
         } else if (isVotesNeeded) {
-            log.info("get all restaurants with votes today");
+            log.info("get all restaurants with rating today");
             return restaurantService.getAllWithVotesToday();
         } else {
             log.info("get all restaurants ");

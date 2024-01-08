@@ -44,7 +44,7 @@ public class AppConfig {
         Map<String, Object> getProperties();
     }
 
-    @Profile("!timeAfter11 && !timeBefore11")
+    @Profile("!timeAfterDeadline && !timeBeforeDeadline")
     @Bean
     public Clock clockNow() {
         return Clock.systemDefaultZone();

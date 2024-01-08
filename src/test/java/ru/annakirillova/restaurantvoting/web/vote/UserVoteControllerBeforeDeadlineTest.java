@@ -20,8 +20,8 @@ import static ru.annakirillova.restaurantvoting.web.user.UserTestData.USER1_MAIL
 import static ru.annakirillova.restaurantvoting.web.user.UserTestData.USER3_MAIL;
 import static ru.annakirillova.restaurantvoting.web.vote.VoteTestData.*;
 
-@ActiveProfiles("timeBefore11")
-public class UserVoteControllerBeforeElevenTest extends AbstractControllerTest {
+@ActiveProfiles("timeBeforeDeadline")
+public class UserVoteControllerBeforeDeadlineTest extends AbstractControllerTest {
 
     @Autowired
     private VoteService voteService;
@@ -45,7 +45,7 @@ public class UserVoteControllerBeforeElevenTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = USER1_MAIL)
-    void updateBeforeEleven() throws Exception {
+    void updateBeforeDeadline() throws Exception {
         ResultActions action = perform(MockMvcRequestBuilders.post(buildUrlWithRestaurantId(UserVoteController.REST_URL, RESTAURANT1_ID + 1))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())

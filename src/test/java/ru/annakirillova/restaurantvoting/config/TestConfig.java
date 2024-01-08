@@ -6,21 +6,23 @@ import org.springframework.context.annotation.Profile;
 
 import java.time.*;
 
+import static ru.annakirillova.restaurantvoting.service.VoteService.RE_VOTE_DEADLINE;
+
 @Configuration
 public class TestConfig {
 
-    @Profile("timeAfter11")
+    @Profile("timeAfterDeadline")
     @Bean
-    public Clock clockAfter11() {
-        LocalTime fixedTime = LocalTime.of(12, 0);
+    public Clock clockAfterDeadline() {
+        LocalTime fixedTime = RE_VOTE_DEADLINE.plusHours(1);
         LocalDate today = LocalDate.now();
         return Clock.fixed(LocalDateTime.of(today, fixedTime).toInstant(ZoneOffset.UTC), ZoneOffset.UTC);
     }
 
-    @Profile("timeBefore11")
+    @Profile("timeBeforeDeadline")
     @Bean
-    public Clock clockBefore11() {
-        LocalTime fixedTime = LocalTime.of(9, 0);
+    public Clock clockBeforeDeadline() {
+        LocalTime fixedTime = RE_VOTE_DEADLINE.minusHours(1);
         LocalDate today = LocalDate.now();
         return Clock.fixed(LocalDateTime.of(today, fixedTime).toInstant(ZoneOffset.UTC), ZoneOffset.UTC);
     }
