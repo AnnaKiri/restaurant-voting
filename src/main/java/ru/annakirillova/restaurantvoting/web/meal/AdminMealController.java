@@ -47,9 +47,9 @@ public class AdminMealController {
 
     @DeleteMapping("/{mealId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable int mealId) {
+    public void delete(@PathVariable int restaurantId, @PathVariable int mealId) {
         log.info("delete the meal {}", mealId);
-        mealService.delete(mealId);
+        mealService.delete(restaurantId, mealId);
     }
 
     @PutMapping(value = "/{mealId}", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -76,7 +76,7 @@ public class AdminMealController {
     @GetMapping("/{mealId}")
     public Meal get(@PathVariable int restaurantId, @PathVariable int mealId) {
         log.info("get the meal {} of the restaurant {}", mealId, restaurantId);
-        return mealService.get(mealId);
+        return mealService.get(restaurantId, mealId);
     }
 
     @GetMapping("/today")

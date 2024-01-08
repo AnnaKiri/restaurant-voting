@@ -13,6 +13,7 @@ public class UserTestData {
 
     public static final int USER1_ID = 1;
     public static final int ADMIN_ID = 4;
+    public static final int NOT_FOUND = 100;
     public static final String USER1_MAIL = "user1@yandex.ru";
     public static final String USER2_MAIL = "user2@yandex.ru";
     public static final String USER3_MAIL = "user3@yandex.ru";

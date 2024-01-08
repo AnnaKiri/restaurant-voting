@@ -24,12 +24,11 @@ public class MealService {
     private final MealRepository mealRepository;
     private final RestaurantRepository restaurantRepository;
 
-    public Meal get(int mealId) {
-        return mealRepository.findById(mealId).orElseThrow(() -> new NotFoundException("Entity with id=" + mealId + " not found"));
+    public Meal get(int restaurantId, int mealId) {
+        return mealRepository.get(restaurantId, mealId).orElseThrow(() -> new NotFoundException("Entity with id=" + mealId + " not found"));
     }
 
     @CacheEvict(value = "restaurantsWithMeals", allEntries = true)
-    @Transactional
     public Meal create(int restaurantId, Meal meal) {
         checkNew(meal);
         meal.setRestaurant(restaurantRepository.getReferenceById(restaurantId));
@@ -51,16 +50,16 @@ public class MealService {
     }
 
     @CacheEvict(value = "restaurantsWithMeals", allEntries = true)
-    public void delete(int mealId) {
-        if (mealRepository.delete(mealId) == 0) {
-            throw new NotFoundException("Entity with id=" + mealId + " not found");
-        }
+    public void delete(int restaurantId, int mealId) {
+        Meal meal = mealRepository.getBelonged(restaurantId, mealId);
+        mealRepository.delete(meal);
     }
 
     @CacheEvict(value = "restaurantsWithMeals", allEntries = true)
     @Transactional
     public void update(int restaurantId, Meal meal, int mealId) {
         assureIdConsistent(meal, mealId);
+        mealRepository.getBelonged(restaurantId, mealId);
         meal.setRestaurant(restaurantRepository.getReferenceById(restaurantId));
         mealRepository.save(meal);
     }

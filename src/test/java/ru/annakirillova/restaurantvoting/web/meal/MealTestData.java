@@ -9,6 +9,7 @@ import java.util.List;
 public class MealTestData {
     public static final MatcherFactory.Matcher<Meal> MEAL_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Meal.class, "restaurant");
     public static final int MEAL1_ID = 1;
+    public static final int NOT_FOUND = 100;
 
     public static final Meal meal1 = new Meal(MEAL1_ID, LocalDate.now(), "Antipasto Salad", 500);
     public static final Meal meal2 = new Meal(MEAL1_ID + 1, LocalDate.now(), "Chicken Grilled", 600);

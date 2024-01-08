@@ -48,6 +48,7 @@ public class RestExceptionHandler {
             put(AuthenticationException.class, UNAUTHORIZED);
             put(FileNotFoundException.class, NOT_FOUND);
             put(NoHandlerFoundException.class, NOT_FOUND);
+            put(DataConflictException.class, DATA_CONFLICT);
             put(IllegalRequestDataException.class, BAD_REQUEST);
             put(VoteException.class, BAD_REQUEST);
             put(AppException.class, APP_ERROR);
