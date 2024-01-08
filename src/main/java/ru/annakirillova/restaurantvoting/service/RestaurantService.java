@@ -15,7 +15,11 @@ import ru.annakirillova.restaurantvoting.to.RestaurantTo;
 import ru.annakirillova.restaurantvoting.util.RestaurantUtil;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static ru.annakirillova.restaurantvoting.validation.ValidationUtil.assureIdConsistent;
 import static ru.annakirillova.restaurantvoting.validation.ValidationUtil.checkNew;
@@ -26,6 +30,10 @@ public class RestaurantService {
     public static final Sort SORT_NAME = Sort.by(Sort.Direction.ASC, "name");
 
     private final RestaurantRepository restaurantRepository;
+
+    public Restaurant get(int id) {
+        return restaurantRepository.findById(id).orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
+    }
 
     @CacheEvict(value = {"restaurants", "restaurantsWithMeals"}, allEntries = true)
     public Restaurant create(Restaurant restaurant) {
@@ -48,57 +56,45 @@ public class RestaurantService {
 
     @Transactional
     public List<RestaurantTo> getAllWithVotesToday() {
-        Map<Integer, List<Vote>> votesMap = new LinkedHashMap<>();
-        for (Restaurant r : restaurantRepository.getRestaurantsWithVotesByDate(LocalDate.now())) {
-            votesMap.put(r.getId(), r.getVotes());
-        }
-        List<Restaurant> restaurantsWithVotes = restaurantRepository.getAll();
-        for (Restaurant r : restaurantsWithVotes) {
-            votesMap.computeIfAbsent(r.getId(), id -> new ArrayList<>());
-            r.setVotes(votesMap.get(r.getId()));
-        }
-        return RestaurantUtil.getTos(restaurantsWithVotes);
+        Map<Integer, List<Vote>> votesMap = restaurantRepository.getRestaurantsWithVotesByDate(LocalDate.now())
+                .stream()
+                .collect(Collectors.toMap(Restaurant::getId, Restaurant::getVotes));
+
+        return restaurantRepository.getAll().stream()
+                .peek(r -> r.setVotes(votesMap.getOrDefault(r.getId(), new ArrayList<>())))
+                .map(RestaurantUtil::createTo)
+                .collect(Collectors.toList());
     }
 
     @Cacheable("restaurantsWithMeals")
     @Transactional
     public List<RestaurantTo> getAllWithMealsToday() {
-        Map<Integer, List<Meal>> mealsMap = new LinkedHashMap<>();
-        for (Restaurant r : restaurantRepository.getRestaurantsWithMealsByDate(LocalDate.now())) {
-            mealsMap.put(r.getId(), r.getMeals());
-        }
-        List<Restaurant> restaurantsWithMeals = restaurantRepository.getAll();
-        for (Restaurant r : restaurantsWithMeals) {
-            mealsMap.computeIfAbsent(r.getId(), id -> new ArrayList<>());
-            r.setMeals(mealsMap.get(r.getId()));
-        }
-        return RestaurantUtil.getTos(restaurantsWithMeals);
+        Map<Integer, List<Meal>> mealsMap = restaurantRepository.getRestaurantsWithMealsByDate(LocalDate.now())
+                .stream()
+                .collect(Collectors.toMap(Restaurant::getId, Restaurant::getMeals));
+
+        return restaurantRepository.getAll().stream()
+                .peek(r -> r.setMeals(mealsMap.getOrDefault(r.getId(), new ArrayList<>())))
+                .map(RestaurantUtil::createTo)
+                .collect(Collectors.toList());
     }
 
     @Transactional
     public Restaurant getWithMealsToday(int id) {
         Restaurant restaurant = get(id);
-        Optional<Restaurant> restaurantWithMeals = restaurantRepository.getWithMealsByDate(id, LocalDate.now());
-        if (restaurantWithMeals.isPresent()) {
-            restaurant.setMeals(restaurantWithMeals.get().getMeals());
-        } else {
-            restaurant.setMeals(new ArrayList<>());
-        }
+        List<Meal> mealsToday = restaurantRepository.getWithMealsByDate(id, LocalDate.now())
+                .map(Restaurant::getMeals)
+                .orElse(Collections.emptyList());
+        restaurant.setMeals(mealsToday);
         return restaurant;
-    }
-
-    public Restaurant get(int id) {
-        return restaurantRepository.findById(id).orElseThrow(() -> new NotFoundException("Entity with id=" + id + " not found"));
     }
 
     public Restaurant getWithVotesToday(int id) {
         Restaurant restaurant = get(id);
-        Optional<Restaurant> restaurantWithVotes = restaurantRepository.getWithVotesByDate(id, LocalDate.now());
-        if (restaurantWithVotes.isPresent()) {
-            restaurant.setVotes(restaurantWithVotes.get().getVotes());
-        } else {
-            restaurant.setVotes(new ArrayList<>());
-        }
+        List<Vote> votesToday = restaurantRepository.getWithVotesByDate(id, LocalDate.now())
+                .map(Restaurant::getVotes)
+                .orElse(Collections.emptyList());
+        restaurant.setVotes(votesToday);
         return restaurant;
     }
 

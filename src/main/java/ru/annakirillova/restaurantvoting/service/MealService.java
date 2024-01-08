@@ -11,6 +11,7 @@ import ru.annakirillova.restaurantvoting.repository.RestaurantRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static ru.annakirillova.restaurantvoting.validation.ValidationUtil.assureIdConsistent;
@@ -41,17 +42,20 @@ public class MealService {
     @CacheEvict(value = "restaurantsWithMeals", allEntries = true)
     @Transactional
     public List<Meal> saveList(List<Meal> meals, int restaurantId) {
-        List<Meal> savedMeals = new ArrayList<>();
+        if (meals == null || meals.isEmpty()) {
+            return Collections.emptyList();
+        }
         restaurantRepository.checkExisted(restaurantId);
         Restaurant restaurant = restaurantRepository.getReferenceById(restaurantId);
-        for (int i = 0; i < meals.size(); i++) {
-            Meal meal = meals.get(i);
+        List<Meal> savedMeals = new ArrayList<>();
+        for (Meal meal : meals) {
             checkNew(meal);
             meal.setRestaurant(restaurant);
             savedMeals.add(mealRepository.save(meal));
         }
         return savedMeals;
     }
+
 
     @CacheEvict(value = "restaurantsWithMeals", allEntries = true)
     @Transactional
