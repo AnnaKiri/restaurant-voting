@@ -176,7 +176,7 @@ The entire REST interface is covered by JUnit tests using Spring MVC Test and Sp
 
 - Get All Restaurants with meals and rating
 
-`curl -X GET http://localhost:8080/user/restaurants?meals=true&votes=true --user user1@yandex.ru:password1`
+`curl -X GET http://localhost:8080/user/restaurants?meals=true&ratingToday=true --user user1@yandex.ru:password1`
 
 - Get All Restaurants with meals
 
@@ -184,7 +184,7 @@ The entire REST interface is covered by JUnit tests using Spring MVC Test and Sp
 
 - Get All Restaurants with rating
 
-`curl -X POST http://localhost:8080/user/restaurants?votes=true --user user1@yandex.ru:password1`
+`curl -X POST http://localhost:8080/user/restaurants?ratingToday=true --user user1@yandex.ru:password1`
 
 - Get All Restaurants
 

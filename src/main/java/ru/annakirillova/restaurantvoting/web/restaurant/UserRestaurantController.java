@@ -33,9 +33,9 @@ public class UserRestaurantController {
 
     @GetMapping
     @Transactional
-    public List<RestaurantTo> getAllWithMealsAndRating(@RequestParam @Nullable Boolean meals, @RequestParam @Nullable Boolean votes) {
-        boolean isMealsNeeded = meals != null && meals;
-        boolean isVotesNeeded = votes != null && votes;
+    public List<RestaurantTo> getAllWithMealsAndRating(@RequestParam @Nullable Boolean mealsToday, @RequestParam @Nullable Boolean ratingToday) {
+        boolean isMealsNeeded = mealsToday != null && mealsToday;
+        boolean isVotesNeeded = ratingToday != null && ratingToday;
         if (isMealsNeeded && isVotesNeeded) {
             log.info("get restaurants with meals and rating");
             List<RestaurantTo> restaurantsWithVotes = restaurantService.getAllWithVotesToday();

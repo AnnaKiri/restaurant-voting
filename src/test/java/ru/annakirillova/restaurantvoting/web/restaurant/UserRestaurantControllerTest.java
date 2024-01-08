@@ -21,7 +21,7 @@ public class UserRestaurantControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = USER1_MAIL)
     void getAllWithRating() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL)
-                .param("votes", "true"))
+                .param("ratingToday", "true"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -32,7 +32,7 @@ public class UserRestaurantControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = USER1_MAIL)
     void getAllWithMeals() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL)
-                .param("meals", "true"))
+                .param("mealsToday", "true"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -43,8 +43,8 @@ public class UserRestaurantControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = USER1_MAIL)
     void getAllWithMealsAndRating() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL)
-                .param("votes", "true")
-                .param("meals", "true"))
+                .param("ratingToday", "true")
+                .param("mealsToday", "true"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
