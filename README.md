@@ -1,7 +1,3 @@
-
-Swagger documentation http://localhost:8080/swagger-ui/index.html
-
-
 # Restaurant voting system
 
 Enterprise Java project with registration/authorization and access rights based on roles (USER, ADMINISTRATOR).

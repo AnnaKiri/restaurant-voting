@@ -13,8 +13,8 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "meal",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"restaurant_id", "description", "date"},
-                name = "uk_restaurant_description_date"))
+        uniqueConstraints = @UniqueConstraint(columnNames = {"date", "restaurant_id", "description"},
+                name = "uk_date_restaurant_description"))
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
