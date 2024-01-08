@@ -8,10 +8,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.annakirillova.restaurantvoting.model.Vote;
-import ru.annakirillova.restaurantvoting.service.VoteService;
+import ru.annakirillova.restaurantvoting.repository.VoteRepository;
 import ru.annakirillova.restaurantvoting.to.VoteTo;
 import ru.annakirillova.restaurantvoting.util.VoteUtil;
 import ru.annakirillova.restaurantvoting.web.AbstractControllerTest;
+import ru.annakirillova.restaurantvoting.web.restaurant.RestaurantTestData;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -24,7 +25,7 @@ import static ru.annakirillova.restaurantvoting.web.vote.VoteTestData.*;
 public class UserVoteControllerBeforeDeadlineTest extends AbstractControllerTest {
 
     @Autowired
-    private VoteService voteService;
+    private VoteRepository voteRepository;
 
     @Test
     @WithUserDetails(value = USER3_MAIL)
@@ -40,7 +41,16 @@ public class UserVoteControllerBeforeDeadlineTest extends AbstractControllerTest
         newVote.setId(newId);
         VoteTo newVoteTo = VoteUtil.createTo(newVote);
         VOTE_TO_MATCHER.assertMatch(created, newVoteTo);
-        VOTE_TO_MATCHER.assertMatch(VoteUtil.createTo(voteService.get(newId)), newVoteTo);
+        VOTE_TO_MATCHER.assertMatch(VoteUtil.createTo(voteRepository.getBelonged(RESTAURANT1_ID + 3, newId)), newVoteTo);
+    }
+
+    @Test
+    @WithUserDetails(value = USER3_MAIL)
+    void createForNotFoundRestaurant() throws Exception {
+        perform(MockMvcRequestBuilders.post(buildUrlWithRestaurantId(UserVoteController.REST_URL, RestaurantTestData.NOT_FOUND))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -56,7 +66,7 @@ public class UserVoteControllerBeforeDeadlineTest extends AbstractControllerTest
         updatedVote.setId(newId);
         VoteTo newVoteTo = VoteUtil.createTo(updatedVote);
         VOTE_TO_MATCHER.assertMatch(created, newVoteTo);
-        VOTE_TO_MATCHER.assertMatch(VoteUtil.createTo(voteService.get(newId)), newVoteTo);
+        VOTE_TO_MATCHER.assertMatch(VoteUtil.createTo(voteRepository.getBelonged(RESTAURANT1_ID + 1, newId)), newVoteTo);
     }
 
     @Test

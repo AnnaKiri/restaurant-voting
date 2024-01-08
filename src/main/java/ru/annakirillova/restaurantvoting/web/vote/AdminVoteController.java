@@ -25,9 +25,9 @@ public class AdminVoteController {
 
     @DeleteMapping("/{voteId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable int voteId) {
+    public void delete(@PathVariable int restaurantId, @PathVariable int voteId) {
         log.info("delete the vote {}", voteId);
-        voteService.delete(voteId);
+        voteService.delete(restaurantId, voteId);
     }
 
     @GetMapping
@@ -53,6 +53,6 @@ public class AdminVoteController {
     @GetMapping("/{voteId}")
     public VoteTo get(@PathVariable int restaurantId, @PathVariable int voteId) {
         log.info("get the vote {} for the restaurant {}", voteId, restaurantId);
-        return VoteUtil.createTo(voteService.get(voteId));
+        return VoteUtil.createTo(voteService.get(restaurantId, voteId));
     }
 }

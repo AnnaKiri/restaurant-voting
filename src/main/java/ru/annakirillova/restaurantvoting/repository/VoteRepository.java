@@ -1,10 +1,10 @@
 package ru.annakirillova.restaurantvoting.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
+import ru.annakirillova.restaurantvoting.error.DataConflictException;
 import ru.annakirillova.restaurantvoting.model.Vote;
 
 import java.time.LocalDate;
@@ -13,11 +13,6 @@ import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface VoteRepository extends JpaRepository<Vote, Integer> {
-    @Modifying
-    @Transactional
-    @Query("DELETE FROM Vote v WHERE v.id= :id")
-    int delete(@Param("id") int id);
-
     @Query("SELECT v FROM Vote v WHERE v.user.id=:userId AND v.created= :date")
     Optional<Vote> getVoteByDate(@Param("userId") int userId, @Param("date") LocalDate date);
 
@@ -29,4 +24,13 @@ public interface VoteRepository extends JpaRepository<Vote, Integer> {
 
     @Query("SELECT v from Vote v WHERE v.created >= :startDate AND v.created < :endDate AND v.restaurant.id = :restaurantId ORDER BY v.created DESC")
     List<Vote> getVotesBetweenDates(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("restaurantId") int restaurantId);
+
+
+    @Query("SELECT v FROM Vote v WHERE v.id = :voteId and v.restaurant.id = :restaurantId")
+    Optional<Vote> get(int restaurantId, int voteId);
+
+    default Vote getBelonged(int restaurantId, int voteId) {
+        return get(restaurantId, voteId).orElseThrow(
+                () -> new DataConflictException("Vote id=" + voteId + "   is not exist or doesn't belong to Restaurant id=" + restaurantId));
+    }
 }

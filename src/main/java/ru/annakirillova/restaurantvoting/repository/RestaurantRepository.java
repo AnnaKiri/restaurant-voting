@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
+import ru.annakirillova.restaurantvoting.error.NotFoundException;
 import ru.annakirillova.restaurantvoting.model.Restaurant;
 
 import java.time.LocalDate;
@@ -36,5 +37,11 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
     @Cacheable("restaurants")
     default List<Restaurant> getAll() {
         return findAll(SORT_NAME);
+    }
+
+    default void checkExisted(int restaurantId) {
+        if (!existsById(restaurantId)) {
+            throw new NotFoundException("Restaurant id=" + restaurantId + "   is not exist");
+        }
     }
 }

@@ -13,6 +13,7 @@ import static ru.annakirillova.restaurantvoting.web.user.UserTestData.*;
 public class VoteTestData {
 
     public static final int VOTE1_ID = 1;
+    public static final int NOT_FOUND = 100;
 
     public static final MatcherFactory.Matcher<Vote> VOTE_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Vote.class, "user", "restaurant");
 

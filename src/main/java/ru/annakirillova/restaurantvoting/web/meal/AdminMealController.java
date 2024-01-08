@@ -12,6 +12,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.annakirillova.restaurantvoting.model.Meal;
+import ru.annakirillova.restaurantvoting.repository.MealRepository;
 import ru.annakirillova.restaurantvoting.service.MealService;
 
 import java.net.URI;
@@ -27,6 +28,8 @@ public class AdminMealController {
 
     @Autowired
     private final MealService mealService;
+    @Autowired
+    private final MealRepository mealRepository;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Meal> createWithLocation(@PathVariable int restaurantId, @Valid @RequestBody Meal meal) {

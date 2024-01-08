@@ -5,10 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.annakirillova.restaurantvoting.error.NotFoundException;
+import ru.annakirillova.restaurantvoting.error.DataConflictException;
 import ru.annakirillova.restaurantvoting.service.VoteService;
 import ru.annakirillova.restaurantvoting.util.VoteUtil;
 import ru.annakirillova.restaurantvoting.web.AbstractControllerTest;
+import ru.annakirillova.restaurantvoting.web.restaurant.RestaurantTestData;
 
 import java.util.List;
 
@@ -40,11 +41,50 @@ public class AdminVoteControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
+    void getNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.get(buildUrlWithRestaurantId(REST_URL_SLASH, RESTAURANT1_ID) + NOT_FOUND))
+                .andDo(print())
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void getForNotFoundRestaurant() throws Exception {
+        perform(MockMvcRequestBuilders.get(buildUrlWithRestaurantId(REST_URL_SLASH, RestaurantTestData.NOT_FOUND) + VOTE1_ID))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(buildUrlWithRestaurantId(REST_URL_SLASH, RESTAURANT1_ID) + VOTE1_ID))
                 .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> voteService.get(VOTE1_ID));
+        assertThrows(DataConflictException.class, () -> voteService.get(RESTAURANT1_ID, VOTE1_ID));
 
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void deleteNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.delete(buildUrlWithRestaurantId(REST_URL_SLASH, RESTAURANT1_ID) + NOT_FOUND))
+                .andDo(print())
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void deleteForNotFoundRestaurant() throws Exception {
+        perform(MockMvcRequestBuilders.delete(buildUrlWithRestaurantId(REST_URL_SLASH, RestaurantTestData.NOT_FOUND) + VOTE1_ID))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void deleteDataConflict() throws Exception {
+        perform(MockMvcRequestBuilders.delete(buildUrlWithRestaurantId(REST_URL_SLASH, RESTAURANT1_ID + 1) + VOTE1_ID))
+                .andExpect(status().isConflict());
     }
 
     @Test
