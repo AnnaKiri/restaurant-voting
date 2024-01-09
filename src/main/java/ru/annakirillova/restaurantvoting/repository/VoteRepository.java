@@ -25,7 +25,6 @@ public interface VoteRepository extends JpaRepository<Vote, Integer> {
     @Query("SELECT v from Vote v WHERE v.created >= :startDate AND v.created < :endDate AND v.restaurant.id = :restaurantId ORDER BY v.created DESC")
     List<Vote> getVotesBetweenDates(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("restaurantId") int restaurantId);
 
-
     @Query("SELECT v FROM Vote v WHERE v.id = :voteId and v.restaurant.id = :restaurantId")
     Optional<Vote> get(int restaurantId, int voteId);
 

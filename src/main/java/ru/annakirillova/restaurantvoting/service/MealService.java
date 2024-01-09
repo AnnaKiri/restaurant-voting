@@ -56,7 +56,6 @@ public class MealService {
         return savedMeals;
     }
 
-
     @CacheEvict(value = "restaurantsWithMeals", allEntries = true)
     @Transactional
     public void delete(int restaurantId, int mealId) {
