@@ -63,6 +63,7 @@ public class RestExceptionHandler {
             put(AccessDeniedException.class, FORBIDDEN);
         }
     };
+
     @Getter
     private final MessageSource messageSource;
 

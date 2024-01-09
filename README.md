@@ -1,4 +1,7 @@
-# Restaurant voting system
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/80ad628e283145068a3d2d8e6ff8142a)](https://app.codacy.com/gh/AnnaKiri/restaurant-voting/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+***
+
+# Restaurant voting application
 
 Enterprise Java project with registration/authorization and access rights based on roles (USER, ADMINISTRATOR).
 The administrator can create / view / edit / delete - dishes / menus / restaurants / users.
@@ -18,14 +21,12 @@ The entire REST interface is covered by JUnit tests using Spring MVC Test and Sp
 * Only one vote counted per user
 * If user votes again the same day:
  - If it is before 11:00 we assume that he changed his mind.
- - If it is after 11:00 then it is too late, vote can't be changed
- </pre> 
+ - If it is after 11:00 then it is too late, vote can't be changed</pre>
 ***
 
 ### Technology stack:
 
-**Maven** / **Hibernate** / **Spring Boot 3.2.1** / **Spring Data JPA** / **Spring Security** / **Spring MVC** / *
-*HSQLDB** / **JUnit** / **EHCACHE** / **Apache Tomcat** / **Json Jackson** / **SLF4J**
+**Maven** / **Hibernate** / **Spring Boot 3.2.1** / **Spring Data JPA** / **Spring Security** / **Spring MVC** / **H2** / **JUnit** / **EHCACHE** / **Apache Tomcat** / **Json Jackson** / **SLF4J**
 
 ***
 
