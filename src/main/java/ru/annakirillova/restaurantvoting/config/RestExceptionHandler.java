@@ -23,6 +23,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import ru.annakirillova.restaurantvoting.error.*;
 
@@ -61,6 +62,7 @@ public class RestExceptionHandler {
             put(ServletRequestBindingException.class, BAD_REQUEST);
             put(RequestRejectedException.class, BAD_REQUEST);
             put(AccessDeniedException.class, FORBIDDEN);
+            put(HandlerMethodValidationException.class, BAD_REQUEST);
         }
     };
 
@@ -79,6 +81,13 @@ public class RestExceptionHandler {
         String path = request.getRequestURI();
         log.warn(ERR_PFX + "BindException with invalidParams {} at request {}", invalidParams, path);
         return createProblemDetail(ex, path, BAD_REQUEST, "BindException", Map.of("invalid_params", invalidParams));
+    }
+
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    ProblemDetail HandlerMethodValidationException(HandlerMethodValidationException ex, HttpServletRequest request) {
+        String path = request.getRequestURI();
+        log.warn(ERR_PFX + "Validation failed at request");
+        return createProblemDetail(ex, path, BAD_REQUEST, "HandlerMethodValidationException - Validation failed at request", Map.of());
     }
 
     private Map<String, String> getErrorMap(BindingResult result) {
