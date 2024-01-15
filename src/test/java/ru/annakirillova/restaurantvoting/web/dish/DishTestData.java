@@ -38,12 +38,6 @@ public class DishTestData {
     public static final Dish DISH_14 = new Dish(DISH1_ID + 13, LocalDate.now(), "Mango Meringue Cake", 300);
     public static final Dish NEW_YEAR_DISH_5 = new Dish(DISH1_ID + 18, LocalDate.of(2024, 1, 1), "Holodec", 129);
 
-    public static final Dish NEW_DISH_1 = new Dish(DISH1_ID + 19, LocalDate.now(), "New Dish1", 155);
-    public static final Dish NEW_DISH_2 = new Dish(DISH1_ID + 20, LocalDate.now(), "New Dish2", 188);
-    public static final Dish NEW_DISH_3 = new Dish(DISH1_ID + 21, LocalDate.now(), "New Dish3", 146);
-
-    public static final List<Dish> NEW_DISHES = List.of(NEW_DISH_1, NEW_DISH_2, NEW_DISH_3);
-
     public static Dish getNew() {
         return new Dish(null, LocalDate.now(), "New Dish", 146);
     }

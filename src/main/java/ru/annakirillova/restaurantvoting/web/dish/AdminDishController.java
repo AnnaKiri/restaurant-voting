@@ -35,13 +35,6 @@ public class AdminDishController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @PostMapping(value = "/add-list", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Dish>> createDishList(@PathVariable int restaurantId, @Valid @RequestBody List<Dish> dishesList) {
-        log.info("create dishes for the restaurant {} from a list", restaurantId);
-        List<Dish> createdList = dishService.saveList(dishesList, restaurantId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdList);
-    }
-
     @DeleteMapping("/{dishId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int restaurantId, @PathVariable int dishId) {

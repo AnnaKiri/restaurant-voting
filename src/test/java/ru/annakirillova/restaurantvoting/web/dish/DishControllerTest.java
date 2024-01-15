@@ -168,26 +168,6 @@ class DishControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void createDishList() throws Exception {
-        List<Dish> newListOfDishes = List.of(new Dish(NEW_DISH_1), new Dish(NEW_DISH_2), new Dish(NEW_DISH_3));
-        perform(MockMvcRequestBuilders.post(buildUrlWithRestaurantId(REST_URL_SLASH, RESTAURANT1_ID) + "add-list")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(newListOfDishes)))
-                .andExpect(DISH_MATCHER.contentJson(NEW_DISHES));
-    }
-
-    @Test
-    @WithUserDetails(value = ADMIN_MAIL)
-    void createDishListForNotFound() throws Exception {
-        List<Dish> newListOfDishes = List.of(new Dish(NEW_DISH_1), new Dish(NEW_DISH_2), new Dish(NEW_DISH_3));
-        perform(MockMvcRequestBuilders.post(buildUrlWithRestaurantId(REST_URL_SLASH, RestaurantTestData.NOT_FOUND) + "add-list")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(newListOfDishes)))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    @WithUserDetails(value = ADMIN_MAIL)
     void getAll() throws Exception {
         perform(MockMvcRequestBuilders.get(buildUrlWithRestaurantId(REST_URL, RESTAURANT1_ID)))
                 .andExpect(status().isOk())
