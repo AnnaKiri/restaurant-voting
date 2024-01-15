@@ -29,7 +29,7 @@ import static ru.annakirillova.restaurantvoting.web.dish.DishTestData.*;
 import static ru.annakirillova.restaurantvoting.web.restaurant.RestaurantTestData.RESTAURANT1_ID;
 import static ru.annakirillova.restaurantvoting.web.user.UserTestData.ADMIN_MAIL;
 
-class DishControllerTest extends AbstractControllerTest {
+class AdminDishControllerTest extends AbstractControllerTest {
 
     private static final String REST_URL_SLASH = REST_URL + '/';
 
