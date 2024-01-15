@@ -3,11 +3,13 @@ package ru.annakirillova.restaurantvoting.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.annakirillova.restaurantvoting.error.NotFoundException;
 import ru.annakirillova.restaurantvoting.error.VoteException;
 import ru.annakirillova.restaurantvoting.model.Vote;
 import ru.annakirillova.restaurantvoting.repository.RestaurantRepository;
 import ru.annakirillova.restaurantvoting.repository.UserRepository;
 import ru.annakirillova.restaurantvoting.repository.VoteRepository;
+import ru.annakirillova.restaurantvoting.to.VoteTo;
 
 import java.time.Clock;
 import java.time.LocalDate;
@@ -26,31 +28,13 @@ public class VoteService {
     private final UserRepository userRepository;
     private final Clock clock;
 
-    public Vote get(int restaurantId, int voteId) {
-        restaurantRepository.checkExisted(restaurantId);
-        return voteRepository.getBelonged(restaurantId, voteId);
+    public Vote getVoteToday(int userId) {
+        return voteRepository.getVoteByDate(userId, LocalDate.now())
+                .orElseThrow(() -> new NotFoundException("Today vote for user with id=" + userId + " not found"));
     }
 
-    @Transactional
-    public void delete(int restaurantId, int voteId) {
-        restaurantRepository.checkExisted(restaurantId);
-        Vote vote = voteRepository.getBelonged(restaurantId, voteId);
-        voteRepository.delete(vote);
-    }
-
-    public List<Vote> getAllByRestaurant(int restaurantId) {
-        restaurantRepository.checkExisted(restaurantId);
-        return voteRepository.getAllByRestaurant(restaurantId);
-    }
-
-    public List<Vote> getBetween(LocalDate startDate, LocalDate endDate, int restaurantId) {
-        restaurantRepository.checkExisted(restaurantId);
-        return voteRepository.getVotesBetweenDates(startDate, endDate, restaurantId);
-    }
-
-    public List<Vote> getAllToday(int restaurantId) {
-        restaurantRepository.checkExisted(restaurantId);
-        return voteRepository.getAllByDate(restaurantId, LocalDate.now());
+    public List<Vote> getAll(int userId) {
+        return voteRepository.getAllByUser(userId);
     }
 
     @Transactional
@@ -61,15 +45,24 @@ public class VoteService {
             Vote newVote = new Vote(userRepository.getReferenceById(userId), restaurantRepository.getReferenceById(restaurantId));
             return voteRepository.save(newVote);
         } else {
-            Vote newVote = voteToday.get();
-            if (newVote.getRestaurant().getId() == restaurantId) {
-                throw new VoteException("Voting for the same restaurant");
-            } else if (LocalTime.now(clock).isAfter(RE_VOTE_DEADLINE)) {
-                throw new VoteException("It's prohibited to change the vote after " + RE_VOTE_DEADLINE);
-            } else {
-                newVote.setRestaurant(restaurantRepository.getReferenceById(restaurantId));
-                return voteRepository.save(newVote);
-            }
+            throw new VoteException("It's prohibited to vote again");
+        }
+    }
+
+    @Transactional
+    public Vote update(VoteTo voteTo, int userId) {
+        Vote voteToday = voteRepository.getExistedByDate(userId, LocalDate.now());
+        int restaurantId = voteTo.getRestaurantId();
+        restaurantRepository.checkExisted(restaurantId);
+        if (!voteTo.getId().equals(voteToday.getId())) {
+            throw new VoteException("Allowed to change the today vote only");
+        } else if (voteToday.getRestaurant().getId() == restaurantId) {
+            throw new VoteException("Voting for the same restaurant");
+        } else if (LocalTime.now(clock).isAfter(RE_VOTE_DEADLINE)) {
+            throw new VoteException("It's prohibited to change the vote after " + RE_VOTE_DEADLINE);
+        } else {
+            voteToday.setRestaurant(restaurantRepository.getReferenceById(restaurantId));
+            return voteRepository.save(voteToday);
         }
     }
 }

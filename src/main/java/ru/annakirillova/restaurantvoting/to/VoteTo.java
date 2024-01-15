@@ -1,5 +1,6 @@
 package ru.annakirillova.restaurantvoting.to;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -14,14 +15,18 @@ import java.time.LocalDate;
 @ToString(callSuper = true)
 public class VoteTo extends BaseTo {
 
-    @NotNull
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Integer userId;
 
     @NotNull
     private Integer restaurantId;
 
-    @NotNull
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private LocalDate created;
+
+    public VoteTo() {
+        super(null);
+    }
 
     public VoteTo(Integer id, Integer userId, Integer restaurantId, LocalDate created) {
         super(id);
