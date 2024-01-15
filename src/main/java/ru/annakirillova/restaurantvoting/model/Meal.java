@@ -13,7 +13,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "meal",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"created", "restaurant_id", "description"},
+        uniqueConstraints = @UniqueConstraint(columnNames = {"available_on", "restaurant_id", "description"},
                 name = "uk_created_restaurant_description"))
 @Getter
 @Setter
@@ -21,9 +21,9 @@ import java.time.LocalDate;
 @ToString(callSuper = true)
 public class Meal extends AbstractBaseEntity {
 
-    @Column(name = "created", nullable = false, columnDefinition = "date default current_date")
+    @Column(name = "available_on", nullable = false, columnDefinition = "date default current_date")
     @NotNull
-    private LocalDate created = LocalDate.now();
+    private LocalDate availableOn = LocalDate.now();
 
     @Column(name = "description", nullable = false)
     @NotBlank
@@ -33,7 +33,7 @@ public class Meal extends AbstractBaseEntity {
 
     @Column(name = "price", nullable = false)
     @NotNull
-    @Range(min = 0, max = 10000)
+    @Range(min = 0, max = 10_000_000)
     private Integer price;
 
     @ToString.Exclude
@@ -43,16 +43,16 @@ public class Meal extends AbstractBaseEntity {
     private Restaurant restaurant;
 
     public Meal(Meal meal) {
-        this(meal.created, meal.description, meal.price);
+        this(meal.availableOn, meal.description, meal.price);
     }
 
-    public Meal(LocalDate created, String description, Integer price) {
-        this(null, created, description, price);
+    public Meal(LocalDate availableOn, String description, Integer price) {
+        this(null, availableOn, description, price);
     }
 
-    public Meal(Integer id, LocalDate created, String description, Integer price) {
+    public Meal(Integer id, LocalDate availableOn, String description, Integer price) {
         super(id);
-        this.created = created;
+        this.availableOn = availableOn;
         this.description = description;
         this.price = price;
     }

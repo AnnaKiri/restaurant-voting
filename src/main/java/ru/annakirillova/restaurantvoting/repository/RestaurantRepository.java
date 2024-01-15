@@ -18,10 +18,10 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
     @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.votes v WHERE v.created = :date ORDER BY r.name")
     List<Restaurant> getRestaurantsWithVotesByDate(@Param("date") LocalDate date);
 
-    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.meals v WHERE v.created = :date ORDER BY r.name")
+    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.meals m WHERE m.availableOn = :date ORDER BY r.name")
     List<Restaurant> getRestaurantsWithMealsByDate(@Param("date") LocalDate date);
 
-    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.meals m WHERE r.id = :id AND m.created = :date")
+    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.meals m WHERE r.id = :id AND m.availableOn = :date")
     Optional<Restaurant> getWithMealsByDate(@Param("id") int id, @Param("date") LocalDate date);
 
     @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.votes v WHERE r.id = :id AND v.created = :date")

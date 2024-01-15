@@ -109,7 +109,7 @@ class MealControllerTest extends AbstractControllerTest {
     @Transactional(propagation = Propagation.NEVER)
     @WithUserDetails(value = ADMIN_MAIL)
     void updateDuplicate() throws Exception {
-        Meal invalid = new Meal(MEAL1_ID, meal2.getCreated(), meal2.getDescription(), 200);
+        Meal invalid = new Meal(MEAL1_ID, meal2.getAvailableOn(), meal2.getDescription(), 200);
         perform(MockMvcRequestBuilders.put(buildUrlWithRestaurantId(REST_URL_SLASH, RESTAURANT1_ID) + MEAL1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid)))

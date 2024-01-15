@@ -9,7 +9,8 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.util.List;
 
 @Entity
-@Table(name = "restaurant")
+@Table(name = "restaurant",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"name"}, name = "uk_restaurant_name"))
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

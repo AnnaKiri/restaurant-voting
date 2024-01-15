@@ -14,13 +14,13 @@ import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface MealRepository extends JpaRepository<Meal, Integer> {
-    @Query("SELECT m from Meal m WHERE m.restaurant.id = :restaurantId ORDER BY m.created DESC")
+    @Query("SELECT m from Meal m WHERE m.restaurant.id = :restaurantId ORDER BY m.availableOn DESC")
     List<Meal> getAll(@Param("restaurantId") int restaurantId);
 
-    @Query("SELECT m from Meal m WHERE m.created = :date AND m.restaurant.id = :restaurantId ORDER BY m.created DESC")
+    @Query("SELECT m from Meal m WHERE m.availableOn = :date AND m.restaurant.id = :restaurantId ORDER BY m.availableOn DESC")
     List<Meal> getAllToday(@Param("date") LocalDate date, @Param("restaurantId") int restaurantId);
 
-    @Query("SELECT m from Meal m WHERE m.created >= :startDate AND m.created <= :endDate AND m.restaurant.id = :restaurantId ORDER BY m.created DESC")
+    @Query("SELECT m from Meal m WHERE m.availableOn >= :startDate AND m.availableOn <= :endDate AND m.restaurant.id = :restaurantId ORDER BY m.availableOn DESC")
     List<Meal> getMealsBetweenDates(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("restaurantId") int restaurantId);
 
     @Query("SELECT m FROM Meal m WHERE m.id = :mealId and m.restaurant.id = :restaurantId")

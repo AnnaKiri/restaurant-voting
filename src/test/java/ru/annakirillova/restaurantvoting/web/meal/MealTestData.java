@@ -49,6 +49,6 @@ public class MealTestData {
     }
 
     public static Meal getUpdated() {
-        return new Meal(MEAL1_ID, meal1.getCreated(), "Updated Meal", 455);
+        return new Meal(MEAL1_ID, meal1.getAvailableOn(), "Updated Meal", 455);
     }
 }

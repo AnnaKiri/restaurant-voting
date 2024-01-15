@@ -33,7 +33,7 @@ VALUES (1, 'Antipasto Salad', 500),
        (5, 'Chicken Marsala', 600),
        (5, 'Mango Meringue Cake', 300);
 
-INSERT INTO meal (created, restaurant_id, description, price)
+INSERT INTO meal (available_on, restaurant_id, description, price)
 VALUES ('2024-01-01', 1, 'Olivye salad', 89),
        ('2024-01-01', 2, 'Shuba salad', 99),
        ('2024-01-01', 3, 'Zalivnaya ryba', 109),
