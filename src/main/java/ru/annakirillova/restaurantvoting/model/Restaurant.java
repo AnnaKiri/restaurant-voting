@@ -13,15 +13,17 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(callSuper = true, exclude = {"meals", "votes"})
+@ToString(callSuper = true)
 public class Restaurant extends AbstractNamedEntity {
 
+    @ToString.Exclude
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     @OrderBy("description ASC")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private List<Meal> meals;
 
+    @ToString.Exclude
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)

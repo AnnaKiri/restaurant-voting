@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(callSuper = true, exclude = {"restaurant"})
+@ToString(callSuper = true)
 public class Meal extends AbstractBaseEntity {
 
     @Column(name = "created", nullable = false, columnDefinition = "date default current_date")
@@ -36,6 +36,7 @@ public class Meal extends AbstractBaseEntity {
     @Range(min = 0, max = 10000)
     private Integer price;
 
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", referencedColumnName = "id", nullable = false)
     @JsonIgnore

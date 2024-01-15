@@ -1,6 +1,5 @@
 package ru.annakirillova.restaurantvoting.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -8,8 +7,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.util.CollectionUtils;
 import ru.annakirillova.restaurantvoting.HasIdAndEmail;
 import ru.annakirillova.restaurantvoting.validation.NoHtml;
@@ -21,7 +18,7 @@ import java.util.*;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(callSuper = true, exclude = {"votes"})
+@ToString(callSuper = true)
 public class User extends AbstractNamedEntity implements HasIdAndEmail {
 
     @Column(name = "email", nullable = false, unique = true)
@@ -51,11 +48,6 @@ public class User extends AbstractNamedEntity implements HasIdAndEmail {
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private List<Vote> votes;
 
     public User(User u) {
         this(u.id, u.name, u.email, u.password, u.enabled, u.registered, u.roles);
