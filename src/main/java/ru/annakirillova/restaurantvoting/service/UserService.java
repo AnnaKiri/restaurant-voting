@@ -25,29 +25,24 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    @CacheEvict(value = "users", allEntries = true)
     public void delete(int id) {
         userRepository.deleteExisted(id);
     }
 
-    @Cacheable("users")
     public List<User> getAll() {
         return userRepository.findAll(SORT_NAME_EMAIL);
     }
 
-    @CacheEvict(value = "users", allEntries = true)
     public void updatePartially(UserTo userTo, User user) {
         User updatedUser = UsersUtil.updateFromTo(user, userTo);
         userRepository.prepareAndSave(updatedUser);
     }
 
-    @CacheEvict(value = "users", allEntries = true)
     public void updateFull(User user, int id) {
         assureIdConsistent(user, id);
         userRepository.prepareAndSave(user);
     }
 
-    @CacheEvict(value = "users", allEntries = true)
     public User create(User user) {
         checkNew(user);
         return userRepository.prepareAndSave(user);
@@ -61,7 +56,6 @@ public class UserService {
         return findByEmailIgnoreCase(email).orElseThrow(() -> new NotFoundException("User with email=" + email + " not found"));
     }
 
-    @CacheEvict(value = "users", allEntries = true)
     @Transactional
     public void setEnabled(int userId, boolean enabled) {
         User user = userRepository.getExisted(userId);
