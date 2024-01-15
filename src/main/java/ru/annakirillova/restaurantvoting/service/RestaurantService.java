@@ -6,7 +6,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.annakirillova.restaurantvoting.model.Meal;
+import ru.annakirillova.restaurantvoting.model.Dish;
 import ru.annakirillova.restaurantvoting.model.Restaurant;
 import ru.annakirillova.restaurantvoting.model.Vote;
 import ru.annakirillova.restaurantvoting.repository.RestaurantRepository;
@@ -30,18 +30,18 @@ public class RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
 
-    @CacheEvict(value = {"restaurants", "restaurantsWithMeals"}, allEntries = true)
+    @CacheEvict(value = {"restaurants", "restaurantsWithDishes"}, allEntries = true)
     public Restaurant create(Restaurant restaurant) {
         checkNew(restaurant);
         return restaurantRepository.save(restaurant);
     }
 
-    @CacheEvict(value = {"restaurants", "restaurantsWithMeals"}, allEntries = true)
+    @CacheEvict(value = {"restaurants", "restaurantsWithDishes"}, allEntries = true)
     public void delete(int id) {
         restaurantRepository.deleteExisted(id);
     }
 
-    @CacheEvict(value = {"restaurants", "restaurantsWithMeals"}, allEntries = true)
+    @CacheEvict(value = {"restaurants", "restaurantsWithDishes"}, allEntries = true)
     public void update(int id, Restaurant restaurant) {
         assureIdConsistent(restaurant, id);
         restaurantRepository.save(restaurant);
@@ -59,26 +59,25 @@ public class RestaurantService {
                 .collect(Collectors.toList());
     }
 
-    @Cacheable("restaurantsWithMeals")
+    @Cacheable("restaurantsWithDishes")
     @Transactional
-    public List<RestaurantTo> getAllWithMealsToday() {
-        Map<Integer, List<Meal>> mealsMap = restaurantRepository.getRestaurantsWithMealsByDate(LocalDate.now())
+    public List<RestaurantTo> getAllWithDishesToday() {
+        Map<Integer, List<Dish>> dishesMap = restaurantRepository.getRestaurantsWithDishesByDate(LocalDate.now())
                 .stream()
-                .collect(Collectors.toMap(Restaurant::getId, Restaurant::getMeals));
-
+                .collect(Collectors.toMap(Restaurant::getId, Restaurant::getDishes));
         return restaurantRepository.getAll().stream()
-                .peek(r -> r.setMeals(mealsMap.getOrDefault(r.getId(), new ArrayList<>())))
+                .peek(r -> r.setDishes(dishesMap.getOrDefault(r.getId(), new ArrayList<>())))
                 .map(RestaurantUtil::createTo)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public Restaurant getWithMealsToday(int id) {
+    public Restaurant getWithDishesToday(int id) {
         Restaurant restaurant = restaurantRepository.getExisted(id);
-        List<Meal> mealsToday = restaurantRepository.getWithMealsByDate(id, LocalDate.now())
-                .map(Restaurant::getMeals)
+        List<Dish> dishesToday = restaurantRepository.getWithDishesByDate(id, LocalDate.now())
+                .map(Restaurant::getDishes)
                 .orElse(Collections.emptyList());
-        restaurant.setMeals(mealsToday);
+        restaurant.setDishes(dishesToday);
         return restaurant;
     }
 
@@ -93,11 +92,11 @@ public class RestaurantService {
     }
 
     @Transactional
-    public RestaurantTo getWithMealsAndRating(int id) {
-        Restaurant restaurantWithMeals = getWithMealsToday(id);
+    public RestaurantTo getWithDishesAndRating(int id) {
+        Restaurant restaurantWithDishes = getWithDishesToday(id);
         Restaurant restaurantWithVotes = getWithVotesToday(id);
         RestaurantTo restaurantTo = RestaurantUtil.createTo(restaurantWithVotes);
-        restaurantTo.setMeals(restaurantWithMeals.getMeals());
+        restaurantTo.setDishes(restaurantWithDishes.getDishes());
         return restaurantTo;
     }
 }

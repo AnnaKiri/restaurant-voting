@@ -53,11 +53,11 @@ public class AdminRestaurantController {
     }
 
     @GetMapping
-    public List<RestaurantTo> getAllWithMealsToday(@RequestParam @Nullable Boolean mealsToday) {
-        boolean isMealsNeeded = mealsToday != null && mealsToday;
-        if (isMealsNeeded) {
-            log.info("get all restaurants with meals today");
-            return restaurantService.getAllWithMealsToday();
+    public List<RestaurantTo> getAllWithDishesToday(@RequestParam @Nullable Boolean dishesToday) {
+        boolean isDishesNeeded = dishesToday != null && dishesToday;
+        if (isDishesNeeded) {
+            log.info("get all restaurants with dishes today");
+            return restaurantService.getAllWithDishesToday();
         } else {
             log.info("get all restaurant");
             return RestaurantUtil.getTos(restaurantRepository.getAll());
@@ -65,11 +65,11 @@ public class AdminRestaurantController {
     }
 
     @GetMapping("/{id}")
-    public RestaurantTo getWithMeals(@PathVariable int id, @RequestParam @Nullable Boolean mealsToday) {
-        boolean isMealsNeeded = mealsToday != null && mealsToday;
-        if (isMealsNeeded) {
-            log.info("get the restaurant {} with meals", id);
-            return RestaurantUtil.createTo(restaurantService.getWithMealsToday(id));
+    public RestaurantTo getWithDishes(@PathVariable int id, @RequestParam @Nullable Boolean dishesToday) {
+        boolean isDishesNeeded = dishesToday != null && dishesToday;
+        if (isDishesNeeded) {
+            log.info("get the restaurant {} with dishes", id);
+            return RestaurantUtil.createTo(restaurantService.getWithDishesToday(id));
         } else {
             log.info("get the restaurant {}", id);
             return RestaurantUtil.createTo(restaurantRepository.getExisted(id));

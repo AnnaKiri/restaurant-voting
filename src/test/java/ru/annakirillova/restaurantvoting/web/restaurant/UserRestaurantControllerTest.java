@@ -30,26 +30,26 @@ public class UserRestaurantControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = USER1_MAIL)
-    void getAllWithMeals() throws Exception {
+    void getAllWithDishes() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL)
-                .param("mealsToday", "true"))
+                .param("dishesToday", "true"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(RESTAURANT_TO_WITH_MEALS_MATCHER.contentJson(RestaurantUtil.getTos(restaurants)));
+                .andExpect(RESTAURANT_TO_WITH_DISHES_MATCHER.contentJson(RestaurantUtil.getTos(restaurants)));
     }
 
     @Test
     @WithUserDetails(value = USER1_MAIL)
-    void getAllWithMealsAndRating() throws Exception {
+    void getAllWithDishesAndRating() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL)
                 .param("ratingToday", "true")
-                .param("mealsToday", "true"))
+                .param("dishesToday", "true"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(RESTAURANT_TO_WITH_VOTES_MATCHER.contentJson(RestaurantUtil.getTos(restaurants)))
-                .andExpect(RESTAURANT_TO_WITH_MEALS_MATCHER.contentJson(RestaurantUtil.getTos(restaurants)));
+                .andExpect(RESTAURANT_TO_WITH_DISHES_MATCHER.contentJson(RestaurantUtil.getTos(restaurants)));
     }
 
     @Test
@@ -64,11 +64,11 @@ public class UserRestaurantControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = USER1_MAIL)
-    void getWithMealsAndRating() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + RESTAURANT1_ID + "/with-meals-and-rating"))
+    void getWithDishesAndRating() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL_SLASH + RESTAURANT1_ID + "/with-dishes-and-rating"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(RESTAURANT_TO_WITH_MEALS_MATCHER.contentJson(RestaurantUtil.createTo(dickinson)))
+                .andExpect(RESTAURANT_TO_WITH_DISHES_MATCHER.contentJson(RestaurantUtil.createTo(dickinson)))
                 .andExpect(RESTAURANT_TO_WITH_VOTES_MATCHER.contentJson(RestaurantUtil.createTo(dickinson)));
     }
 }

@@ -22,7 +22,7 @@ public class Restaurant extends AbstractNamedEntity {
     @OrderBy("description ASC")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private List<Meal> meals;
+    private List<Dish> dishes;
 
     @ToString.Exclude
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")

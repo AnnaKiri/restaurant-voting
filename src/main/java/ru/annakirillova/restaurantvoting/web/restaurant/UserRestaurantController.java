@@ -23,29 +23,29 @@ public class UserRestaurantController {
     private RestaurantService restaurantService;
     private RestaurantRepository restaurantRepository;
 
-    @GetMapping("/{id}/with-meals-and-rating")
+    @GetMapping("/{id}/with-dishes-and-rating")
     @Transactional
-    public RestaurantTo getWithMealsAndRating(@PathVariable int id) {
-        log.info("get the restaurant {} with meals and rating", id);
-        return restaurantService.getWithMealsAndRating(id);
+    public RestaurantTo getWithDishesAndRating(@PathVariable int id) {
+        log.info("get the restaurant {} with dishes and rating", id);
+        return restaurantService.getWithDishesAndRating(id);
     }
 
     @GetMapping
     @Transactional
-    public List<RestaurantTo> getAllWithMealsAndRating(@RequestParam @Nullable Boolean mealsToday, @RequestParam @Nullable Boolean ratingToday) {
-        boolean isMealsNeeded = mealsToday != null && mealsToday;
+    public List<RestaurantTo> getAllWithDishesAndRating(@RequestParam @Nullable Boolean dishesToday, @RequestParam @Nullable Boolean ratingToday) {
+        boolean isDishesNeeded = dishesToday != null && dishesToday;
         boolean isVotesNeeded = ratingToday != null && ratingToday;
-        if (isMealsNeeded && isVotesNeeded) {
-            log.info("get restaurants with meals and rating");
+        if (isDishesNeeded && isVotesNeeded) {
+            log.info("get restaurants with dishes and rating");
             List<RestaurantTo> restaurantsWithVotes = restaurantService.getAllWithVotesToday();
-            List<RestaurantTo> restaurantsWithMeals = restaurantService.getAllWithMealsToday();
+            List<RestaurantTo> restaurantsWithDishes = restaurantService.getAllWithDishesToday();
             for (int i = 0; i < restaurantsWithVotes.size(); i++) {
-                restaurantsWithVotes.get(i).setMeals(restaurantsWithMeals.get(i).getMeals());
+                restaurantsWithVotes.get(i).setDishes(restaurantsWithDishes.get(i).getDishes());
             }
-            return restaurantsWithMeals;
-        } else if (isMealsNeeded) {
-            log.info("get all restaurants with meals today");
-            return restaurantService.getAllWithMealsToday();
+            return restaurantsWithDishes;
+        } else if (isDishesNeeded) {
+            log.info("get all restaurants with dishes today");
+            return restaurantService.getAllWithDishesToday();
         } else if (isVotesNeeded) {
             log.info("get all restaurants with rating today");
             return restaurantService.getAllWithVotesToday();

@@ -12,14 +12,14 @@ import ru.annakirillova.restaurantvoting.validation.NoHtml;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "meal",
+@Table(name = "dish",
         uniqueConstraints = @UniqueConstraint(columnNames = {"available_on", "restaurant_id", "description"},
                 name = "uk_created_restaurant_description"))
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(callSuper = true)
-public class Meal extends AbstractBaseEntity {
+public class Dish extends AbstractBaseEntity {
 
     @Column(name = "available_on", nullable = false, columnDefinition = "date default current_date")
     @NotNull
@@ -42,15 +42,15 @@ public class Meal extends AbstractBaseEntity {
     @JsonIgnore
     private Restaurant restaurant;
 
-    public Meal(Meal meal) {
-        this(meal.availableOn, meal.description, meal.price);
+    public Dish(Dish dish) {
+        this(dish.availableOn, dish.description, dish.price);
     }
 
-    public Meal(LocalDate availableOn, String description, Integer price) {
+    public Dish(LocalDate availableOn, String description, Integer price) {
         this(null, availableOn, description, price);
     }
 
-    public Meal(Integer id, LocalDate availableOn, String description, Integer price) {
+    public Dish(Integer id, LocalDate availableOn, String description, Integer price) {
         super(id);
         this.availableOn = availableOn;
         this.description = description;
