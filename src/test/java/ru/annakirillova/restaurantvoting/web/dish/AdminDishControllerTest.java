@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.annakirillova.restaurantvoting.error.DataConflictException;
 import ru.annakirillova.restaurantvoting.model.Dish;
-import ru.annakirillova.restaurantvoting.service.DishService;
 import ru.annakirillova.restaurantvoting.util.JsonUtil;
 import ru.annakirillova.restaurantvoting.web.AbstractControllerTest;
 import ru.annakirillova.restaurantvoting.web.restaurant.RestaurantTestData;
@@ -42,7 +41,7 @@ class AdminDishControllerTest extends AbstractControllerTest {
     private static final String REST_URL_SLASH = REST_URL + '/';
 
     @Autowired
-    private DishService dishService;
+    private AdminDishController dishController;
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
@@ -81,7 +80,7 @@ class AdminDishControllerTest extends AbstractControllerTest {
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(buildUrlWithRestaurantId(REST_URL_SLASH, RESTAURANT1_ID) + DISH1_ID))
                 .andExpect(status().isNoContent());
-        assertThrows(DataConflictException.class, () -> dishService.get(RESTAURANT1_ID, DISH1_ID));
+        assertThrows(DataConflictException.class, () -> dishController.get(RESTAURANT1_ID, DISH1_ID));
     }
 
     @Test
@@ -99,7 +98,7 @@ class AdminDishControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
-        DISH_MATCHER.assertMatch(dishService.get(RESTAURANT1_ID, updated.getId()), getUpdated());
+        DISH_MATCHER.assertMatch(dishController.get(RESTAURANT1_ID, updated.getId()), getUpdated());
     }
 
     @Test
@@ -137,7 +136,7 @@ class AdminDishControllerTest extends AbstractControllerTest {
         int newId = created.id();
         newDish.setId(newId);
         DISH_MATCHER.assertMatch(created, newDish);
-        DISH_MATCHER.assertMatch(dishService.get(RESTAURANT1_ID, newId), newDish);
+        DISH_MATCHER.assertMatch(dishController.get(RESTAURANT1_ID, newId), newDish);
     }
 
     @Test
