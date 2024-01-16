@@ -1,6 +1,7 @@
 package ru.annakirillova.restaurantvoting.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,6 +24,7 @@ public class Dish extends AbstractBaseEntity {
 
     @Column(name = "available_on", nullable = false, columnDefinition = "date default current_date")
     @NotNull
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private LocalDate availableOn = LocalDate.now();
 
     @Column(name = "description", nullable = false)
