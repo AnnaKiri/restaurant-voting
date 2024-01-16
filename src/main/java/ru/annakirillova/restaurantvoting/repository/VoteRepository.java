@@ -16,7 +16,6 @@ public interface VoteRepository extends BaseRepository<Vote> {
     @Query("SELECT v FROM Vote v WHERE v.user.id=:userId AND v.created= :date")
     Optional<Vote> getVoteByDate(@Param("userId") int userId, @Param("date") LocalDate date);
 
-
     default Vote getExistedByDate(int userId, LocalDate date) {
         return getVoteByDate(userId, date).orElseThrow(() -> new NotFoundException("Vote for user with id=" + userId + " on date " + date + " not found"));
     }

@@ -26,6 +26,17 @@ public class RestaurantTo extends BaseTo {
 
     private Integer rating;
 
+    public RestaurantTo() {
+        super(null);
+        this.name = null;
+    }
+
+    public RestaurantTo(Integer id, String name, long rating) {
+        super(id);
+        this.name = name;
+        this.rating = Math.toIntExact(rating);
+    }
+
     public RestaurantTo(Integer id, String name, List<Dish> dishes, Integer rating) {
         super(id);
         this.name = name;

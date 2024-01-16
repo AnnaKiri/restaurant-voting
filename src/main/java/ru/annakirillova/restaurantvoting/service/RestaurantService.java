@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.annakirillova.restaurantvoting.model.Dish;
 import ru.annakirillova.restaurantvoting.model.Restaurant;
-import ru.annakirillova.restaurantvoting.model.Vote;
 import ru.annakirillova.restaurantvoting.repository.RestaurantRepository;
 import ru.annakirillova.restaurantvoting.to.RestaurantTo;
 import ru.annakirillova.restaurantvoting.util.RestaurantUtil;
@@ -48,14 +47,13 @@ public class RestaurantService {
     }
 
     @Transactional
-    public List<RestaurantTo> getAllWithVotesToday() {
-        Map<Integer, List<Vote>> votesMap = restaurantRepository.getRestaurantsWithVotesByDate(LocalDate.now())
+    public List<RestaurantTo> getAllWithRatingToday() {
+        Map<Integer, Integer> ratingMap = restaurantRepository.getRestaurantsWithRatingByDate(LocalDate.now())
                 .stream()
-                .collect(Collectors.toMap(Restaurant::getId, Restaurant::getVotes));
-
+                .collect(Collectors.toMap(RestaurantTo::getId, RestaurantTo::getRating));
         return restaurantRepository.getAll().stream()
-                .peek(r -> r.setVotes(votesMap.getOrDefault(r.getId(), new ArrayList<>())))
                 .map(RestaurantUtil::createTo)
+                .peek(r -> r.setRating(ratingMap.getOrDefault(r.getId(), 0)))
                 .collect(Collectors.toList());
     }
 
@@ -82,21 +80,19 @@ public class RestaurantService {
     }
 
     @Transactional
-    public Restaurant getWithVotesToday(int id) {
-        Restaurant restaurant = restaurantRepository.getExisted(id);
-        List<Vote> votesToday = restaurantRepository.getWithVotesByDate(id, LocalDate.now())
-                .map(Restaurant::getVotes)
-                .orElse(Collections.emptyList());
-        restaurant.setVotes(votesToday);
-        return restaurant;
+    public RestaurantTo getWithRatingToday(int id) {
+        RestaurantTo restaurantTo = RestaurantUtil.createTo(restaurantRepository.getExisted(id));
+        int rating = restaurantRepository.getWithRatingByDate(id, LocalDate.now())
+                .map(RestaurantTo::getRating)
+                .orElse(0);
+        restaurantTo.setRating(rating);
+        return restaurantTo;
     }
 
     @Transactional
     public RestaurantTo getWithDishesAndRating(int id) {
-        Restaurant restaurantWithDishes = getWithDishesToday(id);
-        Restaurant restaurantWithVotes = getWithVotesToday(id);
-        RestaurantTo restaurantTo = RestaurantUtil.createTo(restaurantWithVotes);
-        restaurantTo.setDishes(restaurantWithDishes.getDishes());
+        RestaurantTo restaurantTo = getWithRatingToday(id);
+        restaurantTo.setDishes(getWithDishesToday(id).getDishes());
         return restaurantTo;
     }
 }
