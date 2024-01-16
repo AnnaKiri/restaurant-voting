@@ -1,13 +1,10 @@
 package ru.annakirillova.restaurantvoting.to;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import ru.annakirillova.restaurantvoting.model.Dish;
-import ru.annakirillova.restaurantvoting.validation.NoHtml;
 
 import java.util.List;
 
@@ -17,9 +14,6 @@ import java.util.List;
 @ToString(callSuper = true, exclude = {"dishes"})
 public class RestaurantTo extends BaseTo {
 
-    @NotBlank
-    @Size(min = 2, max = 100)
-    @NoHtml
     private final String name;
 
     private List<Dish> dishes;
