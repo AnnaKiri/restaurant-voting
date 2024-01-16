@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ProblemDetail;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import ru.annakirillova.restaurantvoting.util.JsonUtil;
 
 import java.sql.SQLException;
@@ -24,6 +25,7 @@ import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 @Configuration
 @Slf4j
 @EnableCaching
+@EnableScheduling
 public class AppConfig {
 
     @Profile("!test")

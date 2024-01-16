@@ -1,9 +1,11 @@
 package ru.annakirillova.restaurantvoting.service;
 
 import lombok.AllArgsConstructor;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.annakirillova.restaurantvoting.config.DateTimeProvider;
@@ -26,6 +28,7 @@ public class RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
     private final DateTimeProvider dateTimeProvider;
+    private final CacheManager cacheManager;
 
     @CacheEvict(value = {"restaurants", "restaurantsWithDishes"}, allEntries = true)
     public Restaurant create(Restaurant restaurant) {
@@ -88,5 +91,10 @@ public class RestaurantService {
     @Cacheable("restaurants")
     public List<Restaurant> getAll() {
         return restaurantRepository.findAll(SORT_NAME);
+    }
+
+    @Scheduled(cron = "0 1 0 * * *") // Clean cache at 00:01 a.m.
+    public void clearRestaurantsWithDishesCache() {
+        cacheManager.getCache("restaurantsWithDishes").clear();
     }
 }
