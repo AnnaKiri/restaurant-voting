@@ -75,7 +75,7 @@ public class AdminRestaurantController {
     @GetMapping
     public List<RestaurantTo> getAll() {
         log.info("get all restaurant");
-        return RestaurantUtil.getTos(restaurantRepository.getAll());
+        return RestaurantUtil.getTos(restaurantService.getAll());
     }
 
     @GetMapping(path = "/{id}", params = "dishesToday=true")

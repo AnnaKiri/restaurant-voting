@@ -1,6 +1,5 @@
 package ru.annakirillova.restaurantvoting.repository;
 
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,8 +10,6 @@ import ru.annakirillova.restaurantvoting.to.RestaurantTo;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
-import static ru.annakirillova.restaurantvoting.service.RestaurantService.SORT_NAME;
 
 @Transactional(readOnly = true)
 public interface RestaurantRepository extends BaseRepository<Restaurant> {
@@ -32,11 +29,6 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
             "WHERE r.id = :id AND v.created = :date " +
             "GROUP BY r.id, r.name")
     Optional<RestaurantTo> getWithRatingByDate(@Param("id") int id, @Param("date") LocalDate date);
-
-    @Cacheable("restaurants")
-    default List<Restaurant> getAll() {
-        return findAll(SORT_NAME);
-    }
 
     default void checkExisted(int restaurantId) {
         if (!existsById(restaurantId)) {

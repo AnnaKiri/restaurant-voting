@@ -47,7 +47,7 @@ public class RestaurantService {
         Map<Integer, Integer> ratingMap = restaurantRepository.getRestaurantsWithRatingByDate(dateTimeProvider.getNowDate())
                 .stream()
                 .collect(Collectors.toMap(RestaurantTo::getId, RestaurantTo::getRating));
-        return restaurantRepository.getAll().stream()
+        return getAll().stream()
                 .map(RestaurantUtil::createTo)
                 .peek(r -> r.setRating(ratingMap.getOrDefault(r.getId(), 0)))
                 .collect(Collectors.toList());
@@ -59,7 +59,7 @@ public class RestaurantService {
         Map<Integer, List<Dish>> dishesMap = restaurantRepository.getRestaurantsWithDishesByDate(dateTimeProvider.getNowDate())
                 .stream()
                 .collect(Collectors.toMap(Restaurant::getId, Restaurant::getDishes));
-        return restaurantRepository.getAll().stream()
+        return getAll().stream()
                 .peek(r -> r.setDishes(dishesMap.getOrDefault(r.getId(), new ArrayList<>())))
                 .map(RestaurantUtil::createTo)
                 .collect(Collectors.toList());
@@ -83,5 +83,10 @@ public class RestaurantService {
                 .orElse(0);
         restaurantTo.setRating(rating);
         return restaurantTo;
+    }
+
+    @Cacheable("restaurants")
+    public List<Restaurant> getAll() {
+        return restaurantRepository.findAll(SORT_NAME);
     }
 }

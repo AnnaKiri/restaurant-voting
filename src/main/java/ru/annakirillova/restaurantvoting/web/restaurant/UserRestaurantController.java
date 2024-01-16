@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.annakirillova.restaurantvoting.repository.RestaurantRepository;
 import ru.annakirillova.restaurantvoting.service.RestaurantService;
 import ru.annakirillova.restaurantvoting.to.RestaurantTo;
 import ru.annakirillova.restaurantvoting.util.RestaurantUtil;
@@ -24,7 +23,6 @@ public class UserRestaurantController {
     static final String REST_URL = "/user/restaurants";
 
     private RestaurantService restaurantService;
-    private RestaurantRepository restaurantRepository;
 
     @GetMapping("/{id}/with-dishes-and-rating")
     @Transactional(readOnly = true)
@@ -65,6 +63,6 @@ public class UserRestaurantController {
     @GetMapping
     public List<RestaurantTo> getAll() {
         log.info("get all restaurants ");
-        return RestaurantUtil.getTos(restaurantRepository.getAll());
+        return RestaurantUtil.getTos(restaurantService.getAll());
     }
 }
