@@ -26,7 +26,7 @@ public class UserRestaurantController {
     private RestaurantRepository restaurantRepository;
 
     @GetMapping("/{id}/with-dishes-and-rating")
-    @Transactional
+    @Transactional(readOnly = true)
     public RestaurantTo getWithDishesAndRating(@PathVariable int id) {
         log.info("get the restaurant {} with dishes and rating", id);
         RestaurantTo restaurantTo = restaurantService.getWithRatingToday(id);
@@ -35,7 +35,7 @@ public class UserRestaurantController {
     }
 
     @GetMapping(params = {"dishesToday=true", "ratingToday=true"})
-    @Transactional
+    @Transactional(readOnly = true)
     public List<RestaurantTo> getAllWithDishesAndRating() {
         log.info("get restaurants with dishes and rating");
         List<RestaurantTo> restaurantsWithVotes = restaurantService.getAllWithRatingToday();

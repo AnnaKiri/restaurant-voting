@@ -42,7 +42,7 @@ public class RestaurantService {
         restaurantRepository.save(restaurant);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<RestaurantTo> getAllWithRatingToday() {
         Map<Integer, Integer> ratingMap = restaurantRepository.getRestaurantsWithRatingByDate(dateTimeProvider.getNowDate())
                 .stream()
@@ -54,7 +54,7 @@ public class RestaurantService {
     }
 
     @Cacheable("restaurantsWithDishes")
-    @Transactional
+    @Transactional(readOnly = true)
     public List<RestaurantTo> getAllWithDishesToday() {
         Map<Integer, List<Dish>> dishesMap = restaurantRepository.getRestaurantsWithDishesByDate(dateTimeProvider.getNowDate())
                 .stream()
@@ -65,7 +65,7 @@ public class RestaurantService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Restaurant getWithDishesToday(int id) {
         Restaurant restaurant = restaurantRepository.getExisted(id);
         List<Dish> dishesToday = restaurantRepository.getWithDishesByDate(id, dateTimeProvider.getNowDate())
@@ -75,7 +75,7 @@ public class RestaurantService {
         return restaurant;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public RestaurantTo getWithRatingToday(int id) {
         RestaurantTo restaurantTo = RestaurantUtil.createTo(restaurantRepository.getExisted(id));
         int rating = restaurantRepository.getWithRatingByDate(id, dateTimeProvider.getNowDate())

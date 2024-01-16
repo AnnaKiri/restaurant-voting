@@ -17,7 +17,6 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-@Transactional(readOnly = true)
 public class VoteService {
     public static final LocalTime RE_VOTE_DEADLINE = LocalTime.of(11, 0);
 

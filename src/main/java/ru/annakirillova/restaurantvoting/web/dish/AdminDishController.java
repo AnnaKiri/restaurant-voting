@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,6 +36,7 @@ import static ru.annakirillova.restaurantvoting.validation.ValidationUtil.checkN
 @RequestMapping(value = AdminDishController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
+@Transactional(readOnly = true)
 public class AdminDishController {
     static final String REST_URL = "/admin/restaurants/{restaurantId}/dishes";
 
@@ -44,6 +46,7 @@ public class AdminDishController {
     private final DateTimeProvider dateTimeProvider;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
     public ResponseEntity<Dish> createWithLocation(@PathVariable int restaurantId, @Valid @RequestBody Dish dish) {
         checkNew(dish);
         restaurantRepository.checkExisted(restaurantId);
@@ -56,6 +59,7 @@ public class AdminDishController {
     }
 
     @DeleteMapping("/{dishId}")
+    @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int restaurantId, @PathVariable int dishId) {
         log.info("delete the dish {}", dishId);
@@ -66,6 +70,7 @@ public class AdminDishController {
 
     @PutMapping(value = "/{dishId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     public void update(@PathVariable int restaurantId, @Valid @RequestBody Dish dish, @PathVariable int dishId) {
         log.info("update the dish {} for the restaurant {}", dish, restaurantId);
         assureIdConsistent(dish, dishId);
