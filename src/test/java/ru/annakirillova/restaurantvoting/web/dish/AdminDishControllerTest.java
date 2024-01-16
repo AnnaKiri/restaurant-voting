@@ -17,7 +17,6 @@ import ru.annakirillova.restaurantvoting.util.JsonUtil;
 import ru.annakirillova.restaurantvoting.web.AbstractControllerTest;
 import ru.annakirillova.restaurantvoting.web.restaurant.RestaurantTestData;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -25,7 +24,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.annakirillova.restaurantvoting.web.dish.AdminDishController.REST_URL;
-import static ru.annakirillova.restaurantvoting.web.dish.DishTestData.*;
+import static ru.annakirillova.restaurantvoting.web.dish.DishTestData.DISH1_ID;
+import static ru.annakirillova.restaurantvoting.web.dish.DishTestData.DISHES_FOR_DICKINSON;
+import static ru.annakirillova.restaurantvoting.web.dish.DishTestData.DISHES_FOR_DICKINSON_TODAY;
+import static ru.annakirillova.restaurantvoting.web.dish.DishTestData.DISH_1;
+import static ru.annakirillova.restaurantvoting.web.dish.DishTestData.DISH_2;
+import static ru.annakirillova.restaurantvoting.web.dish.DishTestData.DISH_MATCHER;
+import static ru.annakirillova.restaurantvoting.web.dish.DishTestData.NEW_YEAR_DISH_1;
+import static ru.annakirillova.restaurantvoting.web.dish.DishTestData.NOT_FOUND;
+import static ru.annakirillova.restaurantvoting.web.dish.DishTestData.getNew;
+import static ru.annakirillova.restaurantvoting.web.dish.DishTestData.getUpdated;
 import static ru.annakirillova.restaurantvoting.web.restaurant.RestaurantTestData.RESTAURANT1_ID;
 import static ru.annakirillova.restaurantvoting.web.user.UserTestData.ADMIN_MAIL;
 
@@ -158,7 +166,7 @@ class AdminDishControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     @DirtiesContext
     void createDuplicate() throws Exception {
-        Dish invalid = new Dish(null, LocalDate.now(), DISH_1.getDescription(), 200);
+        Dish invalid = new Dish(null, dateTimeProvider.getNowDate(), DISH_1.getDescription(), 200);
         perform(MockMvcRequestBuilders.post(buildUrlWithRestaurantId(REST_URL, RESTAURANT1_ID))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid)))

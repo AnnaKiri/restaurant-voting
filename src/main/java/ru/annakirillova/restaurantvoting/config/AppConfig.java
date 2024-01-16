@@ -51,4 +51,9 @@ public class AppConfig {
     public Clock clockNow() {
         return Clock.systemDefaultZone();
     }
+
+    @Bean
+    public DateTimeProvider dateTimeProvider(Clock clock) {
+        return new DateTimeProvider(clock);
+    }
 }

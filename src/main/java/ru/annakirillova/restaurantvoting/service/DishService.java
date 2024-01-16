@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.annakirillova.restaurantvoting.model.Dish;
 import ru.annakirillova.restaurantvoting.repository.DishRepository;
 import ru.annakirillova.restaurantvoting.repository.RestaurantRepository;
+import ru.annakirillova.restaurantvoting.config.DateTimeProvider;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,6 +22,7 @@ public class DishService {
 
     private final DishRepository dishRepository;
     private final RestaurantRepository restaurantRepository;
+    private final DateTimeProvider dateTimeProvider;
 
     public Dish get(int restaurantId, int dishId) {
         restaurantRepository.checkExisted(restaurantId);
@@ -66,6 +68,6 @@ public class DishService {
 
     public List<Dish> getAllToday(int restaurantId) {
         restaurantRepository.checkExisted(restaurantId);
-        return dishRepository.getAllToday(LocalDate.now(), restaurantId);
+        return dishRepository.getAllToday(dateTimeProvider.getNowDate(), restaurantId);
     }
 }

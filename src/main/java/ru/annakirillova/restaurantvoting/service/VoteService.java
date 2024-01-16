@@ -10,9 +10,8 @@ import ru.annakirillova.restaurantvoting.repository.RestaurantRepository;
 import ru.annakirillova.restaurantvoting.repository.UserRepository;
 import ru.annakirillova.restaurantvoting.repository.VoteRepository;
 import ru.annakirillova.restaurantvoting.to.VoteTo;
+import ru.annakirillova.restaurantvoting.config.DateTimeProvider;
 
-import java.time.Clock;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -26,10 +25,10 @@ public class VoteService {
     private final VoteRepository voteRepository;
     private final RestaurantRepository restaurantRepository;
     private final UserRepository userRepository;
-    private final Clock clock;
+    private final DateTimeProvider dateTimeProvider;
 
     public Vote getVoteToday(int userId) {
-        return voteRepository.getVoteByDate(userId, LocalDate.now())
+        return voteRepository.getVoteByDate(userId, dateTimeProvider.getNowDate())
                 .orElseThrow(() -> new NotFoundException("Today vote for user with id=" + userId + " not found"));
     }
 
@@ -40,7 +39,7 @@ public class VoteService {
     @Transactional
     public Vote save(int restaurantId, int userId) {
         restaurantRepository.checkExisted(restaurantId);
-        Optional<Vote> voteToday = voteRepository.getVoteByDate(userId, LocalDate.now());
+        Optional<Vote> voteToday = voteRepository.getVoteByDate(userId, dateTimeProvider.getNowDate());
         if (voteToday.isEmpty()) {
             Vote newVote = new Vote(userRepository.getReferenceById(userId), restaurantRepository.getReferenceById(restaurantId));
             return voteRepository.save(newVote);
@@ -51,14 +50,14 @@ public class VoteService {
 
     @Transactional
     public Vote update(VoteTo voteTo, int userId) {
-        Vote voteToday = voteRepository.getExistedByDate(userId, LocalDate.now());
+        Vote voteToday = voteRepository.getExistedByDate(userId, dateTimeProvider.getNowDate());
         int restaurantId = voteTo.getRestaurantId();
         restaurantRepository.checkExisted(restaurantId);
         if (!voteTo.getId().equals(voteToday.getId())) {
             throw new VoteException("Allowed to change the today vote only");
         } else if (voteToday.getRestaurant().getId() == restaurantId) {
             throw new VoteException("Voting for the same restaurant");
-        } else if (LocalTime.now(clock).isAfter(RE_VOTE_DEADLINE)) {
+        } else if (dateTimeProvider.getNowTime().isAfter(RE_VOTE_DEADLINE)) {
             throw new VoteException("It's prohibited to change the vote after " + RE_VOTE_DEADLINE);
         } else {
             voteToday.setRestaurant(restaurantRepository.getReferenceById(restaurantId));
