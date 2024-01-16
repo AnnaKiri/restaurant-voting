@@ -67,7 +67,7 @@ public class AdminRestaurantController {
 
     @GetMapping(params = "dishesToday=true")
     //the unused param is needed for SwaggerUI
-    public List<RestaurantTo> getAllWithDishesToday(@RequestParam Boolean dishesToday) {
+    public List<RestaurantTo> getAllWithDishesToday(@RequestParam(required = false) Boolean dishesToday) {
         log.info("get all restaurants with dishes today");
         return restaurantService.getAllWithDishesToday();
     }
@@ -80,7 +80,7 @@ public class AdminRestaurantController {
 
     @GetMapping(path = "/{id}", params = "dishesToday=true")
     //the unused param is needed for SwaggerUI
-    public RestaurantTo getWithDishes(@PathVariable int id, @RequestParam Boolean dishesToday) {
+    public RestaurantTo getWithDishes(@PathVariable int id, @RequestParam(required = false) Boolean dishesToday) {
         log.info("get the restaurant {} with dishes", id);
         return RestaurantUtil.createTo(restaurantService.getWithDishesToday(id));
     }

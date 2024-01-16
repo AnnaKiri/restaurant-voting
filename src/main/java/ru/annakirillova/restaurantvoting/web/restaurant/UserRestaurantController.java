@@ -36,7 +36,7 @@ public class UserRestaurantController {
     @GetMapping(params = {"dishesToday=true", "ratingToday=true"})
     @Transactional(readOnly = true)
     //the unused params are needed for SwaggerUI
-    public List<RestaurantTo> getAllWithDishesAndRating(@RequestParam Boolean dishesToday, @RequestParam Boolean ratingToday) {
+    public List<RestaurantTo> getAllWithDishesAndRating(@RequestParam(required = false) Boolean dishesToday, @RequestParam(required = false) Boolean ratingToday) {
         log.info("get restaurants with dishes and rating");
         List<RestaurantTo> restaurantsWithVotes = restaurantService.getAllWithRatingToday();
         List<RestaurantTo> restaurantsWithDishes = restaurantService.getAllWithDishesToday();
@@ -48,14 +48,14 @@ public class UserRestaurantController {
 
     @GetMapping(params = "dishesToday=true")
     //the unused param is needed for SwaggerUI
-    public List<RestaurantTo> getAllWithDishes(@RequestParam Boolean dishesToday) {
+    public List<RestaurantTo> getAllWithDishes(@RequestParam(required = false) Boolean dishesToday) {
         log.info("get all restaurants with dishes today");
         return restaurantService.getAllWithDishesToday();
     }
 
     @GetMapping(params = "ratingToday=true")
     //the unused param is needed for SwaggerUI
-    public List<RestaurantTo> getAllWithRating(@RequestParam Boolean ratingToday) {
+    public List<RestaurantTo> getAllWithRating(@RequestParam(required = false) Boolean ratingToday) {
         log.info("get all restaurants with rating today");
         return restaurantService.getAllWithRatingToday();
     }
