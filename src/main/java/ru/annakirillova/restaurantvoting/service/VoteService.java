@@ -3,6 +3,7 @@ package ru.annakirillova.restaurantvoting.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.annakirillova.restaurantvoting.config.DateTimeProvider;
 import ru.annakirillova.restaurantvoting.error.NotFoundException;
 import ru.annakirillova.restaurantvoting.error.VoteException;
 import ru.annakirillova.restaurantvoting.model.Vote;
@@ -10,10 +11,8 @@ import ru.annakirillova.restaurantvoting.repository.RestaurantRepository;
 import ru.annakirillova.restaurantvoting.repository.UserRepository;
 import ru.annakirillova.restaurantvoting.repository.VoteRepository;
 import ru.annakirillova.restaurantvoting.to.VoteTo;
-import ru.annakirillova.restaurantvoting.config.DateTimeProvider;
 
 import java.time.LocalTime;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,13 +31,8 @@ public class VoteService {
                 .orElseThrow(() -> new NotFoundException("Today vote for user with id=" + userId + " not found"));
     }
 
-    public List<Vote> getAll(int userId) {
-        return voteRepository.getAllByUser(userId);
-    }
-
     @Transactional
     public Vote save(int restaurantId, int userId) {
-        restaurantRepository.checkExisted(restaurantId);
         Optional<Vote> voteToday = voteRepository.getVoteByDate(userId, dateTimeProvider.getNowDate());
         if (voteToday.isEmpty()) {
             Vote newVote = new Vote(userRepository.getReferenceById(userId), restaurantRepository.getReferenceById(restaurantId));

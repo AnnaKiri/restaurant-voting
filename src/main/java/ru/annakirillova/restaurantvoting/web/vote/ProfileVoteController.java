@@ -7,9 +7,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.annakirillova.restaurantvoting.model.Vote;
+import ru.annakirillova.restaurantvoting.repository.RestaurantRepository;
 import ru.annakirillova.restaurantvoting.repository.VoteRepository;
 import ru.annakirillova.restaurantvoting.service.VoteService;
 import ru.annakirillova.restaurantvoting.to.VoteTo;
@@ -29,13 +37,16 @@ public class ProfileVoteController {
 
     private VoteService voteService;
     private VoteRepository voteRepository;
+    private RestaurantRepository restaurantRepository;
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<VoteTo> register(@Valid @RequestBody VoteTo voteTo, @AuthenticationPrincipal AuthUser authUser) {
+        int restaurantId = voteTo.getRestaurantId();
         log.info("the user {} votes for the restaurant {}", authUser.id(), voteTo.getRestaurantId());
         ValidationUtil.checkNew(voteTo);
-        Vote created = voteService.save(voteTo.getRestaurantId(), authUser.id());
+        restaurantRepository.checkExisted(restaurantId);
+        Vote created = voteService.save(restaurantId, authUser.id());
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
@@ -68,6 +79,6 @@ public class ProfileVoteController {
     public List<VoteTo> getAll(@AuthenticationPrincipal AuthUser authUser) {
         int userId = authUser.getUser().id();
         log.info("get all votes for user with id {}", userId);
-        return VoteUtil.getTos(voteService.getAll(userId));
+        return VoteUtil.getTos(voteRepository.getAllByUser(userId));
     }
 }
