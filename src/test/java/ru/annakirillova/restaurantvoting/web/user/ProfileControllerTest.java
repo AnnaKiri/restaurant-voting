@@ -8,7 +8,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.annakirillova.restaurantvoting.model.User;
 import ru.annakirillova.restaurantvoting.repository.UserRepository;
-import ru.annakirillova.restaurantvoting.service.UserService;
 import ru.annakirillova.restaurantvoting.to.UserTo;
 import ru.annakirillova.restaurantvoting.util.JsonUtil;
 import ru.annakirillova.restaurantvoting.util.UsersUtil;
@@ -19,14 +18,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.annakirillova.restaurantvoting.web.user.ProfileController.REST_URL;
-import static ru.annakirillova.restaurantvoting.web.user.UserTestData.*;
+import static ru.annakirillova.restaurantvoting.web.user.UserTestData.ADMIN_MAIL;
+import static ru.annakirillova.restaurantvoting.web.user.UserTestData.USER1_ID;
+import static ru.annakirillova.restaurantvoting.web.user.UserTestData.USER1_MAIL;
+import static ru.annakirillova.restaurantvoting.web.user.UserTestData.USER_MATCHER;
+import static ru.annakirillova.restaurantvoting.web.user.UserTestData.admin;
+import static ru.annakirillova.restaurantvoting.web.user.UserTestData.user1;
+import static ru.annakirillova.restaurantvoting.web.user.UserTestData.user2;
+import static ru.annakirillova.restaurantvoting.web.user.UserTestData.user3;
 
 class ProfileControllerTest extends AbstractControllerTest {
 
     @Autowired
-    private UserService userService;
-    @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private AdminUserController adminUserController;
 
     @Test
     @WithUserDetails(value = USER1_MAIL)
@@ -42,7 +48,7 @@ class ProfileControllerTest extends AbstractControllerTest {
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL))
                 .andExpect(status().isNoContent());
-        USER_MATCHER.assertMatch(userService.getAll(), admin, user2, user3);
+        USER_MATCHER.assertMatch(adminUserController.getAll(), admin, user2, user3);
     }
 
     @Test
