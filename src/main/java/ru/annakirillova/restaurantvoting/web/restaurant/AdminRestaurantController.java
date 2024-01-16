@@ -6,8 +6,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.annakirillova.restaurantvoting.model.Restaurant;
 import ru.annakirillova.restaurantvoting.repository.RestaurantRepository;
@@ -52,27 +59,27 @@ public class AdminRestaurantController {
         restaurantService.update(id, restaurant);
     }
 
+    @GetMapping(params = "dishesToday=true")
+    public List<RestaurantTo> getAllWithDishesToday() {
+        log.info("get all restaurants with dishes today");
+        return restaurantService.getAllWithDishesToday();
+    }
+
     @GetMapping
-    public List<RestaurantTo> getAllWithDishesToday(@RequestParam @Nullable Boolean dishesToday) {
-        boolean isDishesNeeded = dishesToday != null && dishesToday;
-        if (isDishesNeeded) {
-            log.info("get all restaurants with dishes today");
-            return restaurantService.getAllWithDishesToday();
-        } else {
-            log.info("get all restaurant");
-            return RestaurantUtil.getTos(restaurantRepository.getAll());
-        }
+    public List<RestaurantTo> getAll() {
+        log.info("get all restaurant");
+        return RestaurantUtil.getTos(restaurantRepository.getAll());
+    }
+
+    @GetMapping(path = "/{id}", params = "dishesToday=true")
+    public RestaurantTo getWithDishes(@PathVariable int id) {
+        log.info("get the restaurant {} with dishes", id);
+        return RestaurantUtil.createTo(restaurantService.getWithDishesToday(id));
     }
 
     @GetMapping("/{id}")
-    public RestaurantTo getWithDishes(@PathVariable int id, @RequestParam @Nullable Boolean dishesToday) {
-        boolean isDishesNeeded = dishesToday != null && dishesToday;
-        if (isDishesNeeded) {
-            log.info("get the restaurant {} with dishes", id);
-            return RestaurantUtil.createTo(restaurantService.getWithDishesToday(id));
-        } else {
-            log.info("get the restaurant {}", id);
-            return RestaurantUtil.createTo(restaurantRepository.getExisted(id));
-        }
+    public RestaurantTo get(@PathVariable int id) {
+        log.info("get the restaurant {}", id);
+        return RestaurantUtil.createTo(restaurantRepository.getExisted(id));
     }
 }

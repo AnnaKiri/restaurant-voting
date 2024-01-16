@@ -3,12 +3,10 @@ package ru.annakirillova.restaurantvoting.web.restaurant;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.lang.Nullable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.annakirillova.restaurantvoting.repository.RestaurantRepository;
 import ru.annakirillova.restaurantvoting.service.RestaurantService;
@@ -34,28 +32,33 @@ public class UserRestaurantController {
         return restaurantService.getWithDishesAndRating(id);
     }
 
-    @GetMapping
+    @GetMapping(params = {"dishesToday=true", "ratingToday=true"})
     @Transactional
-    public List<RestaurantTo> getAllWithDishesAndRating(@RequestParam @Nullable Boolean dishesToday, @RequestParam @Nullable Boolean ratingToday) {
-        boolean isDishesNeeded = dishesToday != null && dishesToday;
-        boolean isVotesNeeded = ratingToday != null && ratingToday;
-        if (isDishesNeeded && isVotesNeeded) {
-            log.info("get restaurants with dishes and rating");
-            List<RestaurantTo> restaurantsWithVotes = restaurantService.getAllWithRatingToday();
-            List<RestaurantTo> restaurantsWithDishes = restaurantService.getAllWithDishesToday();
-            for (int i = 0; i < restaurantsWithVotes.size(); i++) {
-                restaurantsWithVotes.get(i).setDishes(restaurantsWithDishes.get(i).getDishes());
-            }
-            return restaurantsWithVotes;
-        } else if (isDishesNeeded) {
-            log.info("get all restaurants with dishes today");
-            return restaurantService.getAllWithDishesToday();
-        } else if (isVotesNeeded) {
-            log.info("get all restaurants with rating today");
-            return restaurantService.getAllWithRatingToday();
-        } else {
-            log.info("get all restaurants ");
-            return RestaurantUtil.getTos(restaurantRepository.getAll());
+    public List<RestaurantTo> getAllWithDishesAndRating() {
+        log.info("get restaurants with dishes and rating");
+        List<RestaurantTo> restaurantsWithVotes = restaurantService.getAllWithRatingToday();
+        List<RestaurantTo> restaurantsWithDishes = restaurantService.getAllWithDishesToday();
+        for (int i = 0; i < restaurantsWithVotes.size(); i++) {
+            restaurantsWithVotes.get(i).setDishes(restaurantsWithDishes.get(i).getDishes());
         }
+        return restaurantsWithVotes;
+    }
+
+    @GetMapping(params = "dishesToday=true")
+    public List<RestaurantTo> getAllWithDishes() {
+        log.info("get all restaurants with dishes today");
+        return restaurantService.getAllWithDishesToday();
+    }
+
+    @GetMapping(params = "ratingToday=true")
+    public List<RestaurantTo> getAllWithRating() {
+        log.info("get all restaurants with rating today");
+        return restaurantService.getAllWithRatingToday();
+    }
+
+    @GetMapping
+    public List<RestaurantTo> getAll() {
+        log.info("get all restaurants ");
+        return RestaurantUtil.getTos(restaurantRepository.getAll());
     }
 }
