@@ -6,11 +6,11 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.annakirillova.restaurantvoting.config.DateTimeProvider;
 import ru.annakirillova.restaurantvoting.model.Dish;
 import ru.annakirillova.restaurantvoting.model.Restaurant;
 import ru.annakirillova.restaurantvoting.repository.RestaurantRepository;
 import ru.annakirillova.restaurantvoting.to.RestaurantTo;
-import ru.annakirillova.restaurantvoting.config.DateTimeProvider;
 import ru.annakirillova.restaurantvoting.util.RestaurantUtil;
 
 import java.util.ArrayList;
@@ -18,9 +18,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static ru.annakirillova.restaurantvoting.validation.ValidationUtil.assureIdConsistent;
-import static ru.annakirillova.restaurantvoting.validation.ValidationUtil.checkNew;
 
 @Service
 @AllArgsConstructor
@@ -32,7 +29,6 @@ public class RestaurantService {
 
     @CacheEvict(value = {"restaurants", "restaurantsWithDishes"}, allEntries = true)
     public Restaurant create(Restaurant restaurant) {
-        checkNew(restaurant);
         return restaurantRepository.save(restaurant);
     }
 
@@ -43,7 +39,6 @@ public class RestaurantService {
 
     @CacheEvict(value = {"restaurants", "restaurantsWithDishes"}, allEntries = true)
     public void update(int id, Restaurant restaurant) {
-        assureIdConsistent(restaurant, id);
         restaurantRepository.save(restaurant);
     }
 
@@ -87,13 +82,6 @@ public class RestaurantService {
                 .map(RestaurantTo::getRating)
                 .orElse(0);
         restaurantTo.setRating(rating);
-        return restaurantTo;
-    }
-
-    @Transactional
-    public RestaurantTo getWithDishesAndRating(int id) {
-        RestaurantTo restaurantTo = getWithRatingToday(id);
-        restaurantTo.setDishes(getWithDishesToday(id).getDishes());
         return restaurantTo;
     }
 }

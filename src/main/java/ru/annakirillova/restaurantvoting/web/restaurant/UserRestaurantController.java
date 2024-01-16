@@ -29,7 +29,9 @@ public class UserRestaurantController {
     @Transactional
     public RestaurantTo getWithDishesAndRating(@PathVariable int id) {
         log.info("get the restaurant {} with dishes and rating", id);
-        return restaurantService.getWithDishesAndRating(id);
+        RestaurantTo restaurantTo = restaurantService.getWithRatingToday(id);
+        restaurantTo.setDishes(restaurantService.getWithDishesToday(id).getDishes());
+        return restaurantTo;
     }
 
     @GetMapping(params = {"dishesToday=true", "ratingToday=true"})

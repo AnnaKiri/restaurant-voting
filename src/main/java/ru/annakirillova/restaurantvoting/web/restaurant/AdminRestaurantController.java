@@ -25,6 +25,9 @@ import ru.annakirillova.restaurantvoting.util.RestaurantUtil;
 import java.net.URI;
 import java.util.List;
 
+import static ru.annakirillova.restaurantvoting.validation.ValidationUtil.assureIdConsistent;
+import static ru.annakirillova.restaurantvoting.validation.ValidationUtil.checkNew;
+
 @RestController
 @RequestMapping(value = AdminRestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
@@ -39,6 +42,7 @@ public class AdminRestaurantController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody Restaurant restaurant) {
         log.info("create a restaurant {}", restaurant);
+        checkNew(restaurant);
         Restaurant created = restaurantService.create(restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL).build().toUri();
@@ -56,6 +60,7 @@ public class AdminRestaurantController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@PathVariable int id, @Valid @RequestBody Restaurant restaurant) {
         log.info("update the restaurant {} with id={}", restaurant, id);
+        assureIdConsistent(restaurant, id);
         restaurantService.update(id, restaurant);
     }
 
