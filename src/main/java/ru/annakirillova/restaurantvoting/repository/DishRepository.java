@@ -28,6 +28,6 @@ public interface DishRepository extends JpaRepository<Dish, Integer> {
 
     default Dish getBelonged(int restaurantId, int dishId) {
         return get(restaurantId, dishId).orElseThrow(
-                () -> new DataConflictException("Dish id=" + dishId + "   is not exist or doesn't belong to Restaurant id=" + restaurantId));
+                () -> new DataConflictException("Dish id=" + dishId + " is not exist or doesn't belong to Restaurant id=" + restaurantId));
     }
 }

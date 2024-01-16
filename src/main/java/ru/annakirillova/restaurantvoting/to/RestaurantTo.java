@@ -11,18 +11,18 @@ import java.util.List;
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true, exclude = {"dishes"})
+@ToString(callSuper = true)
 public class RestaurantTo extends BaseTo {
 
-    private final String name;
+    private String name;
 
+    @ToString.Exclude
     private List<Dish> dishes;
 
     private Integer rating;
 
     public RestaurantTo() {
         super(null);
-        this.name = null;
     }
 
     public RestaurantTo(Integer id, String name, long rating) {

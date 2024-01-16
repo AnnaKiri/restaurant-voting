@@ -21,6 +21,7 @@ import ru.annakirillova.restaurantvoting.web.AuthUser;
 
 import java.net.URI;
 
+import static ru.annakirillova.restaurantvoting.validation.ValidationUtil.assureIdConsistent;
 import static ru.annakirillova.restaurantvoting.validation.ValidationUtil.checkNew;
 
 @RestController
@@ -32,8 +33,8 @@ public class ProfileController extends AbstractUserController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<User> register(@Valid @RequestBody UserTo userTo) {
         log.info("register a new user {}", userTo);
+        checkNew(userTo);
         User user = UsersUtil.createNewFromTo(userTo);
-        checkNew(user);
         User created = userRepository.prepareAndSave(user);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL).build().toUri();
@@ -44,6 +45,7 @@ public class ProfileController extends AbstractUserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@RequestBody @Valid UserTo userTo, @AuthenticationPrincipal AuthUser authUser) {
         log.info("update the user {} with id={}", userTo, authUser.id());
+        assureIdConsistent(userTo, authUser.id());
         User updatedUser = UsersUtil.updateFromTo(authUser.getUser(), userTo);
         userRepository.prepareAndSave(updatedUser);
     }

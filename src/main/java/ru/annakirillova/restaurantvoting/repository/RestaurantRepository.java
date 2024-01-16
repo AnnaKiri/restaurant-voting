@@ -32,7 +32,7 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
 
     default void checkExisted(int restaurantId) {
         if (!existsById(restaurantId)) {
-            throw new NotFoundException("Restaurant id=" + restaurantId + "   is not exist");
+            throw new NotFoundException("Restaurant id=" + restaurantId + " is not exist");
         }
     }
 }

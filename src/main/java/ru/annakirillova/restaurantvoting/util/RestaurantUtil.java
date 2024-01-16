@@ -15,10 +15,12 @@ public class RestaurantUtil {
 
     public static RestaurantTo createTo(Restaurant restaurant) {
         List<Vote> votes = restaurant.getVotes();
-        Integer rating = Hibernate.isInitialized(votes) && votes != null ? votes.size() : null;
-
         List<Dish> dishes = restaurant.getDishes();
-        return new RestaurantTo(restaurant.getId(), restaurant.getName(), Hibernate.isInitialized(dishes) ? dishes : null, rating);
+
+        return new RestaurantTo(restaurant.getId(),
+                restaurant.getName(),
+                Hibernate.isInitialized(dishes) ? dishes : null,
+                Hibernate.isInitialized(votes) && votes != null ? votes.size() : null);
     }
 
     public static List<RestaurantTo> getTos(Collection<Restaurant> restaurants) {

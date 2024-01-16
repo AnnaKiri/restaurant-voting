@@ -62,7 +62,7 @@ public class AdminRestaurantController {
     public void update(@PathVariable int id, @Valid @RequestBody Restaurant restaurant) {
         log.info("update the restaurant {} with id={}", restaurant, id);
         assureIdConsistent(restaurant, id);
-        restaurantService.update(id, restaurant);
+        restaurantService.update(restaurant);
     }
 
     @GetMapping(params = "dishesToday=true")

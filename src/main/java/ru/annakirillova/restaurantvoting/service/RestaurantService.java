@@ -41,7 +41,7 @@ public class RestaurantService {
     }
 
     @CacheEvict(value = {"restaurants", "restaurantsWithDishes"}, allEntries = true)
-    public void update(int id, Restaurant restaurant) {
+    public void update(Restaurant restaurant) {
         restaurantRepository.save(restaurant);
     }
 
