@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -65,7 +66,8 @@ public class AdminRestaurantController {
     }
 
     @GetMapping(params = "dishesToday=true")
-    public List<RestaurantTo> getAllWithDishesToday() {
+    //the unused param is needed for SwaggerUI
+    public List<RestaurantTo> getAllWithDishesToday(@RequestParam Boolean dishesToday) {
         log.info("get all restaurants with dishes today");
         return restaurantService.getAllWithDishesToday();
     }
@@ -77,7 +79,8 @@ public class AdminRestaurantController {
     }
 
     @GetMapping(path = "/{id}", params = "dishesToday=true")
-    public RestaurantTo getWithDishes(@PathVariable int id) {
+    //the unused param is needed for SwaggerUI
+    public RestaurantTo getWithDishes(@PathVariable int id, @RequestParam Boolean dishesToday) {
         log.info("get the restaurant {} with dishes", id);
         return RestaurantUtil.createTo(restaurantService.getWithDishesToday(id));
     }

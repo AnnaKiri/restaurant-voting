@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.annakirillova.restaurantvoting.repository.RestaurantRepository;
 import ru.annakirillova.restaurantvoting.service.RestaurantService;
@@ -36,7 +37,8 @@ public class UserRestaurantController {
 
     @GetMapping(params = {"dishesToday=true", "ratingToday=true"})
     @Transactional(readOnly = true)
-    public List<RestaurantTo> getAllWithDishesAndRating() {
+    //the unused params are needed for SwaggerUI
+    public List<RestaurantTo> getAllWithDishesAndRating(@RequestParam Boolean dishesToday, @RequestParam Boolean ratingToday) {
         log.info("get restaurants with dishes and rating");
         List<RestaurantTo> restaurantsWithVotes = restaurantService.getAllWithRatingToday();
         List<RestaurantTo> restaurantsWithDishes = restaurantService.getAllWithDishesToday();
@@ -47,13 +49,15 @@ public class UserRestaurantController {
     }
 
     @GetMapping(params = "dishesToday=true")
-    public List<RestaurantTo> getAllWithDishes() {
+    //the unused param is needed for SwaggerUI
+    public List<RestaurantTo> getAllWithDishes(@RequestParam Boolean dishesToday) {
         log.info("get all restaurants with dishes today");
         return restaurantService.getAllWithDishesToday();
     }
 
     @GetMapping(params = "ratingToday=true")
-    public List<RestaurantTo> getAllWithRating() {
+    //the unused param is needed for SwaggerUI
+    public List<RestaurantTo> getAllWithRating(@RequestParam Boolean ratingToday) {
         log.info("get all restaurants with rating today");
         return restaurantService.getAllWithRatingToday();
     }
