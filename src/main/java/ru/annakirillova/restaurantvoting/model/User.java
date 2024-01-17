@@ -21,7 +21,7 @@ import java.util.*;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(callSuper = true, exclude = {"votes"})
+@ToString(callSuper = true)
 public class User extends AbstractNamedEntity implements HasIdAndEmail {
 
     @Column(name = "email", nullable = false, unique = true)
@@ -52,6 +52,7 @@ public class User extends AbstractNamedEntity implements HasIdAndEmail {
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
+    @ToString.Exclude
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore

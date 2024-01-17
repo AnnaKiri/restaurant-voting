@@ -6,8 +6,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.annakirillova.restaurantvoting.model.Restaurant;
 import ru.annakirillova.restaurantvoting.repository.RestaurantRepository;
@@ -17,6 +25,9 @@ import ru.annakirillova.restaurantvoting.util.RestaurantUtil;
 
 import java.net.URI;
 import java.util.List;
+
+import static ru.annakirillova.restaurantvoting.validation.ValidationUtil.assureIdConsistent;
+import static ru.annakirillova.restaurantvoting.validation.ValidationUtil.checkNew;
 
 @RestController
 @RequestMapping(value = AdminRestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -32,6 +43,7 @@ public class AdminRestaurantController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody Restaurant restaurant) {
         log.info("create a restaurant {}", restaurant);
+        checkNew(restaurant);
         Restaurant created = restaurantService.create(restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL).build().toUri();
@@ -49,30 +61,34 @@ public class AdminRestaurantController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@PathVariable int id, @Valid @RequestBody Restaurant restaurant) {
         log.info("update the restaurant {} with id={}", restaurant, id);
-        restaurantService.update(id, restaurant);
+        assureIdConsistent(restaurant, id);
+        restaurantRepository.checkExisted(id);
+        restaurantService.update(restaurant);
+    }
+
+    @GetMapping(params = "dishesToday=true")
+    //the unused param is needed for SwaggerUI
+    public List<RestaurantTo> getAllWithDishesToday(@RequestParam(required = false) Boolean dishesToday) {
+        log.info("get all restaurants with dishes today");
+        return restaurantService.getAllWithDishesToday();
     }
 
     @GetMapping
-    public List<RestaurantTo> getAllWithMealsToday(@RequestParam @Nullable Boolean mealsToday) {
-        boolean isMealsNeeded = mealsToday != null && mealsToday;
-        if (isMealsNeeded) {
-            log.info("get all restaurants with meals today");
-            return restaurantService.getAllWithMealsToday();
-        } else {
-            log.info("get all restaurant");
-            return RestaurantUtil.getTos(restaurantRepository.getAll());
-        }
+    public List<RestaurantTo> getAll() {
+        log.info("get all restaurant");
+        return RestaurantUtil.getTos(restaurantService.getAll());
+    }
+
+    @GetMapping(path = "/{id}", params = "dishesToday=true")
+    //the unused param is needed for SwaggerUI
+    public RestaurantTo getWithDishes(@PathVariable int id, @RequestParam(required = false) Boolean dishesToday) {
+        log.info("get the restaurant {} with dishes", id);
+        return RestaurantUtil.createTo(restaurantService.getWithDishesToday(id));
     }
 
     @GetMapping("/{id}")
-    public RestaurantTo getWithMeals(@PathVariable int id, @RequestParam @Nullable Boolean mealsToday) {
-        boolean isMealsNeeded = mealsToday != null && mealsToday;
-        if (isMealsNeeded) {
-            log.info("get the restaurant {} with meals", id);
-            return RestaurantUtil.createTo(restaurantService.getWithMealsToday(id));
-        } else {
-            log.info("get the restaurant {}", id);
-            return RestaurantUtil.createTo(restaurantRepository.getExisted(id));
-        }
+    public RestaurantTo get(@PathVariable int id) {
+        log.info("get the restaurant {}", id);
+        return RestaurantUtil.createTo(restaurantRepository.getExisted(id));
     }
 }

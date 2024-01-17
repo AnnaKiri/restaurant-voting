@@ -11,8 +11,8 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "vote",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "created", "restaurant_id"},
-                name = "uk_user_created_restaurant"))
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "created"},
+                name = "uk_user_created"))
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

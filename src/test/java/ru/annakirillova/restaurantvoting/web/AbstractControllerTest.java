@@ -21,8 +21,4 @@ public abstract class AbstractControllerTest {
     protected ResultActions perform(MockHttpServletRequestBuilder builder) throws Exception {
         return mockMvc.perform(builder);
     }
-
-    protected String buildUrlWithRestaurantId(String url, int restaurantId) {
-        return url.replace("{restaurantId}", Integer.toString(restaurantId));
-    }
 }

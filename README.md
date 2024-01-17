@@ -39,48 +39,41 @@ The entire REST interface is covered by JUnit tests using Spring MVC Test and Sp
 
 ### `Admin`
 
-### AdminMealController      `/admin/restaurants/2/meals`
+### AdminDishController      `/admin/restaurants/2/dishes`
 
-- Create a Meal for the Restaurant
+- Create a Dish for the Restaurant
 
-`curl -X POST http://localhost:8080/admin/restaurants/2/meals
+`curl -X POST http://localhost:8080/admin/restaurants/2/dishes
 -H 'Content-Type: application/json'
--d '{"name": "New Meal", "price": "146"}'
+-d '{"name": "New Dish", "price": "146"}'
 --user admin@gmail.com:admin`
 
-- Create a List of Meals for a Restaurant
+- Delete a Dish
 
-`curl -X POST http://localhost:8080/admin/restaurants/2/meals/add-list
+`curl -X DELETE http://localhost:8080/admin/restaurants/2/dishes/1 --user admin@gmail.com:admin`
+
+- Update a Dish
+
+`curl -X PUT http://localhost:8080/admin/restaurants/2/dishes/1
 -H 'Content-Type: application/json'
--d '[{"name": "New Meal1", "price": "155"}, {"name": "New Meal2", "price": "188"}, {"name": "New Meal3", "price": "146"}]'
+-d '{"name": "Updated Dish", "price": "455"}'
 --user admin@gmail.com:admin`
 
-- Delete a Meal
+- Get All Dishes for a Restaurant
 
-`curl -X DELETE http://localhost:8080/admin/restaurants/2/meals/1 --user admin@gmail.com:admin`
+`curl -X GET http://localhost:8080/admin/restaurants/2/dishes --user admin@gmail.com:admin`
 
-- Update a Meal
+- Get Dishes Between Dates for a Restaurant
 
-`curl -X PUT http://localhost:8080/admin/restaurants/2/meals/1
--H 'Content-Type: application/json'
--d '{"name": "Updated Meal", "price": "455"}'
---user admin@gmail.com:admin`
+`curl -X GET http://localhost:8080/admin/restaurants/3/dishes/filter?startDate=2024-01-01&endDate=2024-01-03 --user admin@gmail.com:admin`
 
-- Get All Meals for a Restaurant
+- Get a Specific Dish of a Restaurant
 
-`curl -X GET http://localhost:8080/admin/restaurants/2/meals --user admin@gmail.com:admin`
+`curl -X GET http://localhost:8080/admin/restaurants/2/dishes/1 --user admin@gmail.com:admin`
 
-- Get Meals Between Dates for a Restaurant
+- Get All Dishes Today for a Restaurant
 
-`curl -X GET http://localhost:8080/admin/restaurants/2/meals/filter?startDate=2024-01-02&endDate=2024-01-03 --user admin@gmail.com:admin`
-
-- Get a Specific Meal of a Restaurant
-
-`curl -X GET http://localhost:8080/admin/restaurants/2/meals/1 --user admin@gmail.com:admin`
-
-- Get All Meals for Today for a Restaurant
-
-`curl -X GET http://localhost:8080/admin/restaurants/2/meals/today --user admin@gmail.com:admin`
+`curl -X GET http://localhost:8080/admin/restaurants/2/dishes/today --user admin@gmail.com:admin`
 
 ### AdminRestaurantController      `/admin/restaurants`
 
@@ -102,68 +95,23 @@ The entire REST interface is covered by JUnit tests using Spring MVC Test and Sp
 -d '{"name": "Updated Restaurant"}'
 --user admin@gmail.com:admin`
 
-- Get All Restaurants With Meals
+- Get All Restaurants With Dishes
 
-`curl -X GET 'http://localhost:8080/admin/restaurants?mealsToday=true --user admin@gmail.com:admin`
+`curl -X GET 'http://localhost:8080/admin/restaurants?dishesToday=true --user admin@gmail.com:admin`
 
 - Get All Restaurants
 
 `curl -X GET 'http://localhost:8080/admin/restaurants --user admin@gmail.com:admin`
 
-- Get a Specific Restaurant With Meals
+- Get a Specific Restaurant With Dishes
 
-`curl -X GET 'http://localhost:8080/admin/restaurants/2?mealsToday=true --user admin@gmail.com:admin`
+`curl -X GET 'http://localhost:8080/admin/restaurants/2?dishesToday=true --user admin@gmail.com:admin`
 
 - Get a Specific Restaurant
 
 `curl -X GET 'http://localhost:8080/admin/restaurants/2 --user admin@gmail.com:admin`
 
-### AdminVoteController      `/admin/restaurants/2/votes`
-
-- Delete a Vote
-
-`curl -X DELETE http://localhost:8080/admin/restaurants/2/votes/1 --user admin@gmail.com:admin`
-
-- Get All Votes for a Restaurant
-
-`curl -X GET http://localhost:8080/admin/restaurants/2/votes --user admin@gmail.com:admin`
-
-- Get Votes Between Dates for a Restaurant
-
-`curl -X GET http://localhost:8080/admin/restaurants/2/votes/filter?startDate=2024-01-01&endDate=2024-01-04 --user admin@gmail.com:admin`
-
-- Get All Votes for Today for a Restaurant
-
-`curl -X GET http://localhost:8080/admin/restaurants/2/votes/today --user admin@gmail.com:admin`
-
-- Get a Specific Vote for a Restaurant
-
-`curl -X GET http://localhost:8080/admin/restaurants/2/votes/1 --user admin@gmail.com:admin`
-
 ### AdminUserController      `/admin/users`
-
-- Get a Specific user
-
-`curl -X GET http://localhost:8080/admin/users/1 --user admin@gmail.com:admin`
-
-- Update a user
-
-`curl -X PUT http://localhost:8080/admin/users/1
--H "Content-Type: application/json"
--d '{ "name": "UpdatedUser1", "email": "updatedemail@yandex.ru", "password": "updatedpassword", "roles": ["USER"] }'
---user admin@gmail.com:admin`
-
-- Delete a user
-
-`curl -X DELETE http://localhost:8080/admin/users/1 --user admin@gmail.com:admin`
-
-- Enable or disable a user
-
-`curl -X PATCH http://localhost:8080/admin/users/1?enabled=false --user admin@gmail.com:admin`
-
-- Get All users
-
-`curl -X GET http://localhost:8080/admin/users --user admin@gmail.com:admin`
 
 - Create New user
 
@@ -172,25 +120,48 @@ The entire REST interface is covered by JUnit tests using Spring MVC Test and Sp
 -d '{ "name": "NewUser", "email": "newemail@yandex.ru", "password": "newpassword" }'
 --user admin@gmail.com:admin`
 
+- Delete a user
+
+`curl -X DELETE http://localhost:8080/admin/users/1 --user admin@gmail.com:admin`
+
+- Update a user
+
+`curl -X PUT http://localhost:8080/admin/users/1
+-H "Content-Type: application/json"
+-d '{ "name": "UpdatedUser1", "email": "updatedemail@yandex.ru", "password": "updatedpassword", "roles": ["USER"] }'
+--user admin@gmail.com:admin`
+
+- Get a Specific user
+
+`curl -X GET http://localhost:8080/admin/users/1 --user admin@gmail.com:admin`
+
+- Get All users
+
+`curl -X GET http://localhost:8080/admin/users --user admin@gmail.com:admin`
+
 - Get user by email
 
 `curl -X GET http://localhost:8080/admin/users/by-email?email=user1@yandex.ru --user admin@gmail.com:admin`
+
+- Enable or disable a user
+
+`curl -X PATCH http://localhost:8080/admin/users/1?enabled=false --user admin@gmail.com:admin`
 
 ### `User`
 
 ### UserRestaurantController      `/user/restaurants`
 
-- Get a Restaurant by id with meals and rating
+- Get a Restaurant by id with dishes and rating
 
-`curl -X GET http://localhost:8080/user/restaurants/1/with-meals-and-rating --user user1@yandex.ru:password1`
+`curl -X GET http://localhost:8080/user/restaurants/1/with-dishes-and-rating --user user1@yandex.ru:password1`
 
-- Get All Restaurants with meals and rating
+- Get All Restaurants with dishes and rating
 
-`curl -X GET http://localhost:8080/user/restaurants?mealsToday=true&ratingToday=true --user user1@yandex.ru:password1`
+`curl -X GET http://localhost:8080/user/restaurants?dishesToday=true&ratingToday=true --user user1@yandex.ru:password1`
 
-- Get All Restaurants with meals
+- Get All Restaurants with dishes
 
-`curl -X POST http://localhost:8080/user/restaurants?mealsToday=true --user user1@yandex.ru:password1`
+`curl -X POST http://localhost:8080/user/restaurants?dishesToday=true --user user1@yandex.ru:password1`
 
 - Get All Restaurants with rating
 
@@ -200,11 +171,33 @@ The entire REST interface is covered by JUnit tests using Spring MVC Test and Sp
 
 `curl -X POST http://localhost:8080/user/restaurants --user user1@yandex.ru:password1`
 
-### UserVoteController      `/user/restaurants/{restaurantId}/votes`
+### ProfileVoteController      `/profile/votes`
 
 - Create a vote
 
-`curl -X POST http://localhost:8080/user/restaurants/4/votes --user user1@yandex.ru:password1`
+`curl -X POST http://localhost:8080/profile/votes
+-H "Content-Type: application/json"
+-d '{ "restaurantId": "1" }'
+--user user3@yandex.ru:password3`
+
+- Update a vote
+
+`curl -X PUT http://localhost:8080/profile/votes/1
+-H "Content-Type: application/json"
+-d '{ "restaurantId": "2" }' 
+--user user1@yandex.ru:password1`
+
+- Get a Vote by id
+
+`curl -X GET http://localhost:8080/profile/votes/1 --user user1@yandex.ru:password1`
+
+- Get a Vote for today
+
+`curl -X GET http://localhost:8080/profile/votes/today --user user1@yandex.ru:password1`
+
+- Get all Votes by user
+
+`curl -X GET http://localhost:8080/profile/votes/ --user user1@yandex.ru:password1`
 
 ### ProfileController      `/profile`
 
@@ -214,16 +207,16 @@ The entire REST interface is covered by JUnit tests using Spring MVC Test and Sp
 -H "Content-Type: application/json"
 -d '{ "name": "NewUser", "email": "newuseremail@yandex.ru", "password": "password4" }'`
 
-- Get the currently logged-in user
-
-`curl -X GET http://localhost:8080/profile --user user1@yandex.ru:password1`
-
 - Update the currently logged-in user
 
 `curl -X PUT http://localhost:8080/profile
 -H "Content-Type: application/json"
 -d '{ "name": "UpdatedUser1", "email": "updateduser1@yandex.ru", "password": "updatedpassword1" }'
 --user user1@yandex.ru:password1`
+
+- Get the currently logged-in user
+
+`curl -X GET http://localhost:8080/profile --user user1@yandex.ru:password1`
 
 - Delete the currently logged-in user
 

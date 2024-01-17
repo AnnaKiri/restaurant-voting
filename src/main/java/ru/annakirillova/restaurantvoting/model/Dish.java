@@ -1,6 +1,7 @@
 package ru.annakirillova.restaurantvoting.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -12,18 +13,19 @@ import ru.annakirillova.restaurantvoting.validation.NoHtml;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "meal",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"created", "restaurant_id", "description"},
+@Table(name = "dish",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"available_on", "restaurant_id", "description"},
                 name = "uk_created_restaurant_description"))
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(callSuper = true, exclude = {"restaurant"})
-public class Meal extends AbstractBaseEntity {
+@ToString(callSuper = true)
+public class Dish extends AbstractBaseEntity {
 
-    @Column(name = "created", nullable = false, columnDefinition = "date default current_date")
+    @Column(name = "available_on", nullable = false, columnDefinition = "date default current_date")
     @NotNull
-    private LocalDate created = LocalDate.now();
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    private LocalDate availableOn = LocalDate.now();
 
     @Column(name = "description", nullable = false)
     @NotBlank
@@ -33,25 +35,26 @@ public class Meal extends AbstractBaseEntity {
 
     @Column(name = "price", nullable = false)
     @NotNull
-    @Range(min = 0, max = 10000)
+    @Range(min = 0, max = 10_000_000)
     private Integer price;
 
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", referencedColumnName = "id", nullable = false)
     @JsonIgnore
     private Restaurant restaurant;
 
-    public Meal(Meal meal) {
-        this(meal.created, meal.description, meal.price);
+    public Dish(Dish dish) {
+        this(dish.availableOn, dish.description, dish.price);
     }
 
-    public Meal(LocalDate created, String description, Integer price) {
-        this(null, created, description, price);
+    public Dish(LocalDate availableOn, String description, Integer price) {
+        this(null, availableOn, description, price);
     }
 
-    public Meal(Integer id, LocalDate created, String description, Integer price) {
+    public Dish(Integer id, LocalDate availableOn, String description, Integer price) {
         super(id);
-        this.created = created;
+        this.availableOn = availableOn;
         this.description = description;
         this.price = price;
     }

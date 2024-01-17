@@ -9,7 +9,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.annakirillova.restaurantvoting.error.NotFoundException;
 import ru.annakirillova.restaurantvoting.model.Restaurant;
 import ru.annakirillova.restaurantvoting.repository.RestaurantRepository;
-import ru.annakirillova.restaurantvoting.service.RestaurantService;
 import ru.annakirillova.restaurantvoting.util.JsonUtil;
 import ru.annakirillova.restaurantvoting.util.RestaurantUtil;
 import ru.annakirillova.restaurantvoting.web.AbstractControllerTest;
@@ -107,13 +106,13 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void getAllWithMeals() throws Exception {
+    void getAllWithDishes() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL)
-                .param("mealsToday", "true"))
+                .param("dishesToday", "true"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(RESTAURANT_TO_WITH_MEALS_MATCHER.contentJson(RestaurantUtil.getTos(restaurants)));
+                .andExpect(RESTAURANT_TO_WITH_DISHES_MATCHER.contentJson(RestaurantUtil.getTos(restaurants)));
     }
 
 
@@ -129,12 +128,12 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
-    void getWithMeals() throws Exception {
+    void getWithDishes() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL_SLASH + RESTAURANT1_ID)
-                .param("mealsToday", "true"))
+                .param("dishesToday", "true"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(RESTAURANT_TO_WITH_MEALS_MATCHER.contentJson(RestaurantUtil.createTo(dickinson)));
+                .andExpect(RESTAURANT_TO_WITH_DISHES_MATCHER.contentJson(RestaurantUtil.createTo(dickinson)));
     }
 
     @Test

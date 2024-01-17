@@ -3,10 +3,12 @@ package ru.annakirillova.restaurantvoting.web.restaurant;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.lang.Nullable;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-import ru.annakirillova.restaurantvoting.repository.RestaurantRepository;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import ru.annakirillova.restaurantvoting.service.RestaurantService;
 import ru.annakirillova.restaurantvoting.to.RestaurantTo;
 import ru.annakirillova.restaurantvoting.util.RestaurantUtil;
@@ -21,37 +23,46 @@ public class UserRestaurantController {
     static final String REST_URL = "/user/restaurants";
 
     private RestaurantService restaurantService;
-    private RestaurantRepository restaurantRepository;
 
-    @GetMapping("/{id}/with-meals-and-rating")
-    @Transactional
-    public RestaurantTo getWithMealsAndRating(@PathVariable int id) {
-        log.info("get the restaurant {} with meals and rating", id);
-        return restaurantService.getWithMealsAndRating(id);
+    @GetMapping("/{id}/with-dishes-and-rating")
+    @Transactional(readOnly = true)
+    public RestaurantTo getWithDishesAndRating(@PathVariable int id) {
+        log.info("get the restaurant {} with dishes and rating", id);
+        RestaurantTo restaurantTo = restaurantService.getWithRatingToday(id);
+        restaurantTo.setDishes(restaurantService.getWithDishesToday(id).getDishes());
+        return restaurantTo;
+    }
+
+    @GetMapping(params = {"dishesToday=true", "ratingToday=true"})
+    @Transactional(readOnly = true)
+    //the unused params are needed for SwaggerUI
+    public List<RestaurantTo> getAllWithDishesAndRating(@RequestParam(required = false) Boolean dishesToday, @RequestParam(required = false) Boolean ratingToday) {
+        log.info("get restaurants with dishes and rating");
+        List<RestaurantTo> restaurantsWithVotes = restaurantService.getAllWithRatingToday();
+        List<RestaurantTo> restaurantsWithDishes = restaurantService.getAllWithDishesToday();
+        for (int i = 0; i < restaurantsWithVotes.size(); i++) {
+            restaurantsWithVotes.get(i).setDishes(restaurantsWithDishes.get(i).getDishes());
+        }
+        return restaurantsWithVotes;
+    }
+
+    @GetMapping(params = "dishesToday=true")
+    //the unused param is needed for SwaggerUI
+    public List<RestaurantTo> getAllWithDishes(@RequestParam(required = false) Boolean dishesToday) {
+        log.info("get all restaurants with dishes today");
+        return restaurantService.getAllWithDishesToday();
+    }
+
+    @GetMapping(params = "ratingToday=true")
+    //the unused param is needed for SwaggerUI
+    public List<RestaurantTo> getAllWithRating(@RequestParam(required = false) Boolean ratingToday) {
+        log.info("get all restaurants with rating today");
+        return restaurantService.getAllWithRatingToday();
     }
 
     @GetMapping
-    @Transactional
-    public List<RestaurantTo> getAllWithMealsAndRating(@RequestParam @Nullable Boolean mealsToday, @RequestParam @Nullable Boolean ratingToday) {
-        boolean isMealsNeeded = mealsToday != null && mealsToday;
-        boolean isVotesNeeded = ratingToday != null && ratingToday;
-        if (isMealsNeeded && isVotesNeeded) {
-            log.info("get restaurants with meals and rating");
-            List<RestaurantTo> restaurantsWithVotes = restaurantService.getAllWithVotesToday();
-            List<RestaurantTo> restaurantsWithMeals = restaurantService.getAllWithMealsToday();
-            for (int i = 0; i < restaurantsWithVotes.size(); i++) {
-                restaurantsWithVotes.get(i).setMeals(restaurantsWithMeals.get(i).getMeals());
-            }
-            return restaurantsWithMeals;
-        } else if (isMealsNeeded) {
-            log.info("get all restaurants with meals today");
-            return restaurantService.getAllWithMealsToday();
-        } else if (isVotesNeeded) {
-            log.info("get all restaurants with rating today");
-            return restaurantService.getAllWithVotesToday();
-        } else {
-            log.info("get all restaurants ");
-            return RestaurantUtil.getTos(restaurantRepository.getAll());
-        }
+    public List<RestaurantTo> getAll() {
+        log.info("get all restaurants ");
+        return RestaurantUtil.getTos(restaurantService.getAll());
     }
 }

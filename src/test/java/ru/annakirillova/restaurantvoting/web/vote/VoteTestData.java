@@ -7,8 +7,14 @@ import ru.annakirillova.restaurantvoting.web.MatcherFactory;
 import java.time.LocalDate;
 import java.util.List;
 
-import static ru.annakirillova.restaurantvoting.web.restaurant.RestaurantTestData.*;
-import static ru.annakirillova.restaurantvoting.web.user.UserTestData.*;
+import static ru.annakirillova.restaurantvoting.web.restaurant.RestaurantTestData.chekhov;
+import static ru.annakirillova.restaurantvoting.web.restaurant.RestaurantTestData.dante;
+import static ru.annakirillova.restaurantvoting.web.restaurant.RestaurantTestData.dickinson;
+import static ru.annakirillova.restaurantvoting.web.restaurant.RestaurantTestData.hemingway;
+import static ru.annakirillova.restaurantvoting.web.restaurant.RestaurantTestData.voltaire;
+import static ru.annakirillova.restaurantvoting.web.user.UserTestData.user1;
+import static ru.annakirillova.restaurantvoting.web.user.UserTestData.user2;
+import static ru.annakirillova.restaurantvoting.web.user.UserTestData.user3;
 
 public class VoteTestData {
 
@@ -23,8 +29,7 @@ public class VoteTestData {
     public static final Vote newYearVote3 = new Vote(VOTE1_ID + 4, user3, hemingway, LocalDate.of(2024, 1, 1));
     public static final Vote newYearVote4 = new Vote(VOTE1_ID + 5, user3, dickinson, LocalDate.of(2024, 1, 2));
 
-    public static final List<Vote> votesForRestaurant1Today = List.of(vote1, vote2);
-    public static final List<Vote> votesForRestaurant1AllTime = List.of(vote1, vote2, newYearVote4);
+    public static final List<Vote> votesForUser1 = List.of(vote1, newYearVote1);
 
     public static MatcherFactory.Matcher<VoteTo> VOTE_TO_MATCHER = MatcherFactory.usingEqualsComparator(VoteTo.class);
 
@@ -32,7 +37,7 @@ public class VoteTestData {
         return new Vote(user3, chekhov);
     }
 
-    public static Vote getUpdated() {
-        return new Vote(user1, voltaire);
+    public static VoteTo getUpdated() {
+        return new VoteTo(VOTE1_ID, user1.getId(), voltaire.getId(), LocalDate.now());
     }
 }

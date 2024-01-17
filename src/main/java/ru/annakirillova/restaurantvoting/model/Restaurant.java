@@ -9,19 +9,22 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.util.List;
 
 @Entity
-@Table(name = "restaurant")
+@Table(name = "restaurant",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"name"}, name = "uk_restaurant_name"))
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(callSuper = true, exclude = {"meals", "votes"})
+@ToString(callSuper = true)
 public class Restaurant extends AbstractNamedEntity {
 
+    @ToString.Exclude
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     @OrderBy("description ASC")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private List<Meal> meals;
+    private List<Dish> dishes;
 
+    @ToString.Exclude
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)

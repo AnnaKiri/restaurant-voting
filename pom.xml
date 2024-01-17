@@ -11,7 +11,7 @@
     <groupId>ru.annakirillova</groupId>
     <artifactId>restaurant-voting</artifactId>
     <version>1.0</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>Restaurant Voting</name>
     <description>Java application based on Spring Framework. Restaurant voting system.</description>
     <properties>
@@ -71,11 +71,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
