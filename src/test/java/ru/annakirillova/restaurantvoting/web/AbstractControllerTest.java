@@ -8,7 +8,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.transaction.annotation.Transactional;
-import ru.annakirillova.restaurantvoting.config.DateTimeProvider;
 
 @SpringBootTest
 @Transactional
@@ -18,14 +17,8 @@ public abstract class AbstractControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    protected DateTimeProvider dateTimeProvider;
 
     protected ResultActions perform(MockHttpServletRequestBuilder builder) throws Exception {
         return mockMvc.perform(builder);
-    }
-
-    protected String buildUrlWithRestaurantId(String url, int restaurantId) {
-        return url.replace("{restaurantId}", Integer.toString(restaurantId));
     }
 }

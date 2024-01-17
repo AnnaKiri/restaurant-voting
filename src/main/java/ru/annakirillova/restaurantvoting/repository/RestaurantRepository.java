@@ -19,10 +19,10 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
             "ORDER BY r.name")
     List<RestaurantTo> getRestaurantsWithRatingByDate(@Param("date") LocalDate date);
 
-    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.dishes m WHERE m.availableOn = :date ORDER BY r.name")
+    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.dishes d WHERE d.availableOn = :date ORDER BY r.name, d.description")
     List<Restaurant> getRestaurantsWithDishesByDate(@Param("date") LocalDate date);
 
-    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.dishes m WHERE r.id = :id AND m.availableOn = :date")
+    @Query("SELECT r FROM Restaurant r LEFT JOIN FETCH r.dishes d WHERE r.id = :id AND d.availableOn = :date ORDER BY d.description")
     Optional<Restaurant> getWithDishesByDate(@Param("id") int id, @Param("date") LocalDate date);
 
     @Query("SELECT new ru.annakirillova.restaurantvoting.to.RestaurantTo(r.id, r.name, COUNT(v)) FROM Restaurant r LEFT JOIN r.votes v " +
@@ -32,7 +32,7 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
 
     default void checkExisted(int restaurantId) {
         if (!existsById(restaurantId)) {
-            throw new NotFoundException("Restaurant id=" + restaurantId + " is not exist");
+            throw new NotFoundException("Restaurant id=" + restaurantId + " does not exist");
         }
     }
 }

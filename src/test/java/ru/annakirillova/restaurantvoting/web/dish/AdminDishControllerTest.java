@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import ru.annakirillova.restaurantvoting.config.DateTimeProvider;
 import ru.annakirillova.restaurantvoting.error.DataConflictException;
 import ru.annakirillova.restaurantvoting.model.Dish;
 import ru.annakirillova.restaurantvoting.util.JsonUtil;
@@ -42,6 +43,8 @@ class AdminDishControllerTest extends AbstractControllerTest {
 
     @Autowired
     private AdminDishController dishController;
+    @Autowired
+    protected DateTimeProvider dateTimeProvider;
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
@@ -214,5 +217,10 @@ class AdminDishControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(updated)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
+    }
+
+
+    private String buildUrlWithRestaurantId(String url, int restaurantId) {
+        return url.replace("{restaurantId}", Integer.toString(restaurantId));
     }
 }

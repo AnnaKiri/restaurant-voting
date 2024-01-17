@@ -14,10 +14,10 @@ import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface DishRepository extends JpaRepository<Dish, Integer> {
-    @Query("SELECT d from Dish d WHERE d.restaurant.id = :restaurantId ORDER BY d.availableOn DESC")
+    @Query("SELECT d from Dish d WHERE d.restaurant.id = :restaurantId ORDER BY d.availableOn DESC, d.description ASC")
     List<Dish> getAll(@Param("restaurantId") int restaurantId);
 
-    @Query("SELECT d from Dish d WHERE d.availableOn = :date AND d.restaurant.id = :restaurantId ORDER BY d.availableOn DESC")
+    @Query("SELECT d from Dish d WHERE d.availableOn = :date AND d.restaurant.id = :restaurantId ORDER BY d.description ASC")
     List<Dish> getAllByDate(@Param("date") LocalDate date, @Param("restaurantId") int restaurantId);
 
     @Query("SELECT d from Dish d WHERE d.availableOn >= :startDate AND d.availableOn <= :endDate AND d.restaurant.id = :restaurantId ORDER BY d.availableOn DESC")
@@ -28,6 +28,6 @@ public interface DishRepository extends JpaRepository<Dish, Integer> {
 
     default Dish getBelonged(int restaurantId, int dishId) {
         return get(restaurantId, dishId).orElseThrow(
-                () -> new DataConflictException("Dish id=" + dishId + " is not exist or doesn't belong to Restaurant id=" + restaurantId));
+                () -> new DataConflictException("Dish id=" + dishId + " does not exist or doesn't belong to Restaurant id=" + restaurantId));
     }
 }
